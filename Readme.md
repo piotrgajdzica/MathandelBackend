@@ -1,7 +1,10 @@
 [![Build Status](https://travis-ci.org/Kubster96/MathandelBackend.svg?branch=master)](https://travis-ci.org/Kubster96/MathandelBackend)
 
-#MathandelBackend
+# Mathandel Backend
 
+Repository for Bacheler's of science degree project
+
+## Database setup
 
 1. Download mySQL
 2. mysql -u root -p
