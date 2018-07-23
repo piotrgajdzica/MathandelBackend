@@ -1,7 +1,6 @@
 install: gradle wrapper --gradle-version 4.2
 
 language: java
-script: make all
 jdk:
    - oraclejdk8
 before_install:
