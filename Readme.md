@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/Kubster96/MathandelBackend.svg?branch=master)](https://travis-ci.org/Kubster96/MathandelBackend)
+
+#MathandelBackend
+
+
 1. Download mySQL
 2. mysql -u root -p
 3. GRANT ALL PRIVILEGES ON *.* TO 'MathandelUser'@'localhost' IDENTIFIED BY 'MathandelRulez';
