@@ -22,11 +22,18 @@ public class UserService {
             return serviceResponse;
         }
 
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            serviceResponse.setMessage("Username already in use");
+            serviceResponse.setSuccess(false);
+            return serviceResponse;
+        }
+
         User user = new User();
         user.setEmail(signUpRequest.getEmail());
         user.setName(signUpRequest.getName());
         user.setSurname(signUpRequest.getSurname());
         user.setPassword(signUpRequest.getPassword());
+        user.setUsername(signUpRequest.getUsername());
 
         userRepository.save(user);
 
