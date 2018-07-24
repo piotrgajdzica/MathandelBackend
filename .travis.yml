@@ -1,8 +1,10 @@
 install: gradle wrapper --gradle-version 4.2
 
 language: java
+
 jdk:
    - oraclejdk8
+
 before_install:
    - sudo apt-get update
    - sudo apt-get install gradle
@@ -13,8 +15,3 @@ before_install:
 
 services:
   - mysql
-
-#sudo: required
-#
-#before_script:
-#  - sudo /etc/init.d/mysql stop
