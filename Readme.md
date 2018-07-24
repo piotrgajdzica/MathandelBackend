@@ -8,8 +8,8 @@ Repository for Bacheler's of science degree project
 
 1. Download mySQL
 2. mysql -u root -p
-3. GRANT ALL PRIVILEGES ON *.* TO 'MathandelUser'@'localhost' IDENTIFIED BY 'MathandelRulez';
-4. quit
-5. mysql -u MathandelUser -p
-6. CREATE DATABASE dbMathandel;
-7. USE dbMathandel;
+3. CREATE DATABASE dbMathandel;
+4. CREATE DATABASE dbMathandelTest;
+5. CREATE USER 'MathandelUser'@'localhost' IDENTIFIED BY 'MathandelRulez';
+6. GRANT ALL ON dbMathandel.* TO 'MathandelUser'@'localhost';
+7. GRANT ALL ON dbMathandelTest.* TO 'MathandelUser'@'localhost';
