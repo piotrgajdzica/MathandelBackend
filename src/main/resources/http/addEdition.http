@@ -1,0 +1,8 @@
+POST http://localhost:8080/api/edition/add
+Content-Type: Application/Json
+//tutaj przekleic trzeba token ktory nam zwroci zapytanie signInAdmin
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTMyNTUzMjc1LCJleHAiOjE1MzMxNTgwNzV9.Rfspq6z58b_J1mbbD-jPKIfhlKB693LK_-Wsqxt161rTfsyAtocJbAl2NTYuZG8nXk2oUAl6aSCrB8mzgqcTUQ
+
+< addEdition.json
+
+###

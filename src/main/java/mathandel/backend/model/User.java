@@ -54,6 +54,12 @@ public class User extends DateAudit {
                 inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "participants",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "edition_id"))
+    private Set<Edition> editions = new HashSet<>();
+
     public User() {
     }
 
@@ -119,5 +125,13 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Edition> getEditions() {
+        return editions;
+    }
+
+    public void setEditions(Set<Edition> editions) {
+        this.editions = editions;
     }
 }
