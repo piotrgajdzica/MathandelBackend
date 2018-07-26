@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Kubster96/MathandelBackend.svg?branch=master)](https://travis-ci.org/Kubster96/MathandelBackend)
+[![Build Status](https://travis-ci.org/Kubster96/MathandelBackend.svg?branch=implementation%2Fedition)](https://travis-ci.org/Kubster96/MathandelBackend)
 
 # Mathandel Backend
 
