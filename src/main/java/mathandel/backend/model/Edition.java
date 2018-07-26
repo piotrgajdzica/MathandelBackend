@@ -1,5 +1,10 @@
 package mathandel.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import mathandel.backend.serializer.UserSerializer;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,12 +32,14 @@ public class Edition {
     @Size(max = 40)
     private String name;
 
+    @JsonSerialize(using=LocalDateSerializer.class)
     private LocalDate endDate;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "moderators",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIgnore
     private Set<User> moderators = new HashSet<>();
 
     public Edition() {

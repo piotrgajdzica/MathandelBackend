@@ -14,16 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/api/edition")
+@RequestMapping("/api/editions")
 public class EditionController {
 
     @Autowired
@@ -32,9 +31,9 @@ public class EditionController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping("/add")
+    @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> add(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditionRequest addEditionRequest){
+    public ResponseEntity<?> createEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditionRequest addEditionRequest){
 
         if (editionRepository.existsByName(addEditionRequest.getName())) {
             return new ResponseEntity<>(new ApiResponse(false, "Edition name already exists!"),
@@ -54,8 +53,22 @@ public class EditionController {
         editionRepository.save(edition);
         userRepository.save(user);
 
-
-
         return ResponseEntity.ok(new ApiResponse(true, "Edition added successfully"));
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getEditions(){
+
+        List<Edition> editions = editionRepository.findAll();
+        System.out.println(editions);
+
+        return ResponseEntity.ok(editions);
+    }
+
+//    @DeleteMapping("/{id}")
+
+
+
+
 }
