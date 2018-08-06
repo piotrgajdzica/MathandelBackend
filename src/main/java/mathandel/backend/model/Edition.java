@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import mathandel.backend.serializer.ModeratorsSerializer;
 import mathandel.backend.serializer.UserSerializer;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,17 +33,23 @@ public class Edition {
     @Size(max = 40)
     private String name;
 
-    @JsonSerialize(using=LocalDateSerializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate endDate;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "moderators",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonIgnore
+
+    @JsonSerialize(using = ModeratorsSerializer.class)
     private Set<User> moderators = new HashSet<>();
 
-    public Edition() {
+    public Edition() { }
+
+    public Edition(String name, LocalDate endDate, Set<User> moderators) {
+        this.name = name;
+        this.endDate = endDate;
+        this.moderators = moderators;
     }
 
     public Long getId() {

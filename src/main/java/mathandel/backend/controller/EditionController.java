@@ -9,6 +9,7 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
+import mathandel.backend.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,44 +32,22 @@ public class EditionController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EditionService editionService;
+
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> createEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditionRequest addEditionRequest){
+    public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditionRequest addEditionRequest){
 
-        if (editionRepository.existsByName(addEditionRequest.getName())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Edition name already exists!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        Set<User> moderators = new HashSet<>();
-        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new AppException("User doesn't exist."));
-        moderators.add(user);
-
-        Edition edition = new Edition();
-        edition.setName(addEditionRequest.getName());
-        edition.setEndDate(addEditionRequest.getEndDate());
-        edition.setModerators(moderators);
-        user.getEditions().add(edition);
-
-        editionRepository.save(edition);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new ApiResponse(true, "Edition added successfully"));
+        ApiResponse apiResponse = editionService.addEdition(addEditionRequest, currentUser.getId());
+        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getEditions(){
 
-        List<Edition> editions = editionRepository.findAll();
-        System.out.println(editions);
-
-        return ResponseEntity.ok(editions);
+        return ResponseEntity.ok(editionService.getEditions());
     }
-
-//    @DeleteMapping("/{id}")
-
-
-
 
 }
