@@ -42,7 +42,7 @@ public class AuthTests {
         signUpRequest.setEmail(email);
         signUpRequest.setPassword(password);
         signUpRequest.setUsername(username);
-        authController.registerUser(signUpRequest);
+        authController.signUp(signUpRequest);
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
         //then
