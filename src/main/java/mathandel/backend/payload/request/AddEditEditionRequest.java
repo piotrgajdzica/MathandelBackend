@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
-public class AddEditionRequest {
+public class AddEditEditionRequest {
 
     @NotBlank
     private String name;
@@ -13,7 +13,6 @@ public class AddEditionRequest {
     private LocalDate endDate;
 
     private Integer maxUsers;
-
 
     public String getName() {
         return name;

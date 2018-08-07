@@ -40,16 +40,19 @@ public class Edition {
     @JoinTable(name = "moderators",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-
     @JsonSerialize(using = ModeratorsSerializer.class)
     private Set<User> moderators = new HashSet<>();
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private EditionStatus editionStatus;
+
     public Edition() { }
 
-    public Edition(String name, LocalDate endDate, Set<User> moderators) {
+    public Edition(String name, LocalDate endDate, Set<User> moderators, EditionStatus editionStatus) {
         this.name = name;
         this.endDate = endDate;
         this.moderators = moderators;
+        this.editionStatus = editionStatus;
     }
 
     public Long getId() {
@@ -82,5 +85,13 @@ public class Edition {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public EditionStatus getEditionStatus() {
+        return editionStatus;
+    }
+
+    public void setEditionStatus(EditionStatus editionStatus) {
+        this.editionStatus = editionStatus;
     }
 }

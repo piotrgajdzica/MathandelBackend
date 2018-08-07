@@ -1,9 +1,8 @@
 package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.RoleName;
-import mathandel.backend.model.User;
+import mathandel.backend.model.*;
+import mathandel.backend.repository.EditionStatusRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,9 @@ public class DataLoaderComponent implements ApplicationRunner {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    EditionStatusRepository editionStatusRepository;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         for(RoleName roleName: RoleName.values()){
@@ -35,9 +37,14 @@ public class DataLoaderComponent implements ApplicationRunner {
             roleRepository.save(role);
         }
 
+        for(EditionStatusName editionStatusName: EditionStatusName.values()){
+            EditionStatus editionStatus = new EditionStatus();
+            editionStatus.setEditionStatusName(editionStatusName);
+            editionStatusRepository.save(editionStatus);
+        }
+
         RoleName roleName = RoleName.ROLE_ADMIN;
         roleRepository.findByName(roleName);
-
 
         User user = new User("admin", "admin", "admin", "admin@admin.admin", "admin");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
