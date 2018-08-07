@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/editions
+POST http://localhost:8080/api/editions/2/users
 Content-Type: Application/Json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTMzNjczODU3LCJleHAiOjE1MzQyNzg2NTd9.AMcj8U9WVgG1XAFjjehBMN4LkNXLlGS_QPdiDRRVCPZ3b1DHY90LBluowMQmZHyYacmSOUxryOP7OTBDQM3Pww
 

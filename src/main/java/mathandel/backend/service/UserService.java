@@ -1,7 +1,10 @@
 package mathandel.backend.service;
 
+import mathandel.backend.exception.AppException;
+import mathandel.backend.model.Edition;
 import mathandel.backend.model.User;
-import mathandel.backend.payload.request.SignUpRequest;
+import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,35 +13,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
+    EditionRepository editionRepository;
+
+    @Autowired
     UserRepository userRepository;
 
-    public ServiceResponse createUser(SignUpRequest signUpRequest) {
+    public ApiResponse joinEdition(Long userId, Long editionId){
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition doesn't exist."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
 
-        ServiceResponse serviceResponse = new ServiceResponse();
-
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            serviceResponse.setMessage("Email already in use");
-            serviceResponse.setSuccess(false);
-            return serviceResponse;
-        }
-
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            serviceResponse.setMessage("Username already in use");
-            serviceResponse.setSuccess(false);
-            return serviceResponse;
-        }
-
-        User user = new User();
-        user.setEmail(signUpRequest.getEmail());
-        user.setName(signUpRequest.getName());
-        user.setSurname(signUpRequest.getSurname());
-        user.setPassword(signUpRequest.getPassword());
-        user.setUsername(signUpRequest.getUsername());
-
+        user.getEditions().add(edition);
         userRepository.save(user);
 
-        serviceResponse.setSuccess(true);
-        serviceResponse.setMessage("User created successfully");
-        return serviceResponse;
+        return new ApiResponse(true, "User added to edition successfully");
     }
+
 }

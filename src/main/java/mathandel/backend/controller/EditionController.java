@@ -7,6 +7,7 @@ import mathandel.backend.repository.UserRepository;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.EditionService;
+import mathandel.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,9 @@ public class EditionController {
     @Autowired
     EditionService editionService;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest){
@@ -47,6 +51,13 @@ public class EditionController {
                                          @Valid @RequestBody AddEditEditionRequest addEditEditionRequest,
                                          @PathVariable("editionId") Long editionId){
         ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, currentUser.getId());
+        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @PostMapping("{editionId}/users")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> joinEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId){
+        ApiResponse apiResponse = userService.joinEdition(currentUser.getId(), editionId);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
