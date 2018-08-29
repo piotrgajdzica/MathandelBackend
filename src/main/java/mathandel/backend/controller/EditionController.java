@@ -2,13 +2,10 @@ package mathandel.backend.controller;
 
 import mathandel.backend.payload.request.AddEditEditionRequest;
 import mathandel.backend.payload.response.ApiResponse;
-import mathandel.backend.repository.EditionRepository;
-import mathandel.backend.repository.UserRepository;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.EditionService;
 import mathandel.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,28 +17,24 @@ import javax.validation.Valid;
 @RequestMapping("/api/editions")
 public class EditionController {
 
-    @Autowired
-    EditionRepository editionRepository;
+    private final EditionService editionService;
+    private final UserService userService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    EditionService editionService;
-
-    @Autowired
-    UserService userService;
+    public EditionController(EditionService editionService, UserService userService) {
+        this.editionService = editionService;
+        this.userService = userService;
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest){
+    public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest) {
         ApiResponse apiResponse = editionService.addEdition(addEditEditionRequest, currentUser.getId());
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getEditions(){
+    public ResponseEntity<?> getEditions() {
         return ResponseEntity.ok(editionService.getEditions());
     }
 
@@ -49,14 +42,14 @@ public class EditionController {
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> editEdition(@CurrentUser UserPrincipal currentUser,
                                          @Valid @RequestBody AddEditEditionRequest addEditEditionRequest,
-                                         @PathVariable("editionId") Long editionId){
+                                         @PathVariable("editionId") Long editionId) {
         ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, currentUser.getId());
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @PostMapping("{editionId}/users")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> joinEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId){
+    public ResponseEntity<?> joinEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId) {
         ApiResponse apiResponse = userService.joinEdition(currentUser.getId(), editionId);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }

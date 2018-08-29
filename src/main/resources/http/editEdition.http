@@ -1,6 +1,6 @@
-PUT http://localhost:8080/api/editions/2
+PUT http://localhost:8080/api/editions/3
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTMzNjY4NTg3LCJleHAiOjE1MzQyNzMzODd9.OETxJkoFc1o45u_9mk6J7mKGbgKZIxi4pnsAi9j3cRDH1KGy0IC0BAf4YEG2wS6xQyWqXGsyH2b5fMT1SNPLEQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM1NTU4ODkzLCJleHAiOjE1MzYxNjM2OTN9.co9W9LZ0RPLMXDiRj53IODUp4g1XH8nbjjD7EY1FL4iTB_f2cww7UgtCk6Zt0NUjq4pmD66jYxEcI0lB6lMObQ
 
 < editEdition.json
 

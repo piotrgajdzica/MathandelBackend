@@ -1,6 +1,7 @@
 package mathandel.backend.payload.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
@@ -9,7 +10,7 @@ public class AddEditEditionRequest {
     @NotBlank
     private String name;
 
-    @JsonDeserialize(using= com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)
+    @JsonDeserialize(using = com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer.class)
     private LocalDate endDate;
 
     private Integer maxUsers;

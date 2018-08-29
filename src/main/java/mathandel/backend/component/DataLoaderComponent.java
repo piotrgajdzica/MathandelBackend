@@ -5,7 +5,6 @@ import mathandel.backend.model.*;
 import mathandel.backend.repository.EditionStatusRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,27 +16,27 @@ import java.util.Set;
 @Component
 public class DataLoaderComponent implements ApplicationRunner {
 
-    @Autowired
-    RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EditionStatusRepository editionStatusRepository;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    EditionStatusRepository editionStatusRepository;
+    public DataLoaderComponent(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusRepository editionStatusRepository) {
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.editionStatusRepository = editionStatusRepository;
+    }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        for(RoleName roleName: RoleName.values()){
+    public void run(ApplicationArguments args) {
+        for (RoleName roleName : RoleName.values()) {
             Role role = new Role();
             role.setName(roleName);
             roleRepository.save(role);
         }
 
-        for(EditionStatusName editionStatusName: EditionStatusName.values()){
+        for (EditionStatusName editionStatusName : EditionStatusName.values()) {
             EditionStatus editionStatus = new EditionStatus();
             editionStatus.setEditionStatusName(editionStatusName);
             editionStatusRepository.save(editionStatus);

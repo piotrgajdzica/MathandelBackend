@@ -17,7 +17,8 @@ public class EditionStatus {
     @Column(length = 60)
     private EditionStatusName editionStatusName;
 
-    public EditionStatus() {}
+    public EditionStatus() {
+    }
 
     public EditionStatus(EditionStatusName editionStatusName) {
         this.editionStatusName = editionStatusName;

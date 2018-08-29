@@ -4,7 +4,6 @@ import mathandel.backend.payload.request.LoginRequest;
 import mathandel.backend.payload.request.SignUpRequest;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +16,11 @@ import javax.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final AuthService authService;
 
-    @Autowired
-    AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {

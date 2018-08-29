@@ -21,17 +21,18 @@ import java.util.Set;
 @Service
 public class EditionService {
 
-    @Autowired
-    EditionRepository editionRepository;
+    private final EditionRepository editionRepository;
+    private final EditionStatusRepository editionStatusRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    EditionStatusRepository editionStatusRepository;
+    public EditionService(EditionRepository editionRepository, EditionStatusRepository editionStatusRepository, UserRepository userRepository) {
+        this.editionRepository = editionRepository;
+        this.editionStatusRepository = editionStatusRepository;
+        this.userRepository = userRepository;
+    }
 
-    @Autowired
-    UserRepository userRepository;
 
-
-    public ApiResponse addEdition(AddEditEditionRequest addEditEditionRequest, Long userId){
+    public ApiResponse addEdition(AddEditEditionRequest addEditEditionRequest, Long userId) {
 
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
             return new ApiResponse(false, "Edition name already exists.");
@@ -51,18 +52,18 @@ public class EditionService {
         return new ApiResponse(true, "Edition added successfully");
     }
 
-    public ApiResponse editEdition(AddEditEditionRequest addEditEditionRequest, Long editionId, Long userId){
+    public ApiResponse editEdition(AddEditEditionRequest addEditEditionRequest, Long editionId, Long userId) {
 
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition doesn't exist."));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
 
-        if (!edition.getModerators().contains(user)){
+        if (!edition.getModerators().contains(user)) {
             return new ApiResponse(false, "You are not moderator of this edition.");
         }
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
             return new ApiResponse(false, "Edition name already exists.");
         }
-        if(addEditEditionRequest.getEndDate().isAfter(LocalDate.now())){
+        if (addEditEditionRequest.getEndDate().isAfter(LocalDate.now())) {
             return new ApiResponse(false, "Edition end date cannot be in the past.");
         }
 
@@ -73,7 +74,7 @@ public class EditionService {
         return new ApiResponse(true, "Edition edited successfully");
     }
 
-    public List<Edition> getEditions(){
+    public List<Edition> getEditions() {
         return editionRepository.findAll();
     }
 

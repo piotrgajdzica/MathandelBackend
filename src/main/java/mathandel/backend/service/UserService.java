@@ -6,19 +6,20 @@ import mathandel.backend.model.User;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    @Autowired
-    EditionRepository editionRepository;
+    private final EditionRepository editionRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    public UserService(EditionRepository editionRepository, UserRepository userRepository) {
+        this.editionRepository = editionRepository;
+        this.userRepository = userRepository;
+    }
 
-    public ApiResponse joinEdition(Long userId, Long editionId){
+    public ApiResponse joinEdition(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition doesn't exist."));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
 

@@ -1,6 +1,5 @@
 package mathandel.backend.model;
 
-
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -17,7 +16,8 @@ public class Role {
     @Column(length = 60)
     private RoleName name;
 
-    public Role() {}
+    public Role() {
+    }
 
     public Role(RoleName name) {
         this.name = name;
