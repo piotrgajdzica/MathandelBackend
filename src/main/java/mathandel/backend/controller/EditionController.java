@@ -53,5 +53,4 @@ public class EditionController {
         ApiResponse apiResponse = userService.joinEdition(currentUser.getId(), editionId);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
-
 }

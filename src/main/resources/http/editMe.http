@@ -1,0 +1,7 @@
+PUT http://localhost:8080/api/users/me
+Content-Type: Application/Json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTM1NTY3MTU4LCJleHAiOjE1MzYxNzE5NTh9.TGa39xuOJFlzcuo5j9F6Ai49qXT4x6R8XqfuMStcGdqNr_zWY74rKfXVD_QLSdx7MP0u4supl30AisDFUURq0g
+
+< editMe.json
+
+###
