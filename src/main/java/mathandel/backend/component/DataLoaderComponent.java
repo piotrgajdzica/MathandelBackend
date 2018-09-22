@@ -62,6 +62,8 @@ public class DataLoaderComponent implements ApplicationRunner {
         user.setRoles(roles);
 
         userRepository.save(user);
+
+        // todo zaladowac requesty
     }
 }
 

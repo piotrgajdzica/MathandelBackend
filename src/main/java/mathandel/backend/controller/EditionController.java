@@ -32,6 +32,7 @@ public class EditionController {
     @Autowired
     UserService userService;
 
+    //addEditEditionRequest  nie oop!!!!
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest){
