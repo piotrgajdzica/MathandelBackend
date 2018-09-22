@@ -1,8 +1,5 @@
 package mathandel.backend.model;
 
-
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +14,7 @@ public class ModeratorRequest {
     @Column(length = 300)
     private String reason;
 
+    @ManyToOne(cascade = CascadeType.ALL)
     private ModeratorRequestStatus moderatorRequestStatus;
 
     public ModeratorRequest() {}
