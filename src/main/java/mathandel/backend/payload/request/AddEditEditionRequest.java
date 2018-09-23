@@ -19,23 +19,26 @@ public class AddEditEditionRequest {
         return name;
     }
 
-    public void setName(String name) {
+    public AddEditEditionRequest setName(String name) {
         this.name = name;
-    }
-
-    public Integer getMaxUsers() {
-        return maxUsers;
-    }
-
-    public void setMaxUsers(Integer maxUsers) {
-        this.maxUsers = maxUsers;
+        return this;
     }
 
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public AddEditEditionRequest setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+        return this;
+    }
+
+    public Integer getMaxUsers() {
+        return maxUsers;
+    }
+
+    public AddEditEditionRequest setMaxUsers(Integer maxUsers) {
+        this.maxUsers = maxUsers;
+        return this;
     }
 }

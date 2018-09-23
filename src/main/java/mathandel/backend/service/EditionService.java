@@ -31,13 +31,18 @@ public class EditionService {
         this.userRepository = userRepository;
     }
 
-    public ApiResponse addEdition(AddEditEditionRequest addEditEditionRequest, Long userId) {
+    public ApiResponse createEdition(AddEditEditionRequest addEditEditionRequest, String userName) {
 
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
             return new ApiResponse(false, "Edition name already exists.");
         }
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        User user = userRepository.findByUsername(userName);
+
+        if(user == null){
+            throw new AppException("User doesn't exist.");
+        }
+
         Set<User> moderators = new HashSet<>();
         moderators.add(user);
 
