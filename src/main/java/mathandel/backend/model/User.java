@@ -1,8 +1,5 @@
 package mathandel.backend.model;
 
-import mathandel.backend.model.audit.DateAudit;
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +16,7 @@ import java.util.Set;
                 "email"
         })
 })
-public class User extends DateAudit {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

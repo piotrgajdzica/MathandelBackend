@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/users/me
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM1NTU4ODkzLCJleHAiOjE1MzYxNjM2OTN9.co9W9LZ0RPLMXDiRj53IODUp4g1XH8nbjjD7EY1FL4iTB_f2cww7UgtCk6Zt0NUjq4pmD66jYxEcI0lB6lMObQ
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTM3NzA4NDE1LCJleHAiOjE1MzgzMTMyMTV9.FcuGUZAqZAa23j7s2U2BInVB5YQVOR-OjOFd0Pbd6yD78toNPwUqwkfYBfS4EH4Puu9dBLJ46pDbPDZIkE8JeA
 
 ###

@@ -30,21 +30,12 @@ public class DataLoaderComponent implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        for (RoleName roleName : RoleName.values()) {
-            Role role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
-        }
+        insertRolesToDB();
+        insertEditionsToDB();
+        insertAdminToDB();
+    }
 
-        for (EditionStatusName editionStatusName : EditionStatusName.values()) {
-            EditionStatus editionStatus = new EditionStatus();
-            editionStatus.setEditionStatusName(editionStatusName);
-            editionStatusRepository.save(editionStatus);
-        }
-
-        RoleName roleName = RoleName.ROLE_ADMIN;
-        roleRepository.findByName(roleName);
-
+    private void insertAdminToDB() {
         User user = new User("admin", "admin", "admin", "admin@admin.admin", "admin");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
@@ -61,6 +52,22 @@ public class DataLoaderComponent implements ApplicationRunner {
         user.setRoles(roles);
 
         userRepository.save(user);
+    }
+
+    private void insertEditionsToDB() {
+        for (EditionStatusName editionStatusName : EditionStatusName.values()) {
+            EditionStatus editionStatus = new EditionStatus();
+            editionStatus.setEditionStatusName(editionStatusName);
+            editionStatusRepository.save(editionStatus);
+        }
+    }
+
+    private void insertRolesToDB() {
+        for (RoleName roleName : RoleName.values()) {
+            Role role = new Role();
+            role.setName(roleName);
+            roleRepository.save(role);
+        }
     }
 }
 

@@ -2,30 +2,26 @@ package mathandel.backend.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import mathandel.backend.model.User;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
     private Long id;
-
     private String name;
-
     private String surname;
-
     private String username;
-
     @JsonIgnore
     private String email;
-
     @JsonIgnore
     private String password;
-
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Long id, String name, String surname, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -108,13 +104,47 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         UserPrincipal that = (UserPrincipal) o;
-        return Objects.equals(id, that.id);
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(surname, that.surname)
+                .append(username, that.username)
+                .append(email, that.email)
+                .append(password, that.password)
+                .append(authorities, that.authorities)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .append(surname)
+                .append(username)
+                .append(email)
+                .append(password)
+                .append(authorities)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("surname", surname)
+                .append("username", username)
+                .append("email", email)
+                .append("password", password)
+                .append("authorities", authorities)
+                .toString();
     }
 }

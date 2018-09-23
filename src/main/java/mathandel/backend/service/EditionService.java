@@ -31,7 +31,6 @@ public class EditionService {
         this.userRepository = userRepository;
     }
 
-
     public ApiResponse addEdition(AddEditEditionRequest addEditEditionRequest, Long userId) {
 
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
