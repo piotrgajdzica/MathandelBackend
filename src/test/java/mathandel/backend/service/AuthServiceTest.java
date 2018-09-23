@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -27,19 +29,20 @@ public class AuthServiceTest {
     public void shouldCreateUser() {
 
         //given
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setName("Kubster");
-        signUpRequest.setSurname("Jakubster");
-        signUpRequest.setEmail("kubsterJakubster@gmail.com");
-        signUpRequest.setPassword("rerekumkum");
-        signUpRequest.setUsername("kubster96");
+        SignUpRequest signUpRequest = new SignUpRequest()
+                .setName("Kubster")
+                .setSurname("Jakubster")
+                .setEmail("kubsterJakubster@gmail.com")
+                .setPassword("rerekumkum")
+                .setUsername("kubster96");
 
         //when
         authController.signUp(signUpRequest);
-        User user = userRepository.findByEmail("kubsterJakubster@gmail.com");
+        Optional<User> optionalUser = userRepository.findByEmail("kubsterJakubster@gmail.com");
 
         //then
-        if (user != null) {
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             Assert.assertEquals(user.getName(), "Kubster");
             Assert.assertEquals(user.getSurname(), "Jakubster");
             Assert.assertEquals(user.getEmail(), "kubsterJakubster@gmail.com");

@@ -28,7 +28,7 @@ public class EditionController {
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest) {
-        ApiResponse apiResponse = editionService.createEdition(addEditEditionRequest, currentUser.getUsername());
+        ApiResponse apiResponse = editionService.createEdition(addEditEditionRequest, currentUser.getId());
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 

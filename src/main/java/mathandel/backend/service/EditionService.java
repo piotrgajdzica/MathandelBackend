@@ -31,17 +31,16 @@ public class EditionService {
         this.userRepository = userRepository;
     }
 
-    public ApiResponse createEdition(AddEditEditionRequest addEditEditionRequest, String userName) {
+    public ApiResponse createEdition(AddEditEditionRequest addEditEditionRequest, Long userId) {
 
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
-            return new ApiResponse(false, "Edition name already exists.");
+            return new ApiResponse(false, "Edition name already exists");
+        }
+        if (addEditEditionRequest.getEndDate().isAfter(LocalDate.now())) {
+            return new ApiResponse(false, "Edition end date cannot be in the past");
         }
 
-        User user = userRepository.findByUsername(userName);
-
-        if(user == null){
-            throw new AppException("User doesn't exist.");
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         Set<User> moderators = new HashSet<>();
         moderators.add(user);
@@ -58,17 +57,17 @@ public class EditionService {
 
     public ApiResponse editEdition(AddEditEditionRequest addEditEditionRequest, Long editionId, Long userId) {
 
-        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition doesn't exist."));
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition doesn't exist"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         if (!edition.getModerators().contains(user)) {
-            return new ApiResponse(false, "You are not moderator of this edition.");
+            return new ApiResponse(false, "You are not moderator of this edition");
         }
         if (editionRepository.existsByName(addEditEditionRequest.getName())) {
-            return new ApiResponse(false, "Edition name already exists.");
+            return new ApiResponse(false, "Edition name already exists");
         }
-        if (addEditEditionRequest.getEndDate().isAfter(LocalDate.now())) {
-            return new ApiResponse(false, "Edition end date cannot be in the past.");
+        if (addEditEditionRequest.getEndDate().isBefore(LocalDate.now())) {
+            return new ApiResponse(false, "Edition end date cannot be in the past");
         }
 
         edition.setName(addEditEditionRequest.getName());

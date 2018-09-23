@@ -31,39 +31,44 @@ public class SignUpRequest {
         return name;
     }
 
-    public void setName(String name) {
+    public SignUpRequest setName(String name) {
         this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        return this;
     }
 
     public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public SignUpRequest setSurname(String surname) {
         this.surname = surname;
+        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public SignUpRequest setUsername(String username) {
+        this.username = username;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public SignUpRequest setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public SignUpRequest setPassword(String password) {
+        this.password = password;
+        return this;
     }
 }
