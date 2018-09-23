@@ -1,5 +1,6 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.payload.request.ChangePasswordRequest;
 import mathandel.backend.payload.request.EditMeRequest;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
@@ -27,13 +28,22 @@ public class UserController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getMe(@CurrentUser UserPrincipal currentUser) {
         return ResponseEntity.ok(userService.getMe(currentUser.getId()));
     }
 
     @PutMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> editMe(@CurrentUser UserPrincipal userPrincipal, @RequestBody EditMeRequest editMeRequest){
         ApiResponse apiResponse = userService.editMe(userPrincipal.getId(), editMeRequest);
+        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @PutMapping("/me/password")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> changePassword(@CurrentUser UserPrincipal userPrincipal, @RequestBody ChangePasswordRequest changePasswordRequest){
+        ApiResponse apiResponse = userService.changePassword(userPrincipal.getId(), changePasswordRequest.getNewPassword());
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 }
