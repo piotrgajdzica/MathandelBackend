@@ -1,47 +1,33 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.ModeratorRequest;
-import mathandel.backend.model.User;
 import mathandel.backend.payload.request.ModeratorRequestReasonRequest;
 import mathandel.backend.payload.request.ModeratorRequestStatusChangeRequest;
-import mathandel.backend.repository.ModeratorRequestsRepository;
-import mathandel.backend.repository.UserRepository;
+import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
+import mathandel.backend.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/moderator-requests")
 public class RoleController {
 
-    ModeratorRequestsRepository moderatorRequestsRepository;
+    @Autowired
+    RoleService roleService;
 
-    UserRepository userRepository;
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> requestModerator(@CurrentUser UserPrincipal currentUser,
                                               @Valid @RequestBody ModeratorRequestReasonRequest reason) {
-        Optional<User> userOptional =userRepository.findById(currentUser.getId());
-
-        if(!userOptional.isPresent()) {
-
-            ModeratorRequest moderatorRequest = new ModeratorRequest();
-//            moderatorRequest.s
-
-//            moderatorRequestsRepository.save();
-        }
-        // sprawdzic czy juz nie ma requestu
-        // dodac
-        // todo
-        return null;
-
+        ApiResponse apiResponse = roleService.requestModerator(reason, currentUser.getId());
+        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @GetMapping

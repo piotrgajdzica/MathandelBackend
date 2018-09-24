@@ -24,7 +24,7 @@ public class EditionController {
     EditionRepository editionRepository;
 
     @Autowired
-    UserRepository userRepository;
+    UserRepository userRepository; // po co to i to wyzej???
 
     @Autowired
     EditionService editionService;
