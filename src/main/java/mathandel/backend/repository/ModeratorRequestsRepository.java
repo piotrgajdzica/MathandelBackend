@@ -1,10 +1,13 @@
 package mathandel.backend.repository;
 
 import mathandel.backend.model.ModeratorRequest;
+import mathandel.backend.model.ModeratorRequestStatus;
+import mathandel.backend.model.ModeratorRequestStatusName;
 import mathandel.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,5 +15,7 @@ public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequ
 
     // save juz jest
     Optional<ModeratorRequest> findByUser(User user);
+
+    List<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
 
 }

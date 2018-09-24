@@ -3,19 +3,20 @@ package mathandel.backend.payload.request;
 import mathandel.backend.model.ModeratorRequestStatus;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class ModeratorRequestStatusChangeRequest {
     @NotBlank
-    private Long userId;
+    private List<Long> userIds;
 
     private ModeratorRequestStatus moderatorRequestStatus;
 
-    public Long getUserId() {
-        return userId;
+    public List<Long> getUserIds() {
+        return userIds;
     }
 
-    public ModeratorRequestStatusChangeRequest setUserId(Long userId) {
-        this.userId = userId;
+    public ModeratorRequestStatusChangeRequest setUserIds(List<Long> userIds) {
+        this.userIds = userIds;
         return this;
     }
 

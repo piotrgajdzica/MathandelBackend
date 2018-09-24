@@ -32,10 +32,8 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getModeratorRequests() {
-        //  wyciagnac requesty z bazy, zwrocic
-        // todo
-        return null;
+    public ResponseEntity<?> getModeratorRequests(@CurrentUser UserPrincipal currentUser) {
+        return  ResponseEntity.ok(roleService.getModeratorRequests());
     }
 
     @PutMapping

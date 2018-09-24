@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,18 +26,17 @@ public class RoleService {
     @Autowired
     UserRepository userRepository;
 
-    public ApiResponse requestModerator(@Valid ModeratorRequestReasonRequest reason, Long id) {
+    public ApiResponse requestModerator(@Valid ModeratorRequestReasonRequest reason, Long userId) {
         ApiResponse apiResponse;
 
-        Optional<User> optUser = userRepository.findById(id);
+        Optional<User> optUser = userRepository.findById(userId);
 
-        if (optUser.isPresent() &&
-                optUser.get().getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ROLE_MODERATOR)))
+        if (optUser.isPresent() && hasRole(RoleName.ROLE_MODERATOR, optUser.get()))
             return new ApiResponse(false, "Role already given");
 
         Optional<ModeratorRequest> optModeeratorRequest = moderatorRequestsRepository.findByUser(optUser.get());
 
-        if(optModeeratorRequest.isPresent())
+        if (optModeeratorRequest.isPresent())
             return new ApiResponse(false, "Request already submitted");
 
         ModeratorRequest moderatorRequest = new ModeratorRequest();
@@ -52,4 +52,13 @@ public class RoleService {
         return new ApiResponse(true, "Request submitted");
     }
 
+    public List<ModeratorRequest> getModeratorRequests() {
+        return  moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING);
+    }
+
+
+
+    private boolean hasRole(RoleName roleName, User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(roleName));
+    }
 }
