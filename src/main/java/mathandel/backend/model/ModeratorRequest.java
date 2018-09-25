@@ -17,37 +17,42 @@ public class ModeratorRequest {
     @ManyToOne(cascade = CascadeType.ALL)
     private ModeratorRequestStatus moderatorRequestStatus;
 
-    public ModeratorRequest() {}
+    public ModeratorRequest() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public ModeratorRequest setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public ModeratorRequest setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public String getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public ModeratorRequest setReason(String reason) {
         this.reason = reason;
+        return this;
     }
 
     public ModeratorRequestStatus getModeratorRequestStatus() {
         return moderatorRequestStatus;
     }
 
-    public void setModeratorRequestStatus(ModeratorRequestStatus moderatorRequestStatus) {
+    public ModeratorRequest setModeratorRequestStatus(ModeratorRequestStatus moderatorRequestStatus) {
         this.moderatorRequestStatus = moderatorRequestStatus;
+        return this;
     }
 }
