@@ -51,11 +51,11 @@ public class AuthService {
     public ApiResponse signUp(SignUpRequest signUpRequest) {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ApiResponse(false, "Username is already taken!");
+            return new ApiResponse(false, "Username is already taken.");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ApiResponse(false, "Email Address already in use!");
+            return new ApiResponse(false, "Email Address already in use.");
         }
 
         User user = new User(

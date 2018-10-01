@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping("/{userID}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getUser(@PathVariable("userID") String userID) {
+    public ResponseEntity<?> getUser(@PathVariable("userID") Long userID) {
         return ResponseEntity.ok(userService.getUser(userID));
     }
 

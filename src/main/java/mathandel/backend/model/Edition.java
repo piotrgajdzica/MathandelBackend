@@ -54,39 +54,44 @@ public class Edition {
         return id;
     }
 
-    public void setId(Long id) {
+    public Edition setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public Edition setName(String name) {
         this.name = name;
-    }
-
-    public Set<User> getModerators() {
-        return moderators;
-    }
-
-    public void setModerators(Set<User> moderators) {
-        this.moderators = moderators;
+        return this;
     }
 
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public Edition setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+        return this;
+    }
+
+    public Set<User> getModerators() {
+        return moderators;
+    }
+
+    public Edition setModerators(Set<User> moderators) {
+        this.moderators = moderators;
+        return this;
     }
 
     public EditionStatus getEditionStatus() {
         return editionStatus;
     }
 
-    public void setEditionStatus(EditionStatus editionStatus) {
+    public Edition setEditionStatus(EditionStatus editionStatus) {
         this.editionStatus = editionStatus;
+        return this;
     }
 }

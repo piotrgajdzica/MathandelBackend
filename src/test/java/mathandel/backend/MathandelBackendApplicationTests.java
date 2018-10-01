@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("test")
 public class MathandelBackendApplicationTests {
 
+    //todo integration tests to all classes
     @Test
     public void contextLoads() {
     }

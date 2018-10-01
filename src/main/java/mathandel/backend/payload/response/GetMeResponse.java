@@ -2,6 +2,8 @@ package mathandel.backend.payload.response;
 
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.Role;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Set;
 
@@ -66,5 +68,39 @@ public class GetMeResponse {
     public GetMeResponse setEditions(Set<Edition> editions) {
         this.editions = editions;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GetMeResponse that = (GetMeResponse) o;
+
+        return new EqualsBuilder()
+                .append(name, that.name)
+                .append(surname, that.surname)
+                .append(username, that.username)
+                .append(email, that.email)
+                .append(roles, that.roles)
+                .append(editions, that.editions)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(name)
+                .append(surname)
+                .append(username)
+                .append(email)
+                .append(roles)
+                .append(editions)
+                .toHashCode();
     }
 }

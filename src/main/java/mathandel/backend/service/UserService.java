@@ -38,8 +38,8 @@ public class UserService {
         return new ApiResponse(true, "User added to edition successfully");
     }
 
-    public GetUserResponse getUser(String userID) {
-        Optional<User> optionalUser = userRepository.findById(Long.valueOf(userID));
+    public GetUserResponse getUser(Long userID) {
+        Optional<User> optionalUser = userRepository.findById(userID);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
@@ -71,6 +71,7 @@ public class UserService {
         }
     }
 
+    //todo not tested
     public ApiResponse editMe(Long userId, EditMeRequest editMeRequest) {
 
         Optional<User> optionalUser = userRepository.findById(userId);
@@ -97,6 +98,7 @@ public class UserService {
         return new ApiResponse(false, "User doesn't exist in database");
     }
 
+    //todo not tested
     public ApiResponse changePassword(Long userId, String newPassword) {
 
         Optional<User> optionalUser = userRepository.findById(userId);

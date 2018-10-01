@@ -1,52 +1,111 @@
 package mathandel.backend.service;
 
-import mathandel.backend.controller.AuthController;
-import mathandel.backend.model.User;
+import mathandel.backend.component.DataLoaderComponent;
+import mathandel.backend.exception.AppException;
+import mathandel.backend.model.Role;
+import mathandel.backend.model.RoleName;
 import mathandel.backend.payload.request.SignUpRequest;
+import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.repository.EditionRepository;
+import mathandel.backend.repository.EditionStatusRepository;
+import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 public class AuthServiceTest {
 
-    @Autowired
-    AuthController authController;
+    private SignUpRequest signUpRequest = new SignUpRequest()
+            .setUsername("username")
+            .setEmail("email@email.com")
+            .setName("name")
+            .setSurname("surname")
+            .setPassword("password");
 
-    @Autowired
+    @MockBean
     UserRepository userRepository;
 
-    @Test
-    public void shouldCreateUser() {
+    @MockBean
+    EditionStatusRepository editionStatusRepository;
 
+    @MockBean
+    EditionRepository editionRepository;
+
+    @MockBean
+    RoleRepository roleRepository;
+
+    @Autowired
+    AuthService authService;
+
+    @MockBean
+    DataLoaderComponent dataLoaderComponent;
+
+    @Test
+    public void shouldSignUp() {
         //given
-        SignUpRequest signUpRequest = new SignUpRequest()
-                .setName("Kubster")
-                .setSurname("Jakubster")
-                .setEmail("kubsterJakubster@gmail.com")
-                .setPassword("rerekumkum")
-                .setUsername("kubster96");
+        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(new Role().setName(RoleName.ROLE_USER)));
 
         //when
-        authController.signUp(signUpRequest);
-        Optional<User> optionalUser = userRepository.findByEmail("kubsterJakubster@gmail.com");
+        ApiResponse apiResponse = authService.signUp(signUpRequest);
 
         //then
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            Assert.assertEquals(user.getName(), "Kubster");
-            Assert.assertEquals(user.getSurname(), "Jakubster");
-            Assert.assertEquals(user.getEmail(), "kubsterJakubster@gmail.com");
-            Assert.assertEquals(user.getUsername(), "kubster96");
-        }
+        assertThat(apiResponse.getSuccess()).isTrue();
+        assertThat(apiResponse.getMessage()).isEqualTo("User registered successfully");
+    }
+
+    @Test
+    public void shouldThrowAppException() {
+        //given
+        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.empty());
+        //when then
+        AppException appException = assertThrows(AppException.class, () -> authService.signUp(signUpRequest));
+        assertThat(appException.getMessage()).isEqualTo(("User Role not set."));
+    }
+
+    @Test
+    public void shouldAlreadyExistsByEmail() {
+        //given
+        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);
+
+        //when
+        ApiResponse apiResponse = authService.signUp(signUpRequest);
+
+        //then
+        assertThat(apiResponse.getSuccess()).isFalse();
+        assertThat(apiResponse.getMessage()).isEqualTo("Email Address already in use.");
+
+    }
+
+    @Test
+    public void shouldAlreadyExistsByUsername() {
+        //given
+        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(true);
+
+        //when
+        ApiResponse apiResponse = authService.signUp(signUpRequest);
+
+        //then
+        assertThat(apiResponse.getSuccess()).isFalse();
+        assertThat(apiResponse.getMessage()).isEqualTo("Username is already taken.");
+
     }
 }

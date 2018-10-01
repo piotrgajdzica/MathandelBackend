@@ -83,7 +83,7 @@ public class EditionServiceTest {
     }
 
     @Test
-    public void shouldReturnWhenCreateEditionAlreadyExists() {
+    public void shouldFailCreateEditionAlreadyExists() {
         // given
         when(editionRepository.existsByName(addEditEditionRequest.getName())).thenReturn(true);
 
@@ -118,7 +118,7 @@ public class EditionServiceTest {
     }
 
     @Test
-    public void shouldReturnModeratorErrorResponse() {
+    public void shouldFailModeratorErrorResponse() {
         // given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));

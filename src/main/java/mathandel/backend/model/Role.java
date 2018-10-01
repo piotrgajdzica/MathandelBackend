@@ -19,23 +19,21 @@ public class Role {
     public Role() {
     }
 
-    public Role(RoleName name) {
-        this.name = name;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Role setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public RoleName getName() {
         return name;
     }
 
-    public void setName(RoleName name) {
+    public Role setName(RoleName name) {
         this.name = name;
+        return this;
     }
 }
