@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+//todo it tests
 @Service
 public class UserService {
 
@@ -71,44 +72,30 @@ public class UserService {
         }
     }
 
-    //todo not tested
     public ApiResponse editMe(Long userId, EditMeRequest editMeRequest) {
 
-        Optional<User> optionalUser = userRepository.findById(userId);
-
         if (userRepository.existsByUsername(editMeRequest.getUsername())) {
-            return new ApiResponse(false, "Username is already taken");
+            return new ApiResponse(false, "Username is already taken.");
         }
 
         if (userRepository.existsByEmail(editMeRequest.getEmail())) {
-            return new ApiResponse(false, "Email Address already in use");
+            return new ApiResponse(false, "Email Address already in use.");
         }
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setName(editMeRequest.getName());
-            user.setSurname(editMeRequest.getSurname());
-            user.setUsername(editMeRequest.getUsername());
-            user.setEmail(editMeRequest.getEmail());
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist."))
+                .setName(editMeRequest.getName())
+                .setSurname(editMeRequest.getSurname())
+                .setUsername(editMeRequest.getUsername())
+                .setEmail(editMeRequest.getEmail());
 
-            userRepository.save(user);
-            return new ApiResponse(true, "Successfully edited user");
-        }
-
-        return new ApiResponse(false, "User doesn't exist in database");
+        userRepository.save(user);
+        return new ApiResponse(true, "Successfully edited user.");
     }
 
-    //todo not tested
     public ApiResponse changePassword(Long userId, String newPassword) {
-
-        Optional<User> optionalUser = userRepository.findById(userId);
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return new ApiResponse(true, "Password changed successfully");
-        }
-        return new ApiResponse(false, "User doesn't exist in database");
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist."));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return new ApiResponse(true, "Password changed successfully.");
     }
 }

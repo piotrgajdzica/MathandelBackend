@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+//todo it tests
 @Service
 public class AuthService {
 
