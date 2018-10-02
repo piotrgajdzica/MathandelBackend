@@ -2,6 +2,7 @@ package mathandel.backend.model;
 
 import javax.persistence.*;
 
+//todo add url or urls with images
 @Entity
 public class Product {
 
@@ -12,8 +13,6 @@ public class Product {
     private String name;
 
     private String description;
-
-    private String photoUrl;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
@@ -48,15 +47,6 @@ public class Product {
 
     public Product setDescription(String description) {
         this.description = description;
-        return this;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public Product setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
         return this;
     }
 
