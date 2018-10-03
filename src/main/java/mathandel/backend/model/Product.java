@@ -1,5 +1,10 @@
 package mathandel.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import mathandel.backend.serializer.OwnerSerializer;
+
 import javax.persistence.*;
 
 //todo add url or urls with images
@@ -15,9 +20,12 @@ public class Product {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonSerialize(using = OwnerSerializer.class)
+    @JsonProperty(value = "userId")
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private Edition edition;
 
     public Product() {

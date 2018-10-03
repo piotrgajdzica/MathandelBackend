@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/products
+Content-Type: Application/Json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNTM4NTkzNjQxLCJleHAiOjE1MzkxOTg0NDF9.1l8FoccAinPmiIOVZOnH8OFY8HXhLVYuus2h0B1xg4kEv12KBpn3W4KWWt_UrB8NZVrjb1LgNvSjXVnyxz18iA
+
+< createProduct.json
+
+###

@@ -20,16 +20,17 @@ public class ProductController {
         this.productService = productService;
     }
 
+    //todo maybe return productID
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createProduct(@CurrentUser UserPrincipal user, CreateEditProductRequest createEditProductRequest) {
+    public ResponseEntity<?> createProduct(@CurrentUser UserPrincipal user, @RequestBody CreateEditProductRequest createEditProductRequest) {
         ApiResponse apiResponse = productService.createProduct(user.getId(), createEditProductRequest);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @PutMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> editProduct(@CurrentUser UserPrincipal user, CreateEditProductRequest createEditProductRequest, @PathVariable Long productId) {
+    public ResponseEntity<?> editProduct(@CurrentUser UserPrincipal user, @RequestBody CreateEditProductRequest createEditProductRequest, @PathVariable Long productId) {
         ApiResponse apiResponse = productService.editProduct(user.getId(), createEditProductRequest, productId);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
@@ -39,4 +40,11 @@ public class ProductController {
     public ResponseEntity<?> getProduct(@PathVariable Long productId) {
         return ResponseEntity.ok(productService.getProduct(productId));
     }
+
+    @GetMapping("/not_assigned")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
+        return ResponseEntity.ok(productService.getNotAssignedProducts(current.getId()));
+    }
+
 }

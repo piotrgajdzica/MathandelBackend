@@ -1,9 +1,5 @@
-POST http://localhost:8080/api/editions
+GET http://localhost:8080/api/products/2
 Content-Type: Application/Json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM4NTg1NjYzLCJleHAiOjE1MzkxOTA0NjN9.FSoUELj6h8tEqbYP898w2JdTX1_isqfmiZ0EQV6ulLsr7rwak9tIKX7a7B7vKCb2VWTbmjL3y0KNwCYCozU_tw
 
-< addEdition.json
-
 ###
-   #
-   ####
