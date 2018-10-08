@@ -1,8 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.payload.request.AddEditEditionRequest;
-import mathandel.backend.payload.request.AssignProductRequest;
-import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.client.request.EditionDataRequest;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.EditionService;
@@ -14,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static mathandel.backend.utils.ResponseCreator.createResponse;
 
 @Controller
 @RequestMapping("/api/editions")
@@ -31,9 +31,8 @@ public class EditionController {
 
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> addEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody AddEditEditionRequest addEditEditionRequest) {
-        ApiResponse apiResponse = editionService.createEdition(addEditEditionRequest, currentUser.getId());
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+    public ResponseEntity<?> createEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody EditionDataRequest editionDataRequest) {
+        return createResponse(editionService.createEdition(editionDataRequest, currentUser.getId()));
     }
 
     @GetMapping
@@ -45,35 +44,32 @@ public class EditionController {
     @PutMapping("{editionId}")
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> editEdition(@CurrentUser UserPrincipal currentUser,
-                                         @Valid @RequestBody AddEditEditionRequest addEditEditionRequest,
+                                         @Valid @RequestBody EditionDataRequest editionDataRequest,
                                          @PathVariable("editionId") Long editionId) {
-        ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, currentUser.getId());
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+        return createResponse(editionService.editEdition(editionDataRequest, editionId, currentUser.getId()));
     }
 
     @PostMapping("{editionId}/users")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> joinEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId) {
-        ApiResponse apiResponse = userService.joinEdition(currentUser.getId(), editionId);
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+        return createResponse(userService.joinEdition(currentUser.getId(), editionId));
     }
 
-    @PostMapping("{editionId}/products")
+    @PutMapping("{editionId}/products/{productId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> assignProductToEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId, @RequestBody AssignProductRequest assignProductRequest) {
-        ApiResponse apiResponse = productService.assignProductToEdition(currentUser.getId(), editionId, assignProductRequest.getProductId());
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+    public ResponseEntity<?> assignProductToEdition(@CurrentUser UserPrincipal currentUser, @PathVariable("editionId") Long editionId, @PathVariable Long productId) {
+        return createResponse(productService.assignProductToEdition(currentUser.getId(), editionId, productId));
     }
 
     @GetMapping("{editionId}/products")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getOthersProducts(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
-        return ResponseEntity.ok(productService.getOthersProductsFromEdition(currentUser.getId(), editionId));
+    public ResponseEntity<?> getProductsFromEdition(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
+        return ResponseEntity.ok(productService.getProductsFromEdition(currentUser.getId(), editionId));
     }
 
     @GetMapping("{editionId}/products/my")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getMyProducts(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
+    public ResponseEntity<?> getMyProductsFromEdition(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
         return ResponseEntity.ok(productService.getMyProductsFromEdition(currentUser.getId(), editionId));
     }
 

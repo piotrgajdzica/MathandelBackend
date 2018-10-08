@@ -1,5 +1,7 @@
 package mathandel.backend.model;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -32,11 +34,13 @@ public class User {
 
     @NotBlank
     @Size(max = 15)
+    @NaturalId
     private String username;
 
     @NotBlank
     @Size(max = 40)
     @Email
+    @NaturalId
     private String email;
 
     @NotBlank
@@ -48,12 +52,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "participants",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "edition_id"))
-    private Set<Edition> editions = new HashSet<>();
 
     public User() {
     }
@@ -128,15 +126,4 @@ public class User {
         this.roles = roles;
         return this;
     }
-
-    public Set<Edition> getEditions() {
-        return editions;
-    }
-
-    public User setEditions(Set<Edition> editions) {
-        this.editions = editions;
-        return this;
-    }
-
-
 }

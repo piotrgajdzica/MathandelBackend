@@ -1,7 +1,7 @@
 package mathandel.backend.repository;
 
 import mathandel.backend.model.Role;
-import mathandel.backend.model.RoleName;
+import mathandel.backend.model.enums.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

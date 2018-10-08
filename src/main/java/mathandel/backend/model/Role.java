@@ -1,5 +1,6 @@
 package mathandel.backend.model;
 
+import mathandel.backend.model.enums.RoleName;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;

@@ -1,10 +1,10 @@
-package mathandel.backend.payload.request;
+package mathandel.backend.client.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class EditMeRequest {
+public class UserDataRequest {
 
     @NotBlank
     @Size(min = 4, max = 40)
@@ -27,7 +27,7 @@ public class EditMeRequest {
         return name;
     }
 
-    public EditMeRequest setName(String name) {
+    public UserDataRequest setName(String name) {
         this.name = name;
         return this;
     }
@@ -36,7 +36,7 @@ public class EditMeRequest {
         return surname;
     }
 
-    public EditMeRequest setSurname(String surname) {
+    public UserDataRequest setSurname(String surname) {
         this.surname = surname;
         return this;
     }
@@ -45,7 +45,7 @@ public class EditMeRequest {
         return username;
     }
 
-    public EditMeRequest setUsername(String username) {
+    public UserDataRequest setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -54,7 +54,7 @@ public class EditMeRequest {
         return email;
     }
 
-    public EditMeRequest setEmail(String email) {
+    public UserDataRequest setEmail(String email) {
         this.email = email;
         return this;
     }

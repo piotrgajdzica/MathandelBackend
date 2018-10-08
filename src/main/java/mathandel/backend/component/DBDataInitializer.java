@@ -2,7 +2,9 @@ package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.*;
-import mathandel.backend.repository.EditionStatusRepository;
+import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -14,25 +16,41 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class DataLoaderComponent implements ApplicationRunner {
+public class DBDataInitializer implements ApplicationRunner {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EditionStatusRepository editionStatusRepository;
+    private final EditionStatusTypeRepository editionStatusTypeRepository;
 
-    public DataLoaderComponent(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusRepository editionStatusRepository) {
+    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.editionStatusRepository = editionStatusRepository;
+        this.editionStatusTypeRepository = editionStatusTypeRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) {
         insertRolesToDB();
-        insertEditionsToDB();
+        insertEditionStatusesToDB();
         insertAdminToDB();
+    }
+
+    private void insertRolesToDB() {
+        for (RoleName roleName : RoleName.values()) {
+            Role role = new Role();
+            role.setName(roleName);
+            roleRepository.save(role);
+        }
+    }
+
+    private void insertEditionStatusesToDB() {
+        for (EditionStatusName editionStatusName : EditionStatusName.values()) {
+            EditionStatusType editionStatusType = new EditionStatusType();
+            editionStatusType.setEditionStatusName(editionStatusName);
+            editionStatusTypeRepository.save(editionStatusType);
+        }
     }
 
     private void insertAdminToDB() {
@@ -52,22 +70,6 @@ public class DataLoaderComponent implements ApplicationRunner {
         user.setRoles(roles);
 
         userRepository.save(user);
-    }
-
-    private void insertEditionsToDB() {
-        for (EditionStatusName editionStatusName : EditionStatusName.values()) {
-            EditionStatus editionStatus = new EditionStatus();
-            editionStatus.setEditionStatusName(editionStatusName);
-            editionStatusRepository.save(editionStatus);
-        }
-    }
-
-    private void insertRolesToDB() {
-        for (RoleName roleName : RoleName.values()) {
-            Role role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
-        }
     }
 }
 

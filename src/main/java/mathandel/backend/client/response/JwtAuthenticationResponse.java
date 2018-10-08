@@ -1,4 +1,4 @@
-package mathandel.backend.payload.response;
+package mathandel.backend.client.response;
 
 public class JwtAuthenticationResponse {
     private String accessToken;

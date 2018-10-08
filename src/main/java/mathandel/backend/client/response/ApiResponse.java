@@ -1,6 +1,10 @@
-package mathandel.backend.payload.response;
+package mathandel.backend.client.response;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ApiResponse {
+
+    @JsonIgnore
     private Boolean success;
     private String message;
 

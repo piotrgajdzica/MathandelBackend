@@ -1,14 +1,15 @@
 package mathandel.backend.service;
 
+import mathandel.backend.client.model.EditionTO;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.Edition;
-import mathandel.backend.model.EditionStatus;
-import mathandel.backend.model.EditionStatusName;
+import mathandel.backend.model.EditionStatusType;
+import mathandel.backend.model.enums.EditionStatusName;
 import mathandel.backend.model.User;
-import mathandel.backend.payload.request.AddEditEditionRequest;
-import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.client.request.EditionDataRequest;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.repository.EditionRepository;
-import mathandel.backend.repository.EditionStatusRepository;
+import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,10 +37,10 @@ public class EditionServiceTest {
     private Long userId = 1L;
     private User user = new User("James", "Smith", "jsmith", "jsmith@gmail.com", "jsmith123");
 
-    private AddEditEditionRequest addEditEditionRequest = new AddEditEditionRequest()
+    private EditionDataRequest editionDataRequest = new EditionDataRequest()
             .setName("Mathandel 4000")
-            .setMaxUsers(100)
-            .setEndDate(LocalDate.of(2014, Month.JANUARY, 1));
+            .setMaxParticipants(100)
+            .setEndDate(LocalDate.now().plusMonths(2));
 
     private Long editionId = 1L;
     private Edition edition = new Edition();
@@ -49,7 +49,7 @@ public class EditionServiceTest {
     UserRepository userRepository;
 
     @MockBean
-    EditionStatusRepository editionStatusRepository;
+    EditionStatusTypeRepository editionStatusTypeRepository;
 
     @MockBean
     EditionRepository editionRepository;
@@ -61,10 +61,10 @@ public class EditionServiceTest {
     public void shouldCreateEdition() {
         // given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(editionStatusRepository.findByEditionStatusName(EditionStatusName.OPENED)).thenReturn(new EditionStatus(EditionStatusName.OPENED));
+        when(editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED)).thenReturn(new EditionStatusType(EditionStatusName.OPENED));
 
         // when
-        ApiResponse apiResponse = editionService.createEdition(addEditEditionRequest, userId);
+        ApiResponse apiResponse = editionService.createEdition(editionDataRequest, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isTrue();
@@ -77,7 +77,7 @@ public class EditionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // when
-        AppException appException = assertThrows(AppException.class, () -> editionService.createEdition(addEditEditionRequest, userId));
+        AppException appException = assertThrows(AppException.class, () -> editionService.createEdition(editionDataRequest, userId));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
 
     }
@@ -85,25 +85,14 @@ public class EditionServiceTest {
     @Test
     public void shouldFailCreateEditionAlreadyExists() {
         // given
-        when(editionRepository.existsByName(addEditEditionRequest.getName())).thenReturn(true);
+        when(editionRepository.existsByName(editionDataRequest.getName())).thenReturn(true);
 
         // when
-        ApiResponse apiResponse = editionService.createEdition(addEditEditionRequest, userId);
+        ApiResponse apiResponse = editionService.createEdition(editionDataRequest, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition name already exists");
-    }
-
-    @Test
-    public void shouldThrowExceptionWhenEditEditionDoesntExist() {
-        // given
-        when(editionRepository.findById(editionId)).thenReturn(Optional.empty());
-
-        // when
-        AppException appException = assertThrows(AppException.class, () -> editionService.editEdition(addEditEditionRequest, editionId, userId));
-        assertThat(appException.getMessage()).isEqualTo("Edition doesn't exist");
-
+        assertThat(apiResponse.getMessage()).isEqualTo("Edition name already exists.");
     }
 
     @Test
@@ -113,7 +102,7 @@ public class EditionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // when then
-        AppException appException = assertThrows(AppException.class, () -> editionService.editEdition(addEditEditionRequest, editionId, userId));
+        AppException appException = assertThrows(AppException.class, () -> editionService.editEdition(editionDataRequest, editionId, userId));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
     }
 
@@ -124,7 +113,7 @@ public class EditionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // when
-        ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, userId);
+        ApiResponse apiResponse = editionService.editEdition(editionDataRequest, editionId, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -137,10 +126,10 @@ public class EditionServiceTest {
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         edition.getModerators().add(user);
-        when(editionRepository.existsByName(addEditEditionRequest.getName())).thenReturn(true);
+        when(editionRepository.existsByName(editionDataRequest.getName())).thenReturn(true);
 
         // when
-        ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, userId);
+        ApiResponse apiResponse = editionService.editEdition(editionDataRequest, editionId, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -153,11 +142,11 @@ public class EditionServiceTest {
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         edition.getModerators().add(user);
-        when(editionRepository.existsByName(addEditEditionRequest.getName())).thenReturn(false);
-        addEditEditionRequest.setEndDate(LocalDate.now().minusDays(1));
+        when(editionRepository.existsByName(editionDataRequest.getName())).thenReturn(false);
+        editionDataRequest.setEndDate(LocalDate.now().minusDays(1));
 
         // when
-        ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, userId);
+        ApiResponse apiResponse = editionService.editEdition(editionDataRequest, editionId, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -170,12 +159,11 @@ public class EditionServiceTest {
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         edition.getModerators().add(user);
-        when(editionRepository.existsByName(addEditEditionRequest.getName())).thenReturn(false);
-        addEditEditionRequest.setEndDate(LocalDate.now().plusDays(1));
-
+        when(editionRepository.existsByName(editionDataRequest.getName())).thenReturn(false);
+        editionDataRequest.setEndDate(LocalDate.now().plusDays(1));
 
         // when
-        ApiResponse apiResponse = editionService.editEdition(addEditEditionRequest, editionId, userId);
+        ApiResponse apiResponse = editionService.editEdition(editionDataRequest, editionId, userId);
 
         // then
         assertThat(apiResponse.getSuccess()).isTrue();
@@ -189,7 +177,7 @@ public class EditionServiceTest {
         when(editionRepository.findAll()).thenReturn(editions);
 
         // when
-        List<Edition> resultEdition = editionService.getEditions();
+        List<EditionTO> resultEdition = editionService.getEditions();
 
         // then
         assertThat(resultEdition.size()).isEqualTo(2);

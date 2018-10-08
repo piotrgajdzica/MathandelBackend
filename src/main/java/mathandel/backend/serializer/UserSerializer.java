@@ -8,7 +8,7 @@ import mathandel.backend.model.User;
 import java.io.IOException;
 import java.util.Set;
 
-public class ModeratorsSerializer extends JsonSerializer<Set<User>> {
+public class UserSerializer extends JsonSerializer<Set<User>> {
 
     @Override
     public void serialize(Set<User> moderators, JsonGenerator gen, SerializerProvider provider) throws IOException {

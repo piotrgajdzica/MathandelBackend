@@ -1,12 +1,13 @@
 package mathandel.backend.model;
 
+import mathandel.backend.model.enums.EditionStatusName;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "edition_status")
-public class EditionStatus {
+@Table(name = "edition_status_type")
+public class EditionStatusType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,10 +18,10 @@ public class EditionStatus {
     @Column(length = 60)
     private EditionStatusName editionStatusName;
 
-    public EditionStatus() {
+    public EditionStatusType() {
     }
 
-    public EditionStatus(EditionStatusName editionStatusName) {
+    public EditionStatusType(EditionStatusName editionStatusName) {
         this.editionStatusName = editionStatusName;
     }
 

@@ -2,12 +2,12 @@ package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.Role;
-import mathandel.backend.model.RoleName;
+import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.model.User;
-import mathandel.backend.payload.request.LoginRequest;
-import mathandel.backend.payload.request.SignUpRequest;
-import mathandel.backend.payload.response.ApiResponse;
-import mathandel.backend.payload.response.JwtAuthenticationResponse;
+import mathandel.backend.client.request.LoginRequest;
+import mathandel.backend.client.request.SignUpRequest;
+import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import mathandel.backend.security.JwtTokenProvider;
@@ -70,7 +70,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
+                .orElseThrow(() -> new AppException("User Role not in database."));
 
         user.setRoles(Collections.singleton(userRole));
         userRepository.save(user);

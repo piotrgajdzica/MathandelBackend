@@ -1,4 +1,4 @@
-package mathandel.backend.payload.request;
+package mathandel.backend.client.request;
 
 import javax.validation.constraints.NotBlank;
 

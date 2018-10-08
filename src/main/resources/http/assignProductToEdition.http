@@ -1,7 +1,5 @@
-POST http://localhost:8080/api/editions/5/products
+PUT http://localhost:8080/api/editions/4/products/5
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNTM4NTkzNjQxLCJleHAiOjE1MzkxOTg0NDF9.1l8FoccAinPmiIOVZOnH8OFY8HXhLVYuus2h0B1xg4kEv12KBpn3W4KWWt_UrB8NZVrjb1LgNvSjXVnyxz18iA
-
-< assignProductToEdition.json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTM4OTkzNTQ1LCJleHAiOjE1Mzk1OTgzNDV9.qdU22KOhmW_LVvUW0j1k785Pi4r9vAKNJF_Y0AvTC4adLj7L8wbqGpOWj4waoqdqY2fLVWRpVZI699im0USOuA
 
 ###

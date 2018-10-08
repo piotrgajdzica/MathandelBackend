@@ -2,7 +2,7 @@ package mathandel.backend.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import mathandel.backend.serializer.ModeratorsSerializer;
+import mathandel.backend.serializer.UserSerializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -26,28 +26,26 @@ public class Edition {
     @NotBlank
     @Size(max = 40)
     private String name;
-
-    @JsonSerialize(using = LocalDateSerializer.class)
+    private String description;
     private LocalDate endDate;
+    private int maxParticipants;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "moderators",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonSerialize(using = ModeratorsSerializer.class)
     private Set<User> moderators = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "participants",
+            joinColumns = @JoinColumn(name = "edition_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> participants = new HashSet<>();
+
     @ManyToOne(cascade = CascadeType.ALL)
-    private EditionStatus editionStatus;
+    private EditionStatusType editionStatusType;
 
     public Edition() {
-    }
-
-    public Edition(String name, LocalDate endDate, Set<User> moderators, EditionStatus editionStatus) {
-        this.name = name;
-        this.endDate = endDate;
-        this.moderators = moderators;
-        this.editionStatus = editionStatus;
     }
 
     public Long getId() {
@@ -68,12 +66,30 @@ public class Edition {
         return this;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Edition setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
     public LocalDate getEndDate() {
         return endDate;
     }
 
     public Edition setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+        return this;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public Edition setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
         return this;
     }
 
@@ -86,12 +102,21 @@ public class Edition {
         return this;
     }
 
-    public EditionStatus getEditionStatus() {
-        return editionStatus;
+    public Set<User> getParticipants() {
+        return participants;
     }
 
-    public Edition setEditionStatus(EditionStatus editionStatus) {
-        this.editionStatus = editionStatus;
+    public Edition setParticipants(Set<User> participants) {
+        this.participants = participants;
+        return this;
+    }
+
+    public EditionStatusType getEditionStatusType() {
+        return editionStatusType;
+    }
+
+    public Edition setEditionStatusType(EditionStatusType editionStatusType) {
+        this.editionStatusType = editionStatusType;
         return this;
     }
 }

@@ -1,13 +1,13 @@
 package mathandel.backend.service;
 
-import mathandel.backend.component.DataLoaderComponent;
+import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.Role;
-import mathandel.backend.model.RoleName;
-import mathandel.backend.payload.request.SignUpRequest;
-import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.client.request.SignUpRequest;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.repository.EditionRepository;
-import mathandel.backend.repository.EditionStatusRepository;
+import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class AuthServiceTest {
     UserRepository userRepository;
 
     @MockBean
-    EditionStatusRepository editionStatusRepository;
+    EditionStatusTypeRepository editionStatusTypeRepository;
 
     @MockBean
     EditionRepository editionRepository;
@@ -52,7 +52,7 @@ public class AuthServiceTest {
     AuthService authService;
 
     @MockBean
-    DataLoaderComponent dataLoaderComponent;
+    DBDataInitializer DBDataInitializer;
 
     @Test
     public void shouldSignUp() {
@@ -77,7 +77,7 @@ public class AuthServiceTest {
         when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.empty());
         //when then
         AppException appException = assertThrows(AppException.class, () -> authService.signUp(signUpRequest));
-        assertThat(appException.getMessage()).isEqualTo(("User Role not set."));
+        assertThat(appException.getMessage()).isEqualTo(("User Role not in database."));
     }
 
     @Test

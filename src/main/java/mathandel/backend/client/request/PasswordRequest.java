@@ -1,6 +1,6 @@
-package mathandel.backend.payload.request;
+package mathandel.backend.client.request;
 
-public class ChangePasswordRequest {
+public class PasswordRequest {
     private String newPassword;
 
     public String getNewPassword() {

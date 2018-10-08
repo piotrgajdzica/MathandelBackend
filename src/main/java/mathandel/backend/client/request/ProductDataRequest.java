@@ -1,18 +1,18 @@
-package mathandel.backend.payload.request;
+package mathandel.backend.client.request;
 
-public class CreateEditProductRequest {
+public class ProductDataRequest {
 
     private String name;
     private String description;
 
-    public CreateEditProductRequest() {
+    public ProductDataRequest() {
     }
 
     public String getName() {
         return name;
     }
 
-    public CreateEditProductRequest setName(String name) {
+    public ProductDataRequest setName(String name) {
         this.name = name;
         return this;
     }
@@ -21,7 +21,7 @@ public class CreateEditProductRequest {
         return description;
     }
 
-    public CreateEditProductRequest setDescription(String description) {
+    public ProductDataRequest setDescription(String description) {
         this.description = description;
         return this;
     }

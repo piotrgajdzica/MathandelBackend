@@ -1,6 +1,7 @@
-package mathandel.backend.payload.response;
+package mathandel.backend.client.model;
 
-public class ProductResponse {
+public class ProductTO {
+
     private Long id;
     private String name;
     private String description;
@@ -10,7 +11,7 @@ public class ProductResponse {
         return id;
     }
 
-    public ProductResponse setId(Long id) {
+    public ProductTO setId(Long id) {
         this.id = id;
         return this;
     }
@@ -19,7 +20,7 @@ public class ProductResponse {
         return name;
     }
 
-    public ProductResponse setName(String name) {
+    public ProductTO setName(String name) {
         this.name = name;
         return this;
     }
@@ -28,7 +29,7 @@ public class ProductResponse {
         return description;
     }
 
-    public ProductResponse setDescription(String description) {
+    public ProductTO setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -37,7 +38,7 @@ public class ProductResponse {
         return userId;
     }
 
-    public ProductResponse setUserId(Long userId) {
+    public ProductTO setUserId(Long userId) {
         this.userId = userId;
         return this;
     }

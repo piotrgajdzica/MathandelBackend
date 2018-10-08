@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 //todo add url or urls with images
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -20,12 +21,9 @@ public class Product {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonSerialize(using = OwnerSerializer.class)
-    @JsonProperty(value = "userId")
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Edition edition;
 
     public Product() {
