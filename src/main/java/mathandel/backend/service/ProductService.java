@@ -111,14 +111,20 @@ public class ProductService {
         return mapProducts(productRepository.findByUser_IdAndEditionIsNull(userId));
     }
 
-    //todo problem with using edition ids is that when edition doesnt exist you get just empty list with 200
     public Set<ProductTO> getProductsFromEdition(Long userId, Long editionId) {
-        return mapProducts(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
+        if(editionRepository.existsById(editionId)) {
+            return mapProducts(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
+        } else {
+            throw new ResourceNotFoundException("Edition", "id", editionId);
+        }
     }
 
-    //todo problem with using edition ids is that when edition doesnt exist you get just empty list with 200
     public Set<ProductTO> getMyProductsFromEdition(Long userId, Long editionId) {
-        return mapProducts(productRepository.findByEdition_IdAndUser_Id(editionId, userId));
+        if(editionRepository.existsById(editionId)) {
+            return mapProducts(productRepository.findByEdition_IdAndUser_Id(editionId, userId));
+        } else {
+            throw new ResourceNotFoundException("Edition", "id", editionId);
+        }
     }
 
     private ProductTO mapProduct(Product product) {
