@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 public class EditionServiceTest {
 
     private Long userId = 1L;

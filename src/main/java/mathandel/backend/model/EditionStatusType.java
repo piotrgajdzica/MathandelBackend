@@ -29,15 +29,17 @@ public class EditionStatusType {
         return id;
     }
 
-    public void setId(Long id) {
+    public EditionStatusType setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public EditionStatusName getEditionStatusName() {
         return editionStatusName;
     }
 
-    public void setEditionStatusName(EditionStatusName editionStatusName) {
+    public EditionStatusType setEditionStatusName(EditionStatusName editionStatusName) {
         this.editionStatusName = editionStatusName;
+        return this;
     }
 }

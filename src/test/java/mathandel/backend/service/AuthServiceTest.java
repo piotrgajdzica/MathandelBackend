@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 public class AuthServiceTest {
 
     private SignUpRequest signUpRequest = new SignUpRequest()

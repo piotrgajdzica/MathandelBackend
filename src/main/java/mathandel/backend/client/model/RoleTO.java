@@ -19,9 +19,13 @@ public class RoleTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         RoleTO roleTO = (RoleTO) o;
 
@@ -32,7 +36,7 @@ public class RoleTO {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
+        return new HashCodeBuilder()
                 .append(roleName)
                 .toHashCode();
     }

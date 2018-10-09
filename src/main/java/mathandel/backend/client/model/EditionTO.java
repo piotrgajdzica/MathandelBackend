@@ -2,6 +2,8 @@ package mathandel.backend.client.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 
@@ -67,5 +69,39 @@ public class EditionTO {
     public EditionTO setNumberOfParticipants(int numberOfParticipants) {
         this.numberOfParticipants = numberOfParticipants;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EditionTO editionTO = (EditionTO) o;
+
+        return new EqualsBuilder()
+                .append(maxParticipants, editionTO.maxParticipants)
+                .append(numberOfParticipants, editionTO.numberOfParticipants)
+                .append(Id, editionTO.Id)
+                .append(name, editionTO.name)
+                .append(description, editionTO.description)
+                .append(endDate, editionTO.endDate)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(Id)
+                .append(name)
+                .append(description)
+                .append(endDate)
+                .append(maxParticipants)
+                .append(numberOfParticipants)
+                .toHashCode();
     }
 }

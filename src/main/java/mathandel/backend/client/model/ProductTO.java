@@ -1,5 +1,8 @@
 package mathandel.backend.client.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class ProductTO {
 
     private Long id;
@@ -41,5 +44,35 @@ public class ProductTO {
     public ProductTO setUserId(Long userId) {
         this.userId = userId;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ProductTO productTO = (ProductTO) o;
+
+        return new EqualsBuilder()
+                .append(id, productTO.id)
+                .append(name, productTO.name)
+                .append(description, productTO.description)
+                .append(userId, productTO.userId)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(name)
+                .append(description)
+                .append(userId)
+                .toHashCode();
     }
 }

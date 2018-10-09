@@ -1,5 +1,8 @@
 package mathandel.backend.client.request;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -70,5 +73,37 @@ public class SignUpRequest {
     public SignUpRequest setPassword(String password) {
         this.password = password;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SignUpRequest that = (SignUpRequest) o;
+
+        return new EqualsBuilder()
+                .append(name, that.name)
+                .append(surname, that.surname)
+                .append(username, that.username)
+                .append(email, that.email)
+                .append(password, that.password)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(name)
+                .append(surname)
+                .append(username)
+                .append(email)
+                .append(password)
+                .toHashCode();
     }
 }

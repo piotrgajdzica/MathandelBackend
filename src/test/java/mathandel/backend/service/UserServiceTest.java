@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
 public class UserServiceTest {
 
     private Long editionId = 1L;
@@ -111,7 +110,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldGetUser() {
+    public void shouldGetUserData() {
         //given
         UserTO expected = mapUserData(user);
 
@@ -125,7 +124,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionOnGetUser() {
+    public void shouldThrowExceptionOnGetUserData() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -137,7 +136,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldGetMe() {
+    public void shouldGetMyData() {
         //given
         UserTO expected = mapMyData(user);
 
@@ -151,7 +150,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionOnGetMe() {
+    public void shouldThrowExceptionOnGetMyData() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -163,7 +162,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldEditMe() {
+    public void shouldEditMyData() {
         //given
         when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(false);
@@ -178,7 +177,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shoudlFailEditMeWhenUsernameIsTaken() {
+    public void shoudlFailEditMyDataWhenUsernameIsTaken() {
         //given
         when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(true);
 
@@ -191,7 +190,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldFailEditMeWhenEmailIsTaken() {
+    public void shouldFailEditMyDataWhenEmailIsTaken() {
         //given
         when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(true);
@@ -205,7 +204,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldFailEditMeWhenUserDoesntExist() {
+    public void shouldFailEditMyDataWhenUserDoesntExist() {
         //given
         when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(false);
@@ -231,7 +230,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenChanginhPassword() {
+    public void shouldThrowExceptionWhenChangingPassword() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         when(passwordEncoder.encode(newPassword)).thenReturn("newPasswordEncoded");

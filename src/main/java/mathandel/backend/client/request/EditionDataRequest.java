@@ -2,6 +2,8 @@ package mathandel.backend.client.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
@@ -38,8 +40,6 @@ public class EditionDataRequest {
         return this;
     }
 
-
-
     public String getDescription() {
         return description;
     }
@@ -56,5 +56,35 @@ public class EditionDataRequest {
     public EditionDataRequest setMaxParticipants(Integer maxParticipants) {
         this.maxParticipants = maxParticipants;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EditionDataRequest that = (EditionDataRequest) o;
+
+        return new EqualsBuilder()
+                .append(name, that.name)
+                .append(endDate, that.endDate)
+                .append(description, that.description)
+                .append(maxParticipants, that.maxParticipants)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(name)
+                .append(endDate)
+                .append(description)
+                .append(maxParticipants)
+                .toHashCode();
     }
 }
