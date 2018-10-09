@@ -5,10 +5,10 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LoginRequestTest {
+public class SignInRequestTest {
 
     private String payload = "{\"usernameOrEmail\":\"email@email.com\",\"password\":\"Password\"}";
-    private LoginRequest loginRequest = new LoginRequest()
+    private SignInRequest signInRequest = new SignInRequest()
             .setPassword("Password")
             .setUsernameOrEmail("email@email.com");
     private Gson gson = new Gson();
@@ -17,7 +17,7 @@ public class LoginRequestTest {
     @Test
     public void shouldMarshalLoginReques() {
         //when
-        String actual = gson.toJson(loginRequest);
+        String actual = gson.toJson(signInRequest);
 
         //then
         assertThat(actual).isEqualTo(payload);
@@ -26,9 +26,9 @@ public class LoginRequestTest {
     @Test
     public void shouldUnmarshalLoginReques() {
         //when
-        LoginRequest actual = gson.fromJson(payload, LoginRequest.class);
+        SignInRequest actual = gson.fromJson(payload, SignInRequest.class);
 
         //then
-        assertThat(actual).isEqualTo(loginRequest);
+        assertThat(actual).isEqualTo(signInRequest);
     }
 }

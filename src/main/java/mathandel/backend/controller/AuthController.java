@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.request.LoginRequest;
+import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(authService.signIn(loginRequest));
+    public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequest signInRequest) {
+        return ResponseEntity.ok(authService.signIn(signInRequest));
     }
 
     @PostMapping("/signup")

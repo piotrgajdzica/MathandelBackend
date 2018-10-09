@@ -4,7 +4,7 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.model.Role;
 import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.model.User;
-import mathandel.backend.client.request.LoginRequest;
+import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
@@ -38,10 +38,10 @@ public class AuthService {
         this.tokenProvider = tokenProvider;
     }
 
-    public JwtAuthenticationResponse signIn(LoginRequest loginRequest) {
+    public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

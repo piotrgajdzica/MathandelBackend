@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class SignInRequest {
     @NotBlank
     private String usernameOrEmail;
 
@@ -16,7 +16,7 @@ public class LoginRequest {
         return usernameOrEmail;
     }
 
-    public LoginRequest setUsernameOrEmail(String usernameOrEmail) {
+    public SignInRequest setUsernameOrEmail(String usernameOrEmail) {
         this.usernameOrEmail = usernameOrEmail;
         return this;
     }
@@ -25,7 +25,7 @@ public class LoginRequest {
         return password;
     }
 
-    public LoginRequest setPassword(String password) {
+    public SignInRequest setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -40,7 +40,7 @@ public class LoginRequest {
             return false;
         }
 
-        LoginRequest that = (LoginRequest) o;
+        SignInRequest that = (SignInRequest) o;
 
         return new EqualsBuilder()
                 .append(usernameOrEmail, that.usernameOrEmail)

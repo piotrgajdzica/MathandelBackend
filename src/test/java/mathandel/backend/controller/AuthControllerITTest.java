@@ -1,7 +1,9 @@
 package mathandel.backend.controller;
 
 import com.google.gson.Gson;
+import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
+import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,25 +34,27 @@ public class AuthControllerITTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AuthController authController;
+
+    private String name = "John";
+    private String surname = "Smith";
+    private String username = "jsmith";
+    private String email = "jsmith@gmail.com";
+    private String password = "jsmith123";
+
     private Gson gson = new Gson();
+
+    private SignUpRequest signUpRequest = new SignUpRequest()
+            .setName(name)
+            .setSurname(surname)
+            .setUsername(username)
+            .setEmail(email)
+            .setPassword(password);
 
     @Test
     @Transactional
     public void shouldSignUpAndCreateUserInDB() throws Exception {
-        //given
-        String name = "John";
-        String surname = "Smith";
-        String username = "jsmith";
-        String email = "jsmith@gmail.com";
-        String password = "jsmith123";
-
-        SignUpRequest signUpRequest = new SignUpRequest()
-                .setName(name)
-                .setSurname(surname)
-                .setUsername(username)
-                .setEmail(email)
-                .setPassword(password);
-
         //when
         mockMvc.perform(post("/api/auth/signup")
                 .contentType(APPLICATION_JSON_UTF8)
@@ -64,5 +69,60 @@ public class AuthControllerITTest {
             assertThat(user.getEmail()).isEqualTo(email);
             assertThat(user.getUsername()).isEqualTo(username);
         });
+    }
+
+    @Test
+    @Transactional
+    public void shouldNotSignUpWhenSameUsername() throws Exception {
+        //when
+        mockMvc.perform(post("/api/auth/signup")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(gson.toJson(signUpRequest)));
+
+
+        //then
+        mockMvc.perform(post("/api/auth/signup")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(gson.toJson(signUpRequest.setEmail("diffrent@email.com"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("{\"message\":\"Username is already taken.\"}"));
+    }
+
+    @Test
+    @Transactional
+    public void shouldSignIn() throws Exception {
+        //given
+        SignInRequest signInRequest = new SignInRequest()
+                .setUsernameOrEmail(email)
+                .setPassword(password);
+        authController.signUp(signUpRequest);
+
+        //when
+        MvcResult mvcResult = mockMvc.perform(post("/api/auth/signin")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(gson.toJson(signInRequest)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JwtAuthenticationResponse jwtAuthenticationResponse = gson.fromJson(mvcResult.getResponse().getContentAsString(), JwtAuthenticationResponse.class);
+        assertThat(jwtAuthenticationResponse.getTokenType()).isEqualTo("Bearer");
+        assertThat(jwtAuthenticationResponse.getAccessToken().length()).isEqualTo(168);
+    }
+
+    @Test
+    @Transactional
+    public void shouldNotSignInOnBadCredentials() throws Exception {
+        //given
+        SignInRequest signInRequest = new SignInRequest()
+                .setUsernameOrEmail(email)
+                .setPassword(password);
+        authController.signUp(signUpRequest);
+
+        //when
+        mockMvc.perform(post("/api/auth/signin")
+                .contentType(APPLICATION_JSON_UTF8)
+                .content(gson.toJson(signInRequest.setPassword("wrong password"))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(status().reason("Sorry, You're not authorized to access this resource."));
     }
 }
