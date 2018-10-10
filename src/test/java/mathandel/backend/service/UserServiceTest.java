@@ -1,7 +1,6 @@
 package mathandel.backend.service;
 
 import mathandel.backend.client.model.UserTO;
-import mathandel.backend.client.request.UserDataRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -52,7 +50,7 @@ public class UserServiceTest {
             .setEmail(email)
             .setRoles(Collections.singleton(new Role()));
 
-    private UserDataRequest userDataRequest = new UserDataRequest()
+    private UserTO userTO = new UserTO()
             .setEmail(email)
             .setName(name)
             .setSurname(surname)
@@ -164,12 +162,12 @@ public class UserServiceTest {
     @Test
     public void shouldEditMyData() {
         //given
-        when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when
-        ApiResponse apiResponse = userService.editMyData(userId, userDataRequest);
+        ApiResponse apiResponse = userService.editMyData(userId, userTO);
 
         //then
         assertThat(apiResponse.getSuccess()).isTrue();
@@ -179,10 +177,10 @@ public class UserServiceTest {
     @Test
     public void shoudlFailEditMyDataWhenUsernameIsTaken() {
         //given
-        when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(true);
+        when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(true);
 
         //when
-        ApiResponse apiResponse = userService.editMyData(userId, userDataRequest);
+        ApiResponse apiResponse = userService.editMyData(userId, userTO);
 
         //then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -192,11 +190,11 @@ public class UserServiceTest {
     @Test
     public void shouldFailEditMyDataWhenEmailIsTaken() {
         //given
-        when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(true);
+        when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(true);
 
         //when
-        ApiResponse apiResponse = userService.editMyData(userId, userDataRequest);
+        ApiResponse apiResponse = userService.editMyData(userId, userTO);
 
         //then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -206,12 +204,12 @@ public class UserServiceTest {
     @Test
     public void shouldFailEditMyDataWhenUserDoesntExist() {
         //given
-        when(userRepository.existsByUsername(userDataRequest.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(userDataRequest.getEmail())).thenReturn(false);
+        when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //when then
-        AppException appException = assertThrows(AppException.class, () -> userService.editMyData(userId, userDataRequest));
+        AppException appException = assertThrows(AppException.class, () -> userService.editMyData(userId, userTO));
         assertThat(appException.getMessage()).isEqualTo("User does not exist");
     }
 
@@ -236,7 +234,7 @@ public class UserServiceTest {
         when(passwordEncoder.encode(newPassword)).thenReturn("newPasswordEncoded");
 
         //when then
-        AppException appException = assertThrows(AppException.class, () -> userService.editMyData(userId, userDataRequest));
+        AppException appException = assertThrows(AppException.class, () -> userService.editMyData(userId, userTO));
         assertThat(appException.getMessage()).isEqualTo("User does not exist");
     }
 }

@@ -1,7 +1,6 @@
 package mathandel.backend.service;
 
 import mathandel.backend.client.model.ProductTO;
-import mathandel.backend.client.request.ProductDataRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -45,7 +44,7 @@ public class ProductServiceTest {
     private User user = new User()
             .setId(userId);
 
-    private ProductDataRequest productDataRequest = new ProductDataRequest()
+    private ProductTO productTOrequest = new ProductTO()
             .setName(productName)
             .setDescription(productDescription);
 
@@ -84,7 +83,7 @@ public class ProductServiceTest {
         when(productRepository.save(any())).thenReturn(product);
 
         //when
-        ProductTO actual = productService.createProduct(userId, productDataRequest);
+        ProductTO actual = productService.createProduct(userId, productTOrequest);
 
         //then
         assertThat(actual).isEqualTo(productTO);
@@ -98,7 +97,7 @@ public class ProductServiceTest {
 
         //when then
         AppException appException = assertThrows(AppException.class,
-                () -> productService.createProduct(userId, productDataRequest));
+                () -> productService.createProduct(userId, productTOrequest));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
     }
 
@@ -109,7 +108,7 @@ public class ProductServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         //when
-        ApiResponse apiResponse = productService.editProduct(userId, productDataRequest, productId);
+        ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
 
         //then
         assertThat(apiResponse.getSuccess()).isTrue();
@@ -124,7 +123,7 @@ public class ProductServiceTest {
         product.setEdition(new Edition().setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED)));
 
         //when
-        ApiResponse apiResponse = productService.editProduct(userId, productDataRequest, productId);
+        ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
 
         //then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -139,7 +138,7 @@ public class ProductServiceTest {
         product.setUser(new User().setId(2L));
 
         //when
-        ApiResponse apiResponse = productService.editProduct(userId, productDataRequest, productId);
+        ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
 
         //then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -153,7 +152,7 @@ public class ProductServiceTest {
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         //when
-        ApiResponse apiResponse = productService.editProduct(userId, productDataRequest, productId);
+        ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
 
         //then
         assertThat(apiResponse.getSuccess()).isFalse();
@@ -166,7 +165,7 @@ public class ProductServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //when
-        AppException appException = assertThrows(AppException.class, () -> productService.editProduct(userId, productDataRequest, productId));
+        AppException appException = assertThrows(AppException.class, () -> productService.editProduct(userId, productTOrequest, productId));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist.");
     }
 

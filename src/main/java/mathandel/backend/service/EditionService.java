@@ -1,13 +1,12 @@
 package mathandel.backend.service;
 
 import mathandel.backend.client.model.EditionTO;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.EditionStatusType;
-import mathandel.backend.model.enums.EditionStatusName;
 import mathandel.backend.model.User;
-import mathandel.backend.client.request.EditionDataRequest;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;
@@ -33,12 +32,12 @@ public class EditionService {
         this.userRepository = userRepository;
     }
 
-    public ApiResponse createEdition(EditionDataRequest editionDataRequest, Long userId) {
+    public ApiResponse createEdition(EditionTO editionTO, Long userId) {
 
-        if (editionRepository.existsByName(editionDataRequest.getName())) {
+        if (editionRepository.existsByName(editionTO.getName())) {
             return new ApiResponse(false, "Edition name already exists.");
         }
-        if (editionDataRequest.getEndDate().isBefore(LocalDate.now())) {
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
             return new ApiResponse(false, "Edition end date cannot be in the past");
         }
 
@@ -51,20 +50,20 @@ public class EditionService {
 
         EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
         Edition edition = new Edition()
-                .setName(editionDataRequest.getName())
-                .setEndDate(editionDataRequest.getEndDate())
+                .setName(editionTO.getName())
+                .setEndDate(editionTO.getEndDate())
                 .setModerators(moderators)
                 .setParticipants(participants)
                 .setEditionStatusType(editionStatusType)
-                .setDescription(editionDataRequest.getDescription())
-                .setMaxParticipants(editionDataRequest.getMaxParticipants());
+                .setDescription(editionTO.getDescription())
+                .setMaxParticipants(editionTO.getMaxParticipants());
 
         editionRepository.save(edition);
 
         return new ApiResponse(true, "Edition added successfully");
     }
 
-    public ApiResponse editEdition(EditionDataRequest editionDataRequest, Long editionId, Long userId) {
+    public ApiResponse editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElse(null);
@@ -75,18 +74,18 @@ public class EditionService {
         if (!edition.getModerators().contains(user)) {
             return new ApiResponse(false, "You are not moderator of this edition");
         }
-        if (editionRepository.existsByName(editionDataRequest.getName())) {
+        if (editionRepository.existsByName(editionTO.getName())) {
             return new ApiResponse(false, "Edition name already exists");
         }
-        if (editionDataRequest.getEndDate().isBefore(LocalDate.now())) {
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
             return new ApiResponse(false, "Edition end date cannot be in the past");
         }
-        if (editionDataRequest.getMaxParticipants() < edition.getParticipants().size()) {
+        if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
             return new ApiResponse(false, "Cannot lower max number of participants");
         }
 
-        edition.setName(editionDataRequest.getName());
-        edition.setEndDate(editionDataRequest.getEndDate());
+        edition.setName(editionTO.getName());
+        edition.setEndDate(editionTO.getEndDate());
         editionRepository.save(edition);
 
         return new ApiResponse(true, "Edition edited successfully");

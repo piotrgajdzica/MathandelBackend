@@ -3,10 +3,14 @@ package mathandel.backend.client.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotBlank;
+
 public class ProductTO {
 
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String description;
     private Long userId;
 

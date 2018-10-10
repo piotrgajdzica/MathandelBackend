@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.client.model.UserTO;
 import mathandel.backend.client.request.PasswordRequest;
-import mathandel.backend.client.request.UserDataRequest;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.UserService;
@@ -36,8 +36,8 @@ public class UserController {
 
     @PutMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> editMyData(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserDataRequest userDataRequest){
-        return createResponse(userService.editMyData(userPrincipal.getId(), userDataRequest));
+    public ResponseEntity<?> editMyData(@CurrentUser UserPrincipal userPrincipal, @RequestBody UserTO userTO){
+        return createResponse(userService.editMyData(userPrincipal.getId(), userTO));
     }
 
     @PutMapping("/me/password")

@@ -3,15 +3,32 @@ package mathandel.backend.client.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 public class UserTO {
 
     private Long Id;
+
+    @NotBlank
+    @Size(min = 4, max = 40)
     private String name;
+
+    @NotBlank
+    @Size(min = 4, max = 40)
     private String surname;
+
+    @NotBlank
+    @Size(min = 3, max = 15)
     private String username;
+
+    @NotBlank
+    @Size(max = 40)
+    @Email
     private String email;
+
     private Set<RoleTO> roles;
 
     public Long getId() {

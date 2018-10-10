@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.request.EditionDataRequest;
+import mathandel.backend.client.model.EditionTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.EditionService;
@@ -31,8 +31,8 @@ public class EditionController {
 
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> createEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody EditionDataRequest editionDataRequest) {
-        return createResponse(editionService.createEdition(editionDataRequest, currentUser.getId()));
+    public ResponseEntity<?> createEdition(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody EditionTO editionTO) {
+        return createResponse(editionService.createEdition(editionTO, currentUser.getId()));
     }
 
     @GetMapping
@@ -44,9 +44,9 @@ public class EditionController {
     @PutMapping("{editionId}")
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> editEdition(@CurrentUser UserPrincipal currentUser,
-                                         @Valid @RequestBody EditionDataRequest editionDataRequest,
+                                         @Valid @RequestBody EditionTO editionTO,
                                          @PathVariable("editionId") Long editionId) {
-        return createResponse(editionService.editEdition(editionDataRequest, editionId, currentUser.getId()));
+        return createResponse(editionService.editEdition(editionTO, editionId, currentUser.getId()));
     }
 
     @PostMapping("{editionId}/users")

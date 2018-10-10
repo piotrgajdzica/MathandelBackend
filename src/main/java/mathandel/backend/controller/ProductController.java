@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.request.ProductDataRequest;
+import mathandel.backend.client.model.ProductTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ProductService;
@@ -23,14 +23,14 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createProduct(@CurrentUser UserPrincipal user, @RequestBody ProductDataRequest productDataRequest) {
-        return ResponseEntity.ok(productService.createProduct(user.getId(), productDataRequest));
+    public ResponseEntity<?> createProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO) {
+        return ResponseEntity.ok(productService.createProduct(user.getId(), productTO));
     }
 
     @PutMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> editProduct(@CurrentUser UserPrincipal user, @RequestBody ProductDataRequest productDataRequest, @PathVariable Long productId) {
-        return createResponse(productService.editProduct(user.getId(), productDataRequest, productId));
+    public ResponseEntity<?> editProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO, @PathVariable Long productId) {
+        return createResponse(productService.editProduct(user.getId(), productTO, productId));
 
     }
 

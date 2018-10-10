@@ -1,13 +1,8 @@
 package mathandel.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import mathandel.backend.serializer.OwnerSerializer;
-
 import javax.persistence.*;
 
-//todo add url or urls with images
+//todo add list of urls with images
 @Entity
 @Table(name = "products")
 public class Product {

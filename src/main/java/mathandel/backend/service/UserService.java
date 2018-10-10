@@ -2,7 +2,6 @@ package mathandel.backend.service;
 
 import mathandel.backend.client.model.RoleTO;
 import mathandel.backend.client.model.UserTO;
-import mathandel.backend.client.request.UserDataRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -66,21 +65,21 @@ public class UserService {
         }
     }
 
-    public ApiResponse editMyData(Long userId, UserDataRequest userDataRequest) {
+    public ApiResponse editMyData(Long userId, UserTO userTO) {
 
-        if (userRepository.existsByUsername(userDataRequest.getUsername())) {
+        if (userRepository.existsByUsername(userTO.getUsername())) {
             return new ApiResponse(false, "Username is already taken");
         }
 
-        if (userRepository.existsByEmail(userDataRequest.getEmail())) {
+        if (userRepository.existsByEmail(userTO.getEmail())) {
             return new ApiResponse(false, "Email Address already in use");
         }
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"))
-                .setName(userDataRequest.getName())
-                .setSurname(userDataRequest.getSurname())
-                .setUsername(userDataRequest.getUsername())
-                .setEmail(userDataRequest.getEmail());
+                .setName(userTO.getName())
+                .setSurname(userTO.getSurname())
+                .setUsername(userTO.getUsername())
+                .setEmail(userTO.getEmail());
 
         userRepository.save(user);
         return new ApiResponse(true, "Successfully edited user");

@@ -1,7 +1,6 @@
 package mathandel.backend.service;
 
 import mathandel.backend.client.model.ProductTO;
-import mathandel.backend.client.request.ProductDataRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -33,19 +32,19 @@ public class ProductService {
         this.editionRepository = editionRepository;
     }
 
-    public ProductTO createProduct(Long userId, ProductDataRequest productDataRequest) {
+    public ProductTO createProduct(Long userId, ProductTO productTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         Product product = new Product()
-                .setName(productDataRequest.getName())
-                .setDescription(productDataRequest.getDescription())
+                .setName(productTO.getName())
+                .setDescription(productTO.getDescription())
                 .setUser(user);
 
         return mapProduct(productRepository.save(product));
     }
 
-    //todo if preferences exists shouldnt be able to do this maybe should only be able to add photos
-    public ApiResponse editProduct(Long userId, ProductDataRequest productDataRequest, Long productId) {
+    //todo if preferences exists shouldnt be able to do this
+    public ApiResponse editProduct(Long userId, ProductTO productTO, Long productId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Product product = productRepository.findById(productId).orElse(null);
 
@@ -65,8 +64,8 @@ public class ProductService {
             }
         }
 
-        product.setDescription(productDataRequest.getDescription())
-                .setName(productDataRequest.getName());
+        product.setDescription(productTO.getDescription())
+                .setName(productTO.getName());
 
         productRepository.save(product);
         return new ApiResponse(true, "Product edited successfully");
