@@ -1,6 +1,6 @@
 package mathandel.backend.payload.request;
 
-public class ModeratorRequestReasonRequest {
+public class ModeratorRequestReasonRequest  {
     private String reason;
 
     public String getReason() {

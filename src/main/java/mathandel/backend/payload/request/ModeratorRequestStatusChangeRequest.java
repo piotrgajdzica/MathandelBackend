@@ -7,25 +7,15 @@ import java.util.List;
 
 public class ModeratorRequestStatusChangeRequest {
     @NotBlank
-    private List<Long> userIds;
+    private Long userId;
 
-    private ModeratorRequestStatus moderatorRequestStatus;
 
-    public List<Long> getUserIds() {
-        return userIds;
+    public Long getUserId() {
+        return userId;
     }
 
-    public ModeratorRequestStatusChangeRequest setUserIds(List<Long> userIds) {
-        this.userIds = userIds;
-        return this;
-    }
-
-    public ModeratorRequestStatus getModeratorRequestStatus() {
-        return moderatorRequestStatus;
-    }
-
-    public ModeratorRequestStatusChangeRequest setModeratorRequestStatus(ModeratorRequestStatus moderatorRequestStatus) {
-        this.moderatorRequestStatus = moderatorRequestStatus;
+    public ModeratorRequestStatusChangeRequest setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 }

@@ -9,6 +9,8 @@ public class ModeratorRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name="userId")
     private User user;
 
     @Column(length = 300)

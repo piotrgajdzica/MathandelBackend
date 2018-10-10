@@ -18,4 +18,11 @@ public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequ
 
     List<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
 
+    Optional<ModeratorRequest> findModeratorRequestsByUser_Id(Long id);
+
+
+
+
+
+
 }

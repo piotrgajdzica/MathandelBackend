@@ -13,15 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
-@RequestMapping("/api/moderator-requests")
+@RequestMapping("/api/moderatorRequests")
 public class RoleController {
 
     @Autowired
     RoleService roleService;
 
-
+    // todo złe urle
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> requestModerator(@CurrentUser UserPrincipal currentUser,
@@ -32,27 +33,21 @@ public class RoleController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getModeratorRequests(@CurrentUser UserPrincipal currentUser) {
-        return  ResponseEntity.ok(roleService.getModeratorRequests());
+    public ResponseEntity<?> getModeratorRequests() {
+        return ResponseEntity.ok(roleService.getModeratorRequests());
     }
 
-    @PutMapping
+    @PutMapping("resolve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> resolveModeratorRequest(@RequestBody ModeratorRequestStatusChangeRequest moderatorRequestMessageRequest) {
-        //  zupdatowac
-        // todo
-
-        return null;
+    public ResponseEntity<?> resolveModeratorRequest(@RequestBody List<ModeratorRequestStatusChangeRequest> moderatorRequestMessageRequests) {
+        ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestMessageRequests);
+        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }
 
     @GetMapping("my")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getMyRequest(@CurrentUser UserPrincipal currentUser) {
-        //  wyciagnac requesty z bazy, zwrocic
-        // dodac user response
-        // todo
-        return null;
-
+        return ResponseEntity.ok(roleService.getUserRequests(currentUser.getId()));
     }
 
 

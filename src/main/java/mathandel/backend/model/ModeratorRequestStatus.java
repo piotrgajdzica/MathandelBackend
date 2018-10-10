@@ -16,21 +16,24 @@ public class ModeratorRequestStatus {
     @Column(length = 60)
     private ModeratorRequestStatusName name;
 
-    public ModeratorRequestStatus() {}
+    public ModeratorRequestStatus() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public ModeratorRequestStatus setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public ModeratorRequestStatusName getName() {
         return name;
     }
 
-    public void setName(ModeratorRequestStatusName name) {
+    public ModeratorRequestStatus setName(ModeratorRequestStatusName name) {
         this.name = name;
+        return this;
     }
 }
