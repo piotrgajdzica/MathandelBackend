@@ -97,6 +97,7 @@ public class UserService {
         return mapUser(user);
     }
 
+    //todo edycji nie zwracamy, role zwracamy
     public static UserTO mapMyData(User user) {
         return mapUser(user).setRoles(mapRoles(user.getRoles()));
     }
