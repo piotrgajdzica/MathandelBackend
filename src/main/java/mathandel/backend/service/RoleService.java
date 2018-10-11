@@ -1,6 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.*;
 import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.payload.response.ApiResponse;
@@ -32,12 +33,12 @@ public class RoleService {
         Optional<User> optUser = userRepository.findById(userId);
 
         if (optUser.isPresent() && hasRole(RoleName.ROLE_MODERATOR, optUser.get()))
-            return new ApiResponse(false, "Role already given");
+            throw  new BadRequestException("Role already given");
 
-        Optional<ModeratorRequest> optModeeratorRequest = moderatorRequestsRepository.findByUser(optUser.get());
+        Optional<ModeratorRequest> optModeratorRequest = moderatorRequestsRepository.findByUser(optUser.get());
 
-        if (optModeeratorRequest.isPresent())
-            return new ApiResponse(false, "Request already submitted");
+        if (optModeratorRequest.isPresent())
+            throw  new BadRequestException("Request already submitted");
 
         ModeratorRequest moderatorRequest = new ModeratorRequest();
 
