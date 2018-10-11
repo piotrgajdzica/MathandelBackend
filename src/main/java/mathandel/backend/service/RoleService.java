@@ -1,10 +1,11 @@
 package mathandel.backend.service;
 
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.*;
 import mathandel.backend.model.client.ModeratorRequestTO;
-import mathandel.backend.payload.response.ApiResponse;
+import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;

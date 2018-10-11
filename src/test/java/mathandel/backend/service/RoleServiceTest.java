@@ -35,14 +35,14 @@ public class RoleServiceTest {
     RoleRepository roleRepository;
 
 
-//    @Test
-//    public void shouldRequestModerator(){
+    @Test
+    public void shouldRequestModerator(){
 //        // given
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(moderatorRequestsRepository.findByUser(user)).thenReturn(Optional.of())
 //        // when
 //
 //        // then
-//
-//    }
+
+    }
 }
