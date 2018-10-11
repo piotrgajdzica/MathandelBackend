@@ -1,15 +1,17 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.model.ProductTO;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ProductService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import static mathandel.backend.utils.ResponseCreator.createResponse;
+import java.util.Set;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 @RequestMapping("/api/products")
@@ -23,27 +25,30 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO) {
-        return ResponseEntity.ok(productService.createProduct(user.getId(), productTO));
+    public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user,
+                                                 @RequestBody ProductTO productTO) {
+        return productService.createProduct(user.getId(), productTO);
     }
 
     @PutMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> editProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO, @PathVariable Long productId) {
-        return createResponse(productService.editProduct(user.getId(), productTO, productId));
+    public @ResponseBody ApiResponse editProduct(@CurrentUser UserPrincipal user,
+                                                 @RequestBody ProductTO productTO,
+                                                 @PathVariable Long productId) {
+        return productService.editProduct(user.getId(), productTO, productId);
 
     }
 
     @GetMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getProduct(@PathVariable Long productId) {
-        return ResponseEntity.ok(productService.getProduct(productId));
+    public @ResponseBody ProductTO getProduct(@PathVariable Long productId) {
+        return productService.getProduct(productId);
     }
 
     @GetMapping("/not-assigned")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
-        return ResponseEntity.ok(productService.getNotAssignedProducts(current.getId()));
+    public @ResponseBody Set<ProductTO> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
+        return productService.getNotAssignedProducts(current.getId());
     }
 
 }

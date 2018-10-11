@@ -115,7 +115,7 @@ public class UserControllerITTest {
 
     private String acquireTokenNormalUser() {
         authController.signUp(signUpRequest);
-        JwtAuthenticationResponse jwtAuthenticationResponse = authController.signIn(signInRequest).getBody();
+        JwtAuthenticationResponse jwtAuthenticationResponse = authController.signIn(signInRequest);
         return Objects.requireNonNull(jwtAuthenticationResponse).getAccessToken();
     }
 

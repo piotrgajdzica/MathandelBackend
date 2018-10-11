@@ -34,13 +34,11 @@ public class User {
 
     @NotBlank
     @Size(max = 15)
-    @NaturalId
     private String username;
 
     @NotBlank
     @Size(max = 40)
     @Email
-    @NaturalId
     private String email;
 
     @NotBlank
