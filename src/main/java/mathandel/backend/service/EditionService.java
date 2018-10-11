@@ -7,8 +7,10 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.EditionStatusType;
+import mathandel.backend.model.Role;
 import mathandel.backend.model.User;
 import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;
@@ -104,4 +106,19 @@ public class EditionService {
                 .setMaxParticipants(e.getMaxParticipants())).collect(Collectors.toList());
     }
 
+    public ApiResponse makeUserEditionModerator(Long userId, Long editionId, String username) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        User requestedUser =  userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+        if(!requestedUser.getRoles().contains(new Role().setName(RoleName.ROLE_MODERATOR))) {
+            throw new BadRequestException("Requested user is not moderator");
+        }
+
+        edition.getModerators().add(requestedUser);
+        return new ApiResponse(true, "User " + username + " become moderator of edition " + editionId);
+    }
 }

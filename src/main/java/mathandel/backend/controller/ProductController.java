@@ -23,29 +23,28 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @ResponseStatus(OK)
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO) {
+    public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user,
+                                                 @RequestBody ProductTO productTO) {
         return productService.createProduct(user.getId(), productTO);
     }
 
-    @ResponseStatus(OK)
     @PutMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ApiResponse editProduct(@CurrentUser UserPrincipal user, @RequestBody ProductTO productTO, @PathVariable Long productId) {
+    public @ResponseBody ApiResponse editProduct(@CurrentUser UserPrincipal user,
+                                                 @RequestBody ProductTO productTO,
+                                                 @PathVariable Long productId) {
         return productService.editProduct(user.getId(), productTO, productId);
 
     }
 
-    @ResponseStatus(OK)
     @GetMapping("{productId}")
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO getProduct(@PathVariable Long productId) {
         return productService.getProduct(productId);
     }
 
-    @ResponseStatus(OK)
     @GetMapping("/not-assigned")
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody Set<ProductTO> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
