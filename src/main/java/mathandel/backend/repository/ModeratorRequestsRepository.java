@@ -1,7 +1,6 @@
 package mathandel.backend.repository;
 
 import mathandel.backend.model.ModeratorRequest;
-import mathandel.backend.model.ModeratorRequestStatus;
 import mathandel.backend.model.ModeratorRequestStatusName;
 import mathandel.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

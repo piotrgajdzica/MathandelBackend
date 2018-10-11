@@ -3,7 +3,6 @@ package mathandel.backend.service;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.*;
 import mathandel.backend.model.client.ModeratorRequestTO;
-import mathandel.backend.payload.request.ModeratorRequestReasonRequest;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
@@ -28,7 +27,8 @@ public class RoleService {
     @Autowired
     UserRepository userRepository;
 
-    public ApiResponse requestModerator(@Valid ModeratorRequestReasonRequest reason, Long userId) {
+
+    public ApiResponse requestModerator(@Valid ModeratorRequestTO moderatorRequestTO, Long userId) {
         Optional<User> optUser = userRepository.findById(userId);
 
         if (optUser.isPresent() && hasRole(RoleName.ROLE_MODERATOR, optUser.get()))
@@ -45,22 +45,22 @@ public class RoleService {
         moderatorRequestStatus.setName(ModeratorRequestStatusName.PENDING);
 
         moderatorRequest.setUser(optUser.get())
-                .setReason(reason.getReason())
+                .setReason(moderatorRequestTO.getReason())
                 .setModeratorRequestStatus(moderatorRequestStatus);
         moderatorRequestsRepository.save(moderatorRequest);
 
         return new ApiResponse(true, "Request submitted");
     }
 
-    public List<mathandel.backend.model.client.ModeratorRequestTO> getModeratorRequests() {
-        return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(element -> ServerToClientDataConverter.mapModeratorRequest(element)).collect(Collectors.toList());
+    public List<ModeratorRequestTO> getModeratorRequests() {
+        return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toList());
     }
 
 
     public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> moderatorRequestMessageRequests) {
         ModeratorRequest moderatorRequest;
 
-        for (ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
+        for (mathandel.backend.model.client.ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
             moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(moderatorRequestMessageRequest.getUserId()).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + moderatorRequestMessageRequest.getUserId()));
             moderatorRequestsRepository.save(moderatorRequest.setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().setName(ModeratorRequestStatusName.ACCEPTED)));
         }
@@ -68,11 +68,11 @@ public class RoleService {
         return new ApiResponse(true, "Requests resolved");
     }
 
-    private boolean hasRole(RoleName roleName, User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals(roleName));
+    public ModeratorRequestTO getUserRequests(Long userId) {
+        return ServerToClientDataConverter.mapModeratorRequest(moderatorRequestsRepository.findModeratorRequestsByUser_Id(userId).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + userId)));
     }
 
-    public ModeratorRequest getUserRequests(Long userId) {
-        return moderatorRequestsRepository.findModeratorRequestsByUser_Id(userId).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + userId));
+    private boolean hasRole(RoleName roleName, User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(roleName));
     }
 }

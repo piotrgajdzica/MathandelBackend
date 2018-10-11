@@ -6,11 +6,12 @@ import javax.persistence.*;
 @Table(name = "moderator_request")
 public class ModeratorRequest {
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     private User user;
 
     @Column(length = 300)
@@ -57,4 +58,6 @@ public class ModeratorRequest {
         this.moderatorRequestStatus = moderatorRequestStatus;
         return this;
     }
+
+
 }

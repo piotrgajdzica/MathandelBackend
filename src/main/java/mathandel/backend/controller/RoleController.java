@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.payload.request.ModeratorRequestReasonRequest;
+import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -25,7 +25,7 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> requestModerator(@CurrentUser UserPrincipal currentUser,
-                                              @Valid @RequestBody ModeratorRequestReasonRequest reason) {
+                                              @Valid @RequestBody ModeratorRequestTO reason) {
         ApiResponse apiResponse = roleService.requestModerator(reason, currentUser.getId());
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }

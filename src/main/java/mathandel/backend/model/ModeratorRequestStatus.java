@@ -19,6 +19,7 @@ public class ModeratorRequestStatus {
     public ModeratorRequestStatus() {
     }
 
+
     public Long getId() {
         return id;
     }
