@@ -1,13 +1,13 @@
-package mathandel.backend.service;
+package mathandel.backend.utils;
 
+import mathandel.backend.client.model.UserTO;
 import mathandel.backend.model.ModeratorRequest;
 import mathandel.backend.model.User;
-import mathandel.backend.model.client.ModeratorRequestTO;
-import mathandel.backend.model.client.UserTO;
+import mathandel.backend.client.model.ModeratorRequestTO;
 
 public class ServerToClientDataConverter {
     public static ModeratorRequestTO mapModeratorRequest(ModeratorRequest moderatorRequest) {
-                return new mathandel.backend.model.client.ModeratorRequestTO()
+                return new ModeratorRequestTO()
                         .setModeratorRequestStatus(String.valueOf(moderatorRequest.getModeratorRequestStatus().getName()))
                         .setReason(moderatorRequest.getReason())
                         .setUser(mapUserFull(moderatorRequest.getUser()));

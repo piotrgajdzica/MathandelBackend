@@ -1,4 +1,4 @@
-package mathandel.backend.model.client;
+package mathandel.backend.client.model;
 
 public class ModeratorRequestTO {
     private UserTO user;

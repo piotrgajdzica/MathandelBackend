@@ -4,11 +4,12 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.*;
-import mathandel.backend.model.client.ModeratorRequestTO;
+import mathandel.backend.client.model.ModeratorRequestTO;
 import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
+import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,7 @@ public class RoleService {
     public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> moderatorRequestMessageRequests) {
         ModeratorRequest moderatorRequest;
 
-        for (mathandel.backend.model.client.ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
+        for (ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
             moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(moderatorRequestMessageRequest.getUserId()).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + moderatorRequestMessageRequest.getUserId()));
             moderatorRequestsRepository.save(moderatorRequest.setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().setName(ModeratorRequestStatusName.ACCEPTED)));
         }

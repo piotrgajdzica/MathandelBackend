@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.model.client.ModeratorRequestTO;
+import mathandel.backend.client.model.ModeratorRequestTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.RoleService;
