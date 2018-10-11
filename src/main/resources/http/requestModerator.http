@@ -1,0 +1,9 @@
+POST http://localhost:8080//api/moderatorRequests
+Content-Type: Application/Json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTM5Mjc2NDcyLCJleHAiOjE1Mzk4ODEyNzJ9.8-yfHGzVq89zNopzKNNkD-6dKiFRxuHUDaljaCrglAbSJ9LliWM0nPgCvbUhUCQXgOLUgLswotA1ifA5hD0MHQ
+
+< requestModerator.json
+
+###
+   #
+   ####

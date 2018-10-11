@@ -70,6 +70,8 @@ public class DBDataInitializer implements ApplicationRunner {
         user.setRoles(roles);
 
         userRepository.save(user);
+
+        // todo zaladowac requesty
     }
 }
 
