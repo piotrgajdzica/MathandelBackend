@@ -1,7 +1,6 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.payload.request.ModeratorRequestReasonRequest;
-import mathandel.backend.payload.request.ModeratorRequestStatusChangeRequest;
 import mathandel.backend.payload.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -39,7 +38,7 @@ public class RoleController {
 
     @PutMapping("resolve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> resolveModeratorRequest(@RequestBody List<ModeratorRequestStatusChangeRequest> moderatorRequestMessageRequests) {
+    public ResponseEntity<?> resolveModeratorRequest(@RequestBody List<ModeratorRequestTO> moderatorRequestMessageRequests) {
         ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestMessageRequests);
         return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
     }

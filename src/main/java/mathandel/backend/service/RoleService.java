@@ -2,10 +2,9 @@ package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
 import mathandel.backend.model.*;
+import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.payload.request.ModeratorRequestReasonRequest;
-import mathandel.backend.payload.request.ModeratorRequestStatusChangeRequest;
 import mathandel.backend.payload.response.ApiResponse;
-import mathandel.backend.payload.response.ModeratorRequestsResponse;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
@@ -52,15 +52,15 @@ public class RoleService {
         return new ApiResponse(true, "Request submitted");
     }
 
-    public ApiResponse getModeratorRequests() {
-        return new ModeratorRequestsResponse(true, "Success").setModeratorRequests(moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING));
+    public List<mathandel.backend.model.client.ModeratorRequestTO> getModeratorRequests() {
+        return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(element -> ServerToClientDataConverter.mapModeratorRequest(element)).collect(Collectors.toList());
     }
 
 
-    public ApiResponse resolveModeratorRequests(List<ModeratorRequestStatusChangeRequest> moderatorRequestMessageRequests) {
+    public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> moderatorRequestMessageRequests) {
         ModeratorRequest moderatorRequest;
 
-        for (ModeratorRequestStatusChangeRequest moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
+        for (ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
             moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(moderatorRequestMessageRequest.getUserId()).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + moderatorRequestMessageRequest.getUserId()));
             moderatorRequestsRepository.save(moderatorRequest.setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().setName(ModeratorRequestStatusName.ACCEPTED)));
         }
