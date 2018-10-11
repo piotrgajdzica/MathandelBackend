@@ -33,8 +33,7 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody UserTO getMyData(@CurrentUser UserPrincipal currentUser) {
-        UserTO bleble = userService.getUserData(currentUser.getId());
-        return bleble;
+        return userService.getUserData(currentUser.getId());
     }
 
     @ResponseStatus(OK)
