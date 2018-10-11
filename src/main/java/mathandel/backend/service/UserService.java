@@ -4,6 +4,7 @@ import mathandel.backend.client.model.RoleTO;
 import mathandel.backend.client.model.UserTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.Role;
@@ -31,14 +32,11 @@ public class UserService {
     }
 
     public ApiResponse joinEdition(Long userId, Long editionId) {
-        Edition edition = editionRepository.findById(editionId).orElse(null);
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
-        if(edition == null) {
-            return new ApiResponse(false, "Edition doesn't exist");
-        }
-        if(edition.getParticipants().size() == edition.getMaxParticipants()) {
-            return new ApiResponse(false, "Edition is full");
+        if (edition.getParticipants().size() == edition.getMaxParticipants()) {
+            throw new BadRequestException("Edition is full");
         }
 
         edition.getParticipants().add(user);
@@ -48,31 +46,17 @@ public class UserService {
     }
 
     public UserTO getUserData(Long userID) {
-        User user = userRepository.findById(userID).orElse(null);
-        if (user != null) {
-            return mapUserData(user);
-        } else {
-            throw new ResourceNotFoundException("User", "id", userID);
-        }
-    }
-
-    public UserTO getMyData(Long userID) {
-        User user = userRepository.findById(userID).orElse(null);
-        if (user != null) {
-            return mapMyData(user);
-        } else {
-            throw new ResourceNotFoundException("User", "id", userID);
-        }
+        User user = userRepository.findById(userID).orElseThrow(() -> new ResourceNotFoundException("User", "id", userID));
+        return mapUser(user);
     }
 
     public ApiResponse editMyData(Long userId, UserTO userTO) {
 
         if (userRepository.existsByUsername(userTO.getUsername())) {
-            return new ApiResponse(false, "Username is already taken");
+            throw new BadRequestException("Username is already taken");
         }
-
         if (userRepository.existsByEmail(userTO.getEmail())) {
-            return new ApiResponse(false, "Email Address already in use");
+            throw new BadRequestException("Email Address already in use");
         }
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"))
@@ -92,22 +76,14 @@ public class UserService {
         return new ApiResponse(true, "Password changed successfully");
     }
 
-    public static UserTO mapUserData(User user) {
-        return mapUser(user);
-    }
-
-    //todo edycji nie zwracamy, role zwracamy
-    public static UserTO mapMyData(User user) {
-        return mapUser(user).setRoles(mapRoles(user.getRoles()));
-    }
-
     public static UserTO mapUser(User user) {
         return new UserTO()
                 .setId(user.getId())
                 .setName(user.getName())
                 .setSurname(user.getSurname())
                 .setUsername(user.getUsername())
-                .setEmail(user.getEmail());
+                .setEmail(user.getEmail())
+                .setRoles(mapRoles(user.getRoles()));
     }
 
     public static Set<RoleTO> mapRoles(Set<Role> roles) {

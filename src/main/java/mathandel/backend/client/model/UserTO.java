@@ -2,6 +2,7 @@ package mathandel.backend.client.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.Set;
 
 public class UserTO {
 
-    private Long Id;
+    private Long id;
 
     @NotBlank
     @Size(min = 4, max = 40)
@@ -32,11 +33,11 @@ public class UserTO {
     private Set<RoleTO> roles;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public UserTO setId(Long id) {
-        Id = id;
+        this.id = id;
         return this;
     }
 
@@ -98,7 +99,7 @@ public class UserTO {
         UserTO userTO = (UserTO) o;
 
         return new EqualsBuilder()
-                .append(Id, userTO.Id)
+                .append(id, userTO.id)
                 .append(name, userTO.name)
                 .append(surname, userTO.surname)
                 .append(username, userTO.username)
@@ -110,12 +111,24 @@ public class UserTO {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(Id)
+                .append(id)
                 .append(name)
                 .append(surname)
                 .append(username)
                 .append(email)
                 .append(roles)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("surname", surname)
+                .append("username", username)
+                .append("email", email)
+                .append("roles", roles)
+                .toString();
     }
 }

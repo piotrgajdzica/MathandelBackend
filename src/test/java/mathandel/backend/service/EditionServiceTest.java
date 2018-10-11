@@ -3,6 +3,7 @@ package mathandel.backend.service;
 import mathandel.backend.client.model.EditionTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.EditionStatusType;
 import mathandel.backend.model.User;
@@ -31,8 +32,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class EditionServiceTest {
 
-    private Long userId = 1L;
-    private User user = new User("James", "Smith", "jsmith", "jsmith@gmail.com", "jsmith123");
+    private final Long userId = 1L;
+    private final User user = new User("James", "Smith", "jsmith", "jsmith@gmail.com", "jsmith123");
 
     private EditionTO editionTO = new EditionTO()
             .setName("Mathandel 4000")
@@ -69,7 +70,7 @@ public class EditionServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenCreateUserDoesntExist() {
+    public void shouldFailOnCreateUserDoesntExist() {
         // given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -84,16 +85,13 @@ public class EditionServiceTest {
         // given
         when(editionRepository.existsByName(editionTO.getName())).thenReturn(true);
 
-        // when
-        ApiResponse apiResponse = editionService.createEdition(editionTO, userId);
-
-        // then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition name already exists.");
+        // when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> editionService.createEdition(editionTO, userId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Edition name already exists");
     }
 
     @Test
-    public void shouldThrowExceptionWhenEditUserDoesntExist() {
+    public void shouldFailOnEditUserDoesntExist() {
         // given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -104,37 +102,31 @@ public class EditionServiceTest {
     }
 
     @Test
-    public void shouldFailModeratorErrorResponse() {
+    public void shouldFailOnEditEditionNotModerator() {
         // given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        // when
-        ApiResponse apiResponse = editionService.editEdition(editionTO, editionId, userId);
-
-        // then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("You are not moderator of this edition");
+        // when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> editionService.editEdition(editionTO, editionId, userId));
+        assertThat(badRequestException.getMessage()).isEqualTo("You are not moderator of this edition");
     }
 
     @Test
-    public void shouldReturnEditionNameAlreadyTakenResponse() {
+    public void shouldFailOnEditEditionNameAlreadyExists() {
         // given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         edition.getModerators().add(user);
         when(editionRepository.existsByName(editionTO.getName())).thenReturn(true);
 
-        // when
-        ApiResponse apiResponse = editionService.editEdition(editionTO, editionId, userId);
-
-        // then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition name already exists");
+        // when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> editionService.editEdition(editionTO, editionId, userId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Edition name already exists");
     }
 
     @Test
-    public void shouldReturnEditionDateErrorResponse() {
+    public void shouldFailEditEditionDateError() {
         // given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -142,12 +134,9 @@ public class EditionServiceTest {
         when(editionRepository.existsByName(editionTO.getName())).thenReturn(false);
         editionTO.setEndDate(LocalDate.now().minusDays(1));
 
-        // when
-        ApiResponse apiResponse = editionService.editEdition(editionTO, editionId, userId);
-
-        // then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition end date cannot be in the past");
+        // when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> editionService.editEdition(editionTO, editionId, userId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Edition end date cannot be in the past");
     }
 
     @Test

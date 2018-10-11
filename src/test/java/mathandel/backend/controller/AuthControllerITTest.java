@@ -37,11 +37,11 @@ public class AuthControllerITTest {
     @Autowired
     AuthController authController;
 
-    private String name = "John";
-    private String surname = "Smith";
-    private String username = "jsmith";
-    private String email = "jsmith@gmail.com";
-    private String password = "jsmith123";
+    private final String name = "John";
+    private final String surname = "Smith";
+    private final String username = "jsmith";
+    private final String email = "jsmith@gmail.com";
+    private final String password = "jsmith123";
 
     private Gson gson = new Gson();
 
@@ -79,13 +79,12 @@ public class AuthControllerITTest {
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest)));
 
-
         //then
-        mockMvc.perform(post("/api/auth/signup")
+        MvcResult mvcResult = mockMvc.perform(post("/api/auth/signup")
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest.setEmail("diffrent@email.com"))))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("{\"message\":\"Username is already taken.\"}"));
+                .andReturn();
     }
 
     @Test

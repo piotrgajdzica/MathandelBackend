@@ -3,6 +3,8 @@ package mathandel.backend.service;
 import mathandel.backend.client.model.EditionTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
+import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.EditionStatusType;
 import mathandel.backend.model.User;
@@ -35,10 +37,10 @@ public class EditionService {
     public ApiResponse createEdition(EditionTO editionTO, Long userId) {
 
         if (editionRepository.existsByName(editionTO.getName())) {
-            return new ApiResponse(false, "Edition name already exists.");
+            throw new BadRequestException("Edition name already exists");
         }
         if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            return new ApiResponse(false, "Edition end date cannot be in the past");
+            throw new BadRequestException("Edition end date cannot be in the past");
         }
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
@@ -66,22 +68,19 @@ public class EditionService {
     public ApiResponse editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
-        Edition edition = editionRepository.findById(editionId).orElse(null);
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(edition == null) {
-            return new ApiResponse(false, "Edition doesn't exist");
-        }
         if (!edition.getModerators().contains(user)) {
-            return new ApiResponse(false, "You are not moderator of this edition");
+            throw new BadRequestException("You are not moderator of this edition");
         }
         if (editionRepository.existsByName(editionTO.getName())) {
-            return new ApiResponse(false, "Edition name already exists");
+            throw new BadRequestException("Edition name already exists");
         }
         if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            return new ApiResponse(false, "Edition end date cannot be in the past");
+            throw new BadRequestException("Edition end date cannot be in the past");
         }
         if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
-            return new ApiResponse(false, "Cannot lower max number of participants");
+            throw new BadRequestException("Cannot lower max number of participants");
         }
 
         edition.setName(editionTO.getName());

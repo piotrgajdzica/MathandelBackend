@@ -3,6 +3,7 @@ package mathandel.backend.service;
 import mathandel.backend.client.model.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.EditionStatusType;
@@ -46,21 +47,17 @@ public class ProductService {
     //todo if preferences exists shouldnt be able to do this
     public ApiResponse editProduct(Long userId, ProductTO productTO, Long productId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
-        Product product = productRepository.findById(productId).orElse(null);
-
-        if(product == null) {
-            return new ApiResponse(false, "Product doesn't exist");
-        }
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
         if (!user.getId().equals(product.getUser().getId())) {
-            return new ApiResponse(false, "You have no access to this resource");
+            throw new BadRequestException("You have no access to this resource");
         }
 
         Edition edition = product.getEdition();
         if (edition != null) {
             EditionStatusType editionStatusType = edition.getEditionStatusType();
             if (editionStatusType.getEditionStatusName() != EditionStatusName.OPENED) {
-                return new ApiResponse(false,"Product's edition is not opened");
+                throw new BadRequestException("Product's edition is not opened");
             }
         }
 
@@ -72,32 +69,22 @@ public class ProductService {
     }
 
     public ProductTO getProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product != null) {
-            return mapProduct(product);
-        } else {
-            throw new ResourceNotFoundException("Product", "id", productId);
-        }
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        return mapProduct(product);
     }
 
     public ApiResponse assignProductToEdition(Long userId, Long editionId, Long productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        Edition edition = editionRepository.findById(editionId).orElse(null);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(product == null) {
-            return new ApiResponse(false, "Product doesn't exist");
-        }
-        if(edition == null) {
-            return new ApiResponse(false,"Edition doesn't exist");
-        }
         if(edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
-            return new ApiResponse(false, "Edition isn't opened");
+            throw new BadRequestException("Edition is not opened");
         }
         if (!userId.equals(product.getUser().getId())) {
-            return new ApiResponse(false, "You have no access to this product");
+            throw new BadRequestException("You have no access to this product");
         }
         if (product.getEdition() != null) {
-            return new ApiResponse(false, "Product already in edition");
+            throw new BadRequestException("Product already in edition");
         }
 
         product.setEdition(edition);

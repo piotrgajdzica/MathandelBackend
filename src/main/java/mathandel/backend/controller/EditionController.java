@@ -73,4 +73,6 @@ public class EditionController {
         return ResponseEntity.ok(productService.getMyProductsFromEdition(currentUser.getId(), editionId));
     }
 
+    //todo makeUserModeratorOfEdition
+
 }

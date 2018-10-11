@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getMyData(@CurrentUser UserPrincipal currentUser) {
-        return ResponseEntity.ok(userService.getMyData(currentUser.getId()));
+        return ResponseEntity.ok(userService.getUserData(currentUser.getId()));
     }
 
     @PutMapping("/me")

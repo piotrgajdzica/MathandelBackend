@@ -2,6 +2,7 @@ package mathandel.backend.service;
 
 import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.Role;
 import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.client.request.SignUpRequest;
@@ -69,14 +70,15 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void shouldThrowAppException() {
+    public void shouldNotFindUserRole() {
         //given
         when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
         when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.empty());
+
         //when then
         AppException appException = assertThrows(AppException.class, () -> authService.signUp(signUpRequest));
-        assertThat(appException.getMessage()).isEqualTo(("User Role not in database."));
+        assertThat(appException.getMessage()).isEqualTo(("User Role not in database"));
     }
 
     @Test
@@ -85,26 +87,18 @@ public class AuthServiceTest {
         when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);
 
-        //when
-        ApiResponse apiResponse = authService.signUp(signUpRequest);
-
-        //then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Email Address already in use.");
-
+        //when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> authService.signUp(signUpRequest));
+        assertThat(badRequestException.getMessage()).isEqualTo("Email Address already in use");
     }
 
     @Test
-    public void shouldAlreadyExistsByUsername() {
+    public void shouldFailOnSignUpUsernameInUse() {
         //given
         when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(true);
 
-        //when
-        ApiResponse apiResponse = authService.signUp(signUpRequest);
-
-        //then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Username is already taken.");
-
+        //when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> authService.signUp(signUpRequest));
+        assertThat(badRequestException.getMessage()).isEqualTo("Username is already in use");
     }
 }

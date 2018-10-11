@@ -3,6 +3,7 @@ package mathandel.backend.service;
 import mathandel.backend.client.model.UserTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.Edition;
 import mathandel.backend.model.Role;
@@ -20,8 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collections;
 import java.util.Optional;
 
-import static mathandel.backend.service.UserService.mapMyData;
-import static mathandel.backend.service.UserService.mapUserData;
+import static mathandel.backend.service.UserService.mapUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -30,13 +30,13 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class UserServiceTest {
 
-    private Long editionId = 1L;
-    private Long userId = 2L;
-    private String name = "name";
-    private String surname = "surname";
-    private String email = "email@emial.com";
-    private String username = "username";
-    private String newPassword = "newPassword";
+    private final Long editionId = 1L;
+    private final Long userId = 2L;
+    private final String name = "name";
+    private final String surname = "surname";
+    private final String email = "email@emial.com";
+    private final String username = "username";
+    private final String newPassword = "newPassword";
 
     private Edition edition = new Edition()
             .setId(editionId)
@@ -83,7 +83,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionOnJoinEditionUserDoesntExist() {
+    public void shouldFailJoinEditionUserDoesntExist() {
         //given
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -96,21 +96,20 @@ public class UserServiceTest {
     @Test
     public void shouldFailOnJoinEditionEditionDoesntExist() {
         //given
+        ResourceNotFoundException expected = new ResourceNotFoundException("Edition", "id", editionId);
         when(editionRepository.findById(editionId)).thenReturn(Optional.empty());
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        //when
-        ApiResponse apiResponse = userService.joinEdition(userId, editionId);
-
-        //then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition doesn't exist");
+        //when then
+        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
+                () -> userService.joinEdition(userId, editionId));
+        assertThat(resourceNotFoundException).isEqualTo(expected);
     }
 
     @Test
     public void shouldGetUserData() {
         //given
-        UserTO expected = mapUserData(user);
+        UserTO expected = mapUser(user);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -122,41 +121,15 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionOnGetUserData() {
+    public void shouldFailGetUserData() {
         //given
+        ResourceNotFoundException expected = new ResourceNotFoundException("User", "id", userId);
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //when then
-        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> userService.getUserData(userId));
-        assertThat(resourceNotFoundException.getResourceName()).isEqualTo("User");
-        assertThat(resourceNotFoundException.getFieldName()).isEqualTo("id");
-        assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(userId);
-    }
-
-    @Test
-    public void shouldGetMyData() {
-        //given
-        UserTO expected = mapMyData(user);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-        //when
-        UserTO actual = userService.getMyData(userId);
-
-        //then
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void shouldThrowExceptionOnGetMyData() {
-        //given
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
-
-        //when then
-        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> userService.getMyData(userId));
-        assertThat(resourceNotFoundException.getResourceName()).isEqualTo("User");
-        assertThat(resourceNotFoundException.getFieldName()).isEqualTo("id");
-        assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(userId);
+        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
+                () -> userService.getUserData(userId));
+        assertThat(resourceNotFoundException).isEqualTo(expected);
     }
 
     @Test
@@ -175,30 +148,26 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shoudlFailEditMyDataWhenUsernameIsTaken() {
+    public void shouldFailEditMyDataUsernameIsTaken() {
         //given
         when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(true);
 
-        //when
-        ApiResponse apiResponse = userService.editMyData(userId, userTO);
-
-        //then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Username is already taken");
+        //when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+                () ->  userService.editMyData(userId, userTO));
+        assertThat(badRequestException.getMessage()).isEqualTo("Username is already taken");
     }
 
     @Test
-    public void shouldFailEditMyDataWhenEmailIsTaken() {
+    public void shouldFailEditMyDataEmailIsTaken() {
         //given
         when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(true);
 
-        //when
-        ApiResponse apiResponse = userService.editMyData(userId, userTO);
-
-        //then
-        assertThat(apiResponse.getSuccess()).isFalse();
-        assertThat(apiResponse.getMessage()).isEqualTo("Email Address already in use");
+        //when then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+                () ->  userService.editMyData(userId, userTO));
+        assertThat(badRequestException.getMessage()).isEqualTo("Email Address already in use");
     }
 
     @Test

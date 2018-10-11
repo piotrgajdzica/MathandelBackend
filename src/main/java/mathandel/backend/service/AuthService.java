@@ -1,6 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.Role;
 import mathandel.backend.model.enums.RoleName;
 import mathandel.backend.model.User;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-//todo it tests
 @Service
 public class AuthService {
 
@@ -52,11 +52,11 @@ public class AuthService {
     public ApiResponse signUp(SignUpRequest signUpRequest) {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ApiResponse(false, "Username is already taken.");
+            throw new BadRequestException("Username is already in use");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ApiResponse(false, "Email Address already in use.");
+            throw new BadRequestException("Email Address already in use");
         }
 
         User user = new User(
@@ -69,8 +69,7 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not in database."));
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not in database"));
 
         user.setRoles(Collections.singleton(userRole));
         userRepository.save(user);
