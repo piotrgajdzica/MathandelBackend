@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
-import static mathandel.backend.utils.UrlPaths.signIn;
-import static mathandel.backend.utils.UrlPaths.signUp;
+import static mathandel.backend.utils.UrlPaths.signInPath;
+import static mathandel.backend.utils.UrlPaths.signUpPath;
 
 @Controller
 public class AuthController {
@@ -24,12 +24,12 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping(signIn)
+    @PostMapping(signInPath)
     public @ResponseBody JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
 
-    @PostMapping(signUp)
+    @PostMapping(signUpPath)
     public @ResponseBody ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
     }

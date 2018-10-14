@@ -4,8 +4,8 @@ public class UrlPaths {
 
     // /api/auth
     public static final String authPath = "/api/auth";
-    public static final String signIn = authPath + "/signIn";
-    public static final String signUp = authPath + "/signUp";
+    public static final String signInPath = authPath + "/signInPath";
+    public static final String signUpPath = authPath + "/signUpPath";
 
     // /api/editions
     public static final String editionsPath = "/api/editions";

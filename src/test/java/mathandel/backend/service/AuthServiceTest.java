@@ -65,7 +65,6 @@ public class AuthServiceTest {
         ApiResponse apiResponse = authService.signUp(signUpRequest);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("User registered successfully");
     }
 
