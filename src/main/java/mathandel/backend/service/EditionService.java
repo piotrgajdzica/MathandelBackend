@@ -64,7 +64,7 @@ public class EditionService {
 
         editionRepository.save(edition);
 
-        return new ApiResponse(true, "Edition added successfully");
+        return new ApiResponse("Edition added successfully");
     }
 
     public ApiResponse editEdition(EditionTO editionTO, Long editionId, Long userId) {
@@ -89,7 +89,7 @@ public class EditionService {
         edition.setEndDate(editionTO.getEndDate());
         editionRepository.save(edition);
 
-        return new ApiResponse(true, "Edition edited successfully");
+        return new ApiResponse("Edition edited successfully");
     }
 
     public List<EditionTO> getEditions() {
@@ -119,6 +119,6 @@ public class EditionService {
         }
 
         edition.getModerators().add(requestedUser);
-        return new ApiResponse(true, "User " + username + " become moderator of edition " + editionId);
+        return new ApiResponse("User " + username + " become moderator of edition " + editionId);
     }
 }

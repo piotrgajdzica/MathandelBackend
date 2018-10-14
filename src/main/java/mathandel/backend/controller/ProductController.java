@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-import static org.springframework.http.HttpStatus.OK;
+import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
-@RequestMapping("/api/products")
 public class ProductController {
 
     private ProductService productService;
@@ -23,14 +22,14 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping(productsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user,
                                                  @RequestBody ProductTO productTO) {
         return productService.createProduct(user.getId(), productTO);
     }
 
-    @PutMapping("{productId}")
+    @PutMapping(productPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse editProduct(@CurrentUser UserPrincipal user,
                                                  @RequestBody ProductTO productTO,
@@ -39,13 +38,13 @@ public class ProductController {
 
     }
 
-    @GetMapping("{productId}")
+    @GetMapping(productPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO getProduct(@PathVariable Long productId) {
         return productService.getProduct(productId);
     }
 
-    @GetMapping("/not-assigned")
+    @GetMapping(notAssignedProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody Set<ProductTO> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
         return productService.getNotAssignedProducts(current.getId());

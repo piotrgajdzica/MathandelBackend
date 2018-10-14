@@ -74,6 +74,6 @@ public class AuthService {
         user.setRoles(Collections.singleton(userRole));
         userRepository.save(user);
 
-        return new ApiResponse(true, "User registered successfully");
+        return new ApiResponse("User registered successfully");
     }
 }

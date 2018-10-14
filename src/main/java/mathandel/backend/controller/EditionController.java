@@ -16,13 +16,15 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
+import static mathandel.backend.utils.UrlPaths.*;
+
 @Controller
-@RequestMapping("/api/editions")
 public class EditionController {
 
     private final EditionService editionService;
     private final UserService userService;
     private final ProductService productService;
+
 
     public EditionController(EditionService editionService, UserService userService, ProductService productService) {
         this.editionService = editionService;
@@ -30,35 +32,35 @@ public class EditionController {
         this.productService = productService;
     }
 
-    @PostMapping
+    @PostMapping(editionsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody ApiResponse createEdition(@CurrentUser UserPrincipal currentUser,
                                                    @Valid @RequestBody EditionTO editionTO) {
         return editionService.createEdition(editionTO, currentUser.getId());
     }
 
-    @GetMapping
+    @GetMapping(editionsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody List<EditionTO> getEditions() {
         return editionService.getEditions();
     }
 
-    @PutMapping("{editionId}")
+    @PutMapping(editionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody ApiResponse editEdition(@CurrentUser UserPrincipal currentUser,
                                          @Valid @RequestBody EditionTO editionTO,
-                                         @PathVariable("editionId") Long editionId) {
+                                         @PathVariable Long editionId) {
         return editionService.editEdition(editionTO, editionId, currentUser.getId());
     }
 
-    @PostMapping("{editionId}/users")
+    @PostMapping(editionParticipantsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse joinEdition(@CurrentUser UserPrincipal currentUser,
-                                                 @PathVariable("editionId") Long editionId) {
+                                                 @PathVariable Long editionId) {
         return userService.joinEdition(currentUser.getId(), editionId);
     }
 
-    @PutMapping("{editionId}/products/{productId}")
+    @PutMapping(editionProductPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse assignProductToEdition(@CurrentUser UserPrincipal currentUser,
                                                             @PathVariable Long editionId,
@@ -66,26 +68,25 @@ public class EditionController {
         return productService.assignProductToEdition(currentUser.getId(), editionId, productId);
     }
 
-    @GetMapping("{editionId}/products")
+    @GetMapping(editionProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody Set<ProductTO> getProductsFromEdition(@CurrentUser UserPrincipal currentUser,
                                                                @PathVariable Long editionId) {
         return productService.getProductsFromEdition(currentUser.getId(), editionId);
     }
 
-    @GetMapping("{editionId}/products/my")
+    @GetMapping(editionMyProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody Set<ProductTO> getMyProductsFromEdition(@CurrentUser UserPrincipal currentUser,
                                                                  @PathVariable Long editionId) {
         return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
-    @GetMapping("{editionId}/moderators")
+    @GetMapping(editionModeratorsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody ApiResponse makeUserEditionModerator(@CurrentUser UserPrincipal currentUser,
                                                               @PathVariable Long editionId,
                                                               @Valid @RequestBody String username) {
         return editionService.makeUserEditionModerator(currentUser.getId(), editionId, username);
     }
-
 }

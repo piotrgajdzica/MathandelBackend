@@ -42,7 +42,7 @@ public class UserService {
         edition.getParticipants().add(user);
         editionRepository.save(edition);
 
-        return new ApiResponse(true, "User added to edition successfully");
+        return new ApiResponse("User added to edition successfully");
     }
 
     public UserTO getUserData(Long userID) {
@@ -66,14 +66,14 @@ public class UserService {
                 .setEmail(userTO.getEmail());
 
         userRepository.save(user);
-        return new ApiResponse(true, "Successfully edited user");
+        return new ApiResponse("Successfully edited user");
     }
 
     public ApiResponse changePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        return new ApiResponse(true, "Password changed successfully");
+        return new ApiResponse("Password changed successfully");
     }
 
     public static UserTO mapUser(User user) {

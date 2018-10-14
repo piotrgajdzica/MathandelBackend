@@ -6,7 +6,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "edition_status_type")
+@Table(name = "edition_status_types")
 public class EditionStatusType {
 
     @Id

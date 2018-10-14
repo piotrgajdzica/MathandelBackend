@@ -27,7 +27,7 @@ public class RoleController {
     public ResponseEntity<?> requestModerator(@CurrentUser UserPrincipal currentUser,
                                               @Valid @RequestBody ModeratorRequestTO reason) {
         ApiResponse apiResponse = roleService.requestModerator(reason, currentUser.getId());
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping
@@ -40,7 +40,7 @@ public class RoleController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> resolveModeratorRequest(@RequestBody List<ModeratorRequestTO> moderatorRequestMessageRequests) {
         ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestMessageRequests);
-        return apiResponse.getSuccess() ? ResponseEntity.ok(apiResponse) : ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("my")

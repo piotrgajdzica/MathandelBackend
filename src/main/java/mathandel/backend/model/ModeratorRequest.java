@@ -3,7 +3,7 @@ package mathandel.backend.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "moderator_request")
+@Table(name = "moderator_requests")
 public class ModeratorRequest {
     @Id
 

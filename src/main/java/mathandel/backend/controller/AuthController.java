@@ -5,12 +5,17 @@ import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.service.AuthService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
-@RestController
-@RequestMapping("/api/auth")
+import static mathandel.backend.utils.UrlPaths.signIn;
+import static mathandel.backend.utils.UrlPaths.signUp;
+
+@Controller
 public class AuthController {
 
     private final AuthService authService;
@@ -19,12 +24,12 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/signin")
+    @PostMapping(signIn)
     public @ResponseBody JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
 
-    @PostMapping("/signup")
+    @PostMapping(signUp)
     public @ResponseBody ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
     }
