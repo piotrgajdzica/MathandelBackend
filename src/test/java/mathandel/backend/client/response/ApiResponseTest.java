@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApiResponseTest {
 
-    private String payload = "{\"success\":true,\"message\":\"User created successfully\"}";
-    private ApiResponse apiResponse = new ApiResponse(true, "User created successfully");
+    private String payload = "{\"message\":\"User created successfully\"}";
+    private ApiResponse apiResponse = new ApiResponse("User created successfully");
     private Gson gson = new Gson();
 
     @Test

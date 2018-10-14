@@ -112,7 +112,6 @@ public class ProductServiceTest {
         ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Product edited successfully");
     }
 
@@ -199,7 +198,6 @@ public class ProductServiceTest {
         ApiResponse apiResponse = productService.assignProductToEdition(userId, editionId, productId);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Product successfully assigned to edition");
     }
 

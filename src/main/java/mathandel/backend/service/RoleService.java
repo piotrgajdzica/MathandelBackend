@@ -52,7 +52,7 @@ public class RoleService {
                 .setModeratorRequestStatus(moderatorRequestStatus);
         moderatorRequestsRepository.save(moderatorRequest);
 
-        return new ApiResponse(true, "Request submitted");
+        return new ApiResponse("Request submitted");
     }
 
     public List<ModeratorRequestTO> getModeratorRequests() {
@@ -68,7 +68,7 @@ public class RoleService {
             moderatorRequestsRepository.save(moderatorRequest.setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().setName(ModeratorRequestStatusName.ACCEPTED)));
         }
 
-        return new ApiResponse(true, "Requests resolved");
+        return new ApiResponse("Requests resolved");
     }
 
     public ModeratorRequestTO getUserRequests(Long userId) {

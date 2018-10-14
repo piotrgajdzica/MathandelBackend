@@ -65,7 +65,7 @@ public class ProductService {
                 .setName(productTO.getName());
 
         productRepository.save(product);
-        return new ApiResponse(true, "Product edited successfully");
+        return new ApiResponse("Product edited successfully");
     }
 
     public ProductTO getProduct(Long productId) {
@@ -89,7 +89,7 @@ public class ProductService {
 
         product.setEdition(edition);
         productRepository.save(product);
-        return new ApiResponse(true, "Product successfully assigned to edition");
+        return new ApiResponse("Product successfully assigned to edition");
 
     }
 
@@ -113,7 +113,7 @@ public class ProductService {
         }
     }
 
-    private ProductTO mapProduct(Product product) {
+    public static ProductTO mapProduct(Product product) {
         return new ProductTO()
                 .setId(product.getId())
                 .setName(product.getName())
@@ -122,7 +122,7 @@ public class ProductService {
 
     }
 
-    private Set<ProductTO> mapProducts(Set<Product> products) {
-        return products.stream().map(this::mapProduct).collect(Collectors.toSet());
+    public static Set<ProductTO> mapProducts(Set<Product> products) {
+        return products.stream().map(ProductService::mapProduct).collect(Collectors.toSet());
     }
 }

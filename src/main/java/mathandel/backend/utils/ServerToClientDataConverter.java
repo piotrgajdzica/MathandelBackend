@@ -13,7 +13,6 @@ public class ServerToClientDataConverter {
                         .setModeratorRequestStatus(String.valueOf(moderatorRequest.getModeratorRequestStatus().getName()))
                         .setReason(moderatorRequest.getReason())
                         .setUser(mapUserFull(moderatorRequest.getUser()));
-
     }
 
     private static UserTO mapUserFull(User user) {

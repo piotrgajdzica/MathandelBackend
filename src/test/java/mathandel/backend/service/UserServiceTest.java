@@ -78,7 +78,6 @@ public class UserServiceTest {
         ApiResponse apiResponse = userService.joinEdition(userId, editionId);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("User added to edition successfully");
     }
 
@@ -143,7 +142,6 @@ public class UserServiceTest {
         ApiResponse apiResponse = userService.editMyData(userId, userTO);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Successfully edited user");
     }
 
@@ -192,7 +190,6 @@ public class UserServiceTest {
         ApiResponse apiResponse = userService.changePassword(userId, newPassword);
 
         //then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Password changed successfully");
     }
 

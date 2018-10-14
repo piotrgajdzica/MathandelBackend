@@ -65,7 +65,6 @@ public class EditionServiceTest {
         ApiResponse apiResponse = editionService.createEdition(editionTO, userId);
 
         // then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Edition added successfully");
     }
 
@@ -152,7 +151,6 @@ public class EditionServiceTest {
         ApiResponse apiResponse = editionService.editEdition(editionTO, editionId, userId);
 
         // then
-        assertThat(apiResponse.getSuccess()).isTrue();
         assertThat(apiResponse.getMessage()).isEqualTo("Edition edited successfully");
     }
 

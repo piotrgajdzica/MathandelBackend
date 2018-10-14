@@ -10,8 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static mathandel.backend.utils.UrlPaths.*;
+
 @Controller
-@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,26 +21,26 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userID}")
+    @GetMapping(userPath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody UserTO getUserData(@PathVariable("userID") Long userID) {
-        return userService.getUserData(userID);
+    public @ResponseBody UserTO getUserData(@PathVariable Long userId) {
+        return userService.getUserData(userId);
     }
 
-    @GetMapping("/me")
+    @GetMapping(userMePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody UserTO getMyData(@CurrentUser UserPrincipal currentUser) {
         return userService.getUserData(currentUser.getId());
     }
 
-    @PutMapping("/me")
+    @PutMapping(userMePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse editMyData(@CurrentUser UserPrincipal userPrincipal,
                                                 @RequestBody UserTO userTO){
         return userService.editMyData(userPrincipal.getId(), userTO);
     }
 
-    @PutMapping("/me/password")
+    @PutMapping(userMePasswordPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse changePassword(@CurrentUser UserPrincipal userPrincipal,
                                                     @RequestBody PasswordRequest passwordRequest){

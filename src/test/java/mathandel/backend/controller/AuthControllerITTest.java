@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
+import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import static mathandel.backend.utils.UrlPaths.signInPath;
+import static mathandel.backend.utils.UrlPaths.signUpPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,7 +59,7 @@ public class AuthControllerITTest {
     @Transactional
     public void shouldSignUpAndCreateUserInDB() throws Exception {
         //when
-        mockMvc.perform(post("/api/auth/signup")
+        mockMvc.perform(post(signUpPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest)))
                 .andExpect(status().isOk())
@@ -75,12 +78,12 @@ public class AuthControllerITTest {
     @Transactional
     public void shouldNotSignUpWhenSameUsername() throws Exception {
         //when
-        mockMvc.perform(post("/api/auth/signup")
+        mockMvc.perform(post(signUpPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest)));
 
         //then
-        MvcResult mvcResult = mockMvc.perform(post("/api/auth/signup")
+        MvcResult mvcResult = mockMvc.perform(post(signUpPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest.setEmail("diffrent@email.com"))))
                 .andExpect(status().isBadRequest())
@@ -97,7 +100,7 @@ public class AuthControllerITTest {
         authController.signUp(signUpRequest);
 
         //when
-        MvcResult mvcResult = mockMvc.perform(post("/api/auth/signin")
+        MvcResult mvcResult = mockMvc.perform(post(signInPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signInRequest)))
                 .andExpect(status().isOk())
@@ -118,7 +121,7 @@ public class AuthControllerITTest {
         authController.signUp(signUpRequest);
 
         //when
-        mockMvc.perform(post("/api/auth/signin")
+        mockMvc.perform(post(signInPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signInRequest.setPassword("wrong password"))))
                 .andExpect(status().isUnauthorized())

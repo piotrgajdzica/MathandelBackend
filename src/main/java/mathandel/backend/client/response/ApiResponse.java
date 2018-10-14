@@ -1,26 +1,14 @@
 package mathandel.backend.client.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ApiResponse {
 
-    @JsonIgnore
-    private Boolean success;
     private String message;
 
-    public ApiResponse(Boolean success, String message) {
-        this.success = success;
+    public ApiResponse(String message) {
         this.message = message;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
     }
 
     public String getMessage() {
@@ -44,7 +32,6 @@ public class ApiResponse {
         ApiResponse that = (ApiResponse) o;
 
         return new EqualsBuilder()
-                .append(success, that.success)
                 .append(message, that.message)
                 .isEquals();
     }
@@ -52,7 +39,6 @@ public class ApiResponse {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(success)
                 .append(message)
                 .toHashCode();
     }
