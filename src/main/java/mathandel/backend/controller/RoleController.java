@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.client.model.ModeratorRequestTO;
+import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.RoleService;
@@ -18,35 +18,38 @@ import java.util.List;
 @RequestMapping("/api/moderatorRequests")
 public class RoleController {
 
-    @Autowired
-    RoleService roleService;
+    private final RoleService roleService;
+
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
+
 
     // todo złe urle
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> requestModerator(@CurrentUser UserPrincipal currentUser,
+    public @ResponseBody ApiResponse requestModerator(@CurrentUser UserPrincipal currentUser,
                                               @Valid @RequestBody ModeratorRequestTO reason) {
-        ApiResponse apiResponse = roleService.requestModerator(reason, currentUser.getId());
-        return ResponseEntity.ok(apiResponse);
+        return roleService.requestModerator(reason, currentUser.getId());
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getModeratorRequests() {
-        return ResponseEntity.ok(roleService.getModeratorRequests());
+    public @ResponseBody List<ModeratorRequestTO> getModeratorRequests() {
+        return roleService.getModeratorRequests();
     }
 
+    //todo tochybatrzebaowrapowacwobiekt
     @PutMapping("resolve")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> resolveModeratorRequest(@RequestBody List<ModeratorRequestTO> moderatorRequestMessageRequests) {
-        ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestMessageRequests);
-        return ResponseEntity.ok(apiResponse);
+    public @ResponseBody ApiResponse resolveModeratorRequest(@RequestBody List<ModeratorRequestTO> moderatorRequestMessageRequests) {
+        return roleService.resolveModeratorRequests(moderatorRequestMessageRequests);
     }
 
     @GetMapping("my")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getMyRequest(@CurrentUser UserPrincipal currentUser) {
-        return ResponseEntity.ok(roleService.getUserRequests(currentUser.getId()));
+    public @ResponseBody ModeratorRequestTO getMyRequest(@CurrentUser UserPrincipal currentUser) {
+        return roleService.getUserRequests(currentUser.getId());
     }
 
 

@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 public class GroupProductTO {
 

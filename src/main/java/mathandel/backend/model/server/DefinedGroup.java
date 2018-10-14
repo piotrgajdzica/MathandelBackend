@@ -1,4 +1,4 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

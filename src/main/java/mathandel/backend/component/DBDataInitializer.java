@@ -1,9 +1,11 @@
 package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
-import mathandel.backend.model.*;
-import mathandel.backend.model.enums.EditionStatusName;
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.RoleName;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;

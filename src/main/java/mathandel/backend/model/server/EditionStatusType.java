@@ -1,6 +1,6 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
 
-import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;

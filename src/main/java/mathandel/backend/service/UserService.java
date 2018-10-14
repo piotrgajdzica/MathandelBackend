@@ -1,21 +1,18 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.RoleTO;
-import mathandel.backend.client.model.UserTO;
+import mathandel.backend.model.client.UserTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.User;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRoles;
 
 //todo it tests
 @Service
@@ -86,7 +83,5 @@ public class UserService {
                 .setRoles(mapRoles(user.getRoles()));
     }
 
-    public static Set<RoleTO> mapRoles(Set<Role> roles) {
-        return roles.stream().map(r -> new RoleTO().setRoleName(r.getName())).collect(Collectors.toSet());
-    }
+
 }

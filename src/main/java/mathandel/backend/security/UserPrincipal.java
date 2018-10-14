@@ -1,7 +1,7 @@
 package mathandel.backend.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import mathandel.backend.model.User;
+import mathandel.backend.model.server.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

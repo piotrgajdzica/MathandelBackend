@@ -1,9 +1,9 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.model.DefinedGroupTO;
-import mathandel.backend.client.model.GroupProductTO;
-import mathandel.backend.client.model.ProductTO;
+import mathandel.backend.model.client.DefinedGroupTO;
+import mathandel.backend.model.client.GroupProductTO;
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.DefinedGroupService;
@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 
-import static mathandel.backend.utils.UrlPaths.definedGroup;
-import static mathandel.backend.utils.UrlPaths.definedGroups;
-import static mathandel.backend.utils.UrlPaths.defunedGroupProducts;
+import static mathandel.backend.utils.UrlPaths.*;
 
 //todo think about urls
 @Controller

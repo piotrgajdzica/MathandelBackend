@@ -1,17 +1,16 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "moderator_requests")
 public class ModeratorRequest {
-    @Id
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userId")
     private User user;
 
     @Column(length = 300)

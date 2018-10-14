@@ -1,15 +1,15 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.ProductTO;
+import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.EditionStatusType;
-import mathandel.backend.model.Product;
-import mathandel.backend.model.User;
-import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
@@ -113,7 +113,7 @@ public class ProductService {
         }
     }
 
-    public static ProductTO mapProduct(Product product) {
+    private ProductTO mapProduct(Product product) {
         return new ProductTO()
                 .setId(product.getId())
                 .setName(product.getName())
@@ -122,7 +122,7 @@ public class ProductService {
 
     }
 
-    public static Set<ProductTO> mapProducts(Set<Product> products) {
-        return products.stream().map(ProductService::mapProduct).collect(Collectors.toSet());
+    private Set<ProductTO> mapProducts(Set<Product> products) {
+        return products.stream().map(this::mapProduct).collect(Collectors.toSet());
     }
 }

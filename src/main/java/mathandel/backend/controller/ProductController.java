@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.model.ProductTO;
+import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 public class ProductController {

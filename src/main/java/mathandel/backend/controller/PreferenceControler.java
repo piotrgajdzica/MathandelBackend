@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.model.PreferenceTO;
+import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.DefinedGroupService;
@@ -27,10 +27,12 @@ public class PreferenceControler {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> rateExchange
-            (@CurrentUser UserPrincipal currentUser,
-                                              @Valid @RequestBody PreferenceTO preference) {
-        // todo
+    public ResponseEntity<?> rateExchange(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody PreferenceTO preference) {
+        //todo wystawia gość który ocenial wymiane
+        // todo move to results
+
+
+        return null;
     }
 
 }

@@ -1,13 +1,13 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
 
-import mathandel.backend.model.enums.RoleName;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "moderator_requests_status")
+public class ModeratorRequestStatus {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,25 +15,25 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)
-    private RoleName name;
+    private ModeratorRequestStatusName name;
 
-    public Role() {
+    public ModeratorRequestStatus() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public Role setId(Long id) {
+    public ModeratorRequestStatus setId(Long id) {
         this.id = id;
         return this;
     }
 
-    public RoleName getName() {
+    public ModeratorRequestStatusName getName() {
         return name;
     }
 
-    public Role setName(RoleName name) {
+    public ModeratorRequestStatus setName(ModeratorRequestStatusName name) {
         this.name = name;
         return this;
     }

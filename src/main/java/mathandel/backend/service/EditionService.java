@@ -1,16 +1,16 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.EditionTO;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.EditionStatusType;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.User;
-import mathandel.backend.model.enums.EditionStatusName;
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;
@@ -20,7 +20,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static mathandel.backend.utils.ServerToClientDataConverter.mapEditions;
+
 
 //todo it tests
 @Service
@@ -96,15 +98,7 @@ public class EditionService {
         return mapEditions(editionRepository.findAll());
     }
 
-    private List<EditionTO> mapEditions(List<Edition> all) {
-        return all.stream().map(e -> new EditionTO()
-                .setId(e.getId())
-                .setName(e.getName())
-                .setDescription(e.getDescription())
-                .setEndDate(e.getEndDate())
-                .setNumberOfParticipants(e.getParticipants().size())
-                .setMaxParticipants(e.getMaxParticipants())).collect(Collectors.toList());
-    }
+
 
     public ApiResponse makeUserEditionModerator(Long userId, Long editionId, String username) {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));

@@ -1,7 +1,7 @@
 package mathandel.backend.repository;
 
-import mathandel.backend.model.EditionStatusType;
-import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

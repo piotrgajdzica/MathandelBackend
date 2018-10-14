@@ -1,13 +1,13 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.EditionTO;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.EditionStatusType;
-import mathandel.backend.model.User;
-import mathandel.backend.model.enums.EditionStatusName;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;

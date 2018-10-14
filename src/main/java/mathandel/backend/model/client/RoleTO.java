@@ -1,6 +1,6 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.server.enums.RoleName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

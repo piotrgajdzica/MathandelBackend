@@ -1,7 +1,15 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
+
+import mathandel.backend.model.server.ModeratorRequestStatusName;
 
 public class ModeratorRequestTO {
+    //todo id of request
+    //todo only ids
     private UserTO user;
+    private Long userId;
+    private String reason;
+    //todo as enum
+    private ModeratorRequestStatusName moderatorRequestStatus;
 
     public Long getUserId() {
         return userId;
@@ -11,10 +19,6 @@ public class ModeratorRequestTO {
         this.userId = userId;
         return this;
     }
-
-    private Long userId;
-    private String reason;
-    private String moderatorRequestStatus;
 
     public UserTO getUser() {
         return user;
@@ -34,11 +38,11 @@ public class ModeratorRequestTO {
         return this;
     }
 
-    public String getModeratorRequestStatus() {
+    public ModeratorRequestStatusName getModeratorRequestStatus() {
         return moderatorRequestStatus;
     }
 
-    public ModeratorRequestTO setModeratorRequestStatus(String moderatorRequestStatus) {
+    public ModeratorRequestTO setModeratorRequestStatus(ModeratorRequestStatusName moderatorRequestStatus) {
         this.moderatorRequestStatus = moderatorRequestStatus;
         return this;
     }

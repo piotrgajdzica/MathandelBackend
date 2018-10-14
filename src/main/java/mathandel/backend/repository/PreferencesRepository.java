@@ -1,6 +1,6 @@
 package mathandel.backend.repository;
 
-import mathandel.backend.model.Preference;
+import mathandel.backend.model.server.Preference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

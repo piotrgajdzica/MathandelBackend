@@ -1,6 +1,6 @@
 package mathandel.backend.security;
 
-import mathandel.backend.model.User;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

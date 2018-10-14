@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

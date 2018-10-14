@@ -1,15 +1,17 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "preferences")
 public class Preference {
+
+    //todo maybe GenerationType.AUTO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @ManyToOne
     private User user;
 
     @ManyToOne
@@ -21,9 +23,8 @@ public class Preference {
     @ManyToOne
     private DefinedGroup definedGroup;
 
-    @Column(name = "editionId")
+    @ManyToOne
     private Edition edition;
-
 
     public Long getId() {
         return id;

@@ -1,4 +1,4 @@
-package mathandel.backend.model.enums;
+package mathandel.backend.model.server.enums;
 
 public enum RoleName {
     ROLE_USER,

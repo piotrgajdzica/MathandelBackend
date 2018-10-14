@@ -1,4 +1,6 @@
-package mathandel.backend.model;
+package mathandel.backend.model.server;
+
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

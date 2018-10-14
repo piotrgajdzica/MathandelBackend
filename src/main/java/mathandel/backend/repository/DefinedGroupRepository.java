@@ -1,6 +1,6 @@
 package mathandel.backend.repository;
 
-import mathandel.backend.model.DefinedGroup;
+import mathandel.backend.model.server.DefinedGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

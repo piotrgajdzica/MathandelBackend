@@ -1,13 +1,13 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.UserTO;
+import mathandel.backend.model.client.UserTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.User;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;

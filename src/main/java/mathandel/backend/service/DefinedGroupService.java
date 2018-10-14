@@ -1,15 +1,16 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.DefinedGroupTO;
-import mathandel.backend.client.model.ProductTO;
+import mathandel.backend.model.client.DefinedGroupTO;
+import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.DefinedGroup;
-import mathandel.backend.model.Edition;
-import mathandel.backend.model.Product;
-import mathandel.backend.model.User;
+import mathandel.backend.utils.ServerToClientDataConverter;
+import mathandel.backend.model.server.DefinedGroup;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.DefinedGroupRepository;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static mathandel.backend.service.ProductService.mapProducts;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapProducts;
+
 
 @Service
 public class DefinedGroupService {
@@ -83,15 +85,10 @@ public class DefinedGroupService {
 
         Set<DefinedGroup> definedGroups = definedGroupRepository.findByUser_IdAndEdition_Id(userId, editionId);
 
-        return definedGroups.stream().map(DefinedGroupService::mapDefinedGroup).collect(Collectors.toSet());
+        return definedGroups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
     }
 
-    public static DefinedGroupTO mapDefinedGroup(DefinedGroup definedGroup) {
-        return new DefinedGroupTO()
-                .setId(definedGroup.getId())
-                .setName(definedGroup.getName())
-                .setNumberOfProducts(definedGroup.getProducts().size());
-    }
+
 
     public ApiResponse addProductToDefinedGroup(Long userId, Long editionId, Long groupId, Long productId) {
         DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));

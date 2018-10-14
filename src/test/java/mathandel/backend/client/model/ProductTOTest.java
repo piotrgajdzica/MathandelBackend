@@ -1,6 +1,7 @@
 package mathandel.backend.client.model;
 
 import com.google.gson.Gson;
+import mathandel.backend.model.client.ProductTO;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

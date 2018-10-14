@@ -1,6 +1,7 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 public class PreferenceTO {
+    //todo dodac ograniczenia typu @NotBlank @NotNull
     private Long id;
 
     private Long userId;

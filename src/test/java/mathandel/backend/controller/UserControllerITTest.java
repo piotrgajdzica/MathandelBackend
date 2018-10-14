@@ -1,12 +1,12 @@
 package mathandel.backend.controller;
 
 import com.google.gson.Gson;
-import mathandel.backend.client.model.RoleTO;
-import mathandel.backend.client.model.UserTO;
+import mathandel.backend.model.client.RoleTO;
+import mathandel.backend.model.client.UserTO;
 import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.server.enums.RoleName;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)

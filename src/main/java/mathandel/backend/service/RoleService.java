@@ -3,9 +3,12 @@ package mathandel.backend.service;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.*;
-import mathandel.backend.client.model.ModeratorRequestTO;
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.client.ModeratorRequestTO;
+import mathandel.backend.model.server.enums.RoleName;
+import mathandel.backend.model.server.ModeratorRequest;
+import mathandel.backend.model.server.ModeratorRequestStatus;
+import mathandel.backend.model.server.ModeratorRequestStatusName;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
@@ -18,61 +21,65 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequest;
+
 @Service
 public class RoleService {
 
-    @Autowired
-    RoleRepository roleRepository;
+    private final ModeratorRequestsRepository moderatorRequestsRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    ModeratorRequestsRepository moderatorRequestsRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
+    public RoleService(ModeratorRequestsRepository moderatorRequestsRepository, UserRepository userRepository) {
+        this.moderatorRequestsRepository = moderatorRequestsRepository;
+        this.userRepository = userRepository;
+    }
 
     public ApiResponse requestModerator(@Valid ModeratorRequestTO moderatorRequestTO, Long userId) {
-        Optional<User> optUser = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
-        if (optUser.isPresent() && hasRole(RoleName.ROLE_MODERATOR, optUser.get()))
-            throw  new BadRequestException("Role already given");
+        if(moderatorRequestsRepository.existsByUser(user)) {
+            throw new BadRequestException("Request already submitted");
+        }
 
-        Optional<ModeratorRequest> optModeratorRequest = moderatorRequestsRepository.findByUser(optUser.get());
-
-        if (optModeratorRequest.isPresent())
-            throw  new BadRequestException("Request already submitted");
-
-        ModeratorRequest moderatorRequest = new ModeratorRequest();
-
-        ModeratorRequestStatus moderatorRequestStatus = new ModeratorRequestStatus();
-        moderatorRequestStatus.setName(ModeratorRequestStatusName.PENDING);
-
-        moderatorRequest.setUser(optUser.get())
+        ModeratorRequest moderatorRequest = new ModeratorRequest().setUser(user)
                 .setReason(moderatorRequestTO.getReason())
-                .setModeratorRequestStatus(moderatorRequestStatus);
+                .setModeratorRequestStatus(new ModeratorRequestStatus().setName(ModeratorRequestStatusName.PENDING));
+
         moderatorRequestsRepository.save(moderatorRequest);
 
         return new ApiResponse("Request submitted");
     }
 
+    // todo mapRequests static method
     public List<ModeratorRequestTO> getModeratorRequests() {
         return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toList());
     }
 
-
-    public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> moderatorRequestMessageRequests) {
+    public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> resolvedRequests) {
         ModeratorRequest moderatorRequest;
 
-        for (ModeratorRequestTO moderatorRequestMessageRequest : moderatorRequestMessageRequests) {
-            moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(moderatorRequestMessageRequest.getUserId()).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + moderatorRequestMessageRequest.getUserId()));
-            moderatorRequestsRepository.save(moderatorRequest.setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().setName(ModeratorRequestStatusName.ACCEPTED)));
+        for (ModeratorRequestTO resolvedRequest : resolvedRequests) {
+            //todo findByModeratorRequest_Id
+            moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(resolvedRequest.getUserId())
+                    .orElseThrow(() -> new AppException("No entry in moderator_requests for user " + resolvedRequest.getUserId()));
+
+            moderatorRequest
+                    .getModeratorRequestStatus()
+                    .setName(resolvedRequest.getModeratorRequestStatus());
+
+            moderatorRequestsRepository.save(moderatorRequest);
         }
 
         return new ApiResponse("Requests resolved");
     }
 
     public ModeratorRequestTO getUserRequests(Long userId) {
-        return ServerToClientDataConverter.mapModeratorRequest(moderatorRequestsRepository.findModeratorRequestsByUser_Id(userId).orElseThrow(() -> new AppException("No entry in moderator_requests for user " + userId)));
+        ModeratorRequest moderatorRequest =
+                moderatorRequestsRepository
+                        .findModeratorRequestsByUser_Id(userId)
+                        .orElseThrow(() -> new AppException("No entry in moderator_requests for user " + userId));
+
+        return mapModeratorRequest(moderatorRequest);
     }
 
     private boolean hasRole(RoleName roleName, User user) {

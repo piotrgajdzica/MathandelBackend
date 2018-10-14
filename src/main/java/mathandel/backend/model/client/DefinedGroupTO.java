@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

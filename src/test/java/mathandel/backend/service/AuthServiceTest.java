@@ -3,8 +3,8 @@ package mathandel.backend.service;
 import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.enums.RoleName;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.repository.EditionRepository;
@@ -16,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;

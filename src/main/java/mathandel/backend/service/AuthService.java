@@ -2,9 +2,9 @@ package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.Role;
-import mathandel.backend.model.enums.RoleName;
-import mathandel.backend.model.User;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.enums.RoleName;
+import mathandel.backend.model.server.User;
 import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.ApiResponse;

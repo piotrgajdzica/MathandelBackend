@@ -1,6 +1,6 @@
 package mathandel.backend.repository;
 
-import mathandel.backend.model.Product;
+import mathandel.backend.model.server.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

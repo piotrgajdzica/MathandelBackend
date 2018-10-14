@@ -1,6 +1,7 @@
 package mathandel.backend.client.model;
 
 import com.google.gson.Gson;
+import mathandel.backend.model.client.EditionTO;
 import org.junit.Test;
 
 import java.time.LocalDate;

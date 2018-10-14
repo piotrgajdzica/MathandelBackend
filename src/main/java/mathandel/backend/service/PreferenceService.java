@@ -1,11 +1,10 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.model.PreferenceTO;
+import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.DefinedGroup;
-import mathandel.backend.model.Preference;
-import mathandel.backend.model.Product;
+import mathandel.backend.model.server.Preference;
+import mathandel.backend.model.server.Product;
 import mathandel.backend.repository.*;
 import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
@@ -16,15 +15,17 @@ import java.util.stream.Collectors;
 @Service
 public class PreferenceService {
 
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
-    PreferencesRepository preferencesRepository;
+    private PreferencesRepository preferencesRepository;
 
-    EditionRepository editionRepository;
+    private EditionRepository editionRepository;
 
-    UserRepository userRepositry;
+    private UserRepository userRepositry;
 
-    DefinedGroupRepository definedGroupRepository;
+    private DefinedGroupRepository definedGroupRepository;
+
+    //todo constructor
 
     public ApiResponse addPreference(Long userId, Long haveProductId, Long wantProductId, Long editionId) {
 
@@ -46,7 +47,7 @@ public class PreferenceService {
 
         preferencesRepository.save(preference);
 
-        return new ApiResponse(true, "Preference saved");
+        return new ApiResponse( "Preference saved");
 
     }
 
@@ -64,7 +65,7 @@ public class PreferenceService {
 
         preferencesRepository.save(preference);
 
-        return new ApiResponse(true, "Preference saved");
+        return new ApiResponse( "Preference saved");
     }
 
     public Set<PreferenceTO> getUserPreferencesFromOneEdtion(Long userId, Long editionId) {
