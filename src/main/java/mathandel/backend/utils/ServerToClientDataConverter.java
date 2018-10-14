@@ -1,7 +1,9 @@
 package mathandel.backend.utils;
 
+import mathandel.backend.client.model.PreferenceTO;
 import mathandel.backend.client.model.UserTO;
 import mathandel.backend.model.ModeratorRequest;
+import mathandel.backend.model.Preference;
 import mathandel.backend.model.User;
 import mathandel.backend.client.model.ModeratorRequestTO;
 
@@ -19,4 +21,12 @@ public class ServerToClientDataConverter {
         return null;
     }
 
+    public static PreferenceTO mapPreference(Preference preference) {
+        return new PreferenceTO()
+                .setDefinedGroupId(mapDefinedGroup(preference.getDefinedGroup()))
+                .setHaveProductId(mapProduct(preference.getHaveProduct()))
+                .setWantProductId(mapProduct(preference.getWantProduct()))
+                .setId(preference.getId())
+                .setUserId(preference.getUser().getId());
+    }
 }
