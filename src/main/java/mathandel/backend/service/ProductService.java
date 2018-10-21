@@ -14,6 +14,7 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.stream.Collectors;

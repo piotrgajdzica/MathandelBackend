@@ -1,8 +1,8 @@
 package mathandel.backend.model.server;
 
 import javax.persistence.*;
+import java.util.Set;
 
-//todo add list of urls with images
 @Entity
 @Table(name = "products")
 public class Product {
@@ -20,6 +20,9 @@ public class Product {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Edition edition;
+
+    @OneToMany
+    private Set<Image> images;
 
     public Product() {
     }
@@ -66,6 +69,15 @@ public class Product {
 
     public Product setEdition(Edition edition) {
         this.edition = edition;
+        return this;
+    }
+
+    public Set<Image> getImages() {
+        return images;
+    }
+
+    public Product setImages(Set<Image> images) {
+        this.images = images;
         return this;
     }
 }

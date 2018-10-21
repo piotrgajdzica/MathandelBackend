@@ -1,7 +1,10 @@
 package mathandel.backend.model.client;
 
+import javax.validation.constraints.NotNull;
+
 public class GroupProductTO {
 
+    @NotNull
     private Long productId;
 
     public Long getProductId() {

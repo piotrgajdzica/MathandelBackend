@@ -1,10 +1,10 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Role;
@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapEditions;
 
 
@@ -98,21 +99,26 @@ public class EditionService {
         return mapEditions(editionRepository.findAll());
     }
 
-
-
     public ApiResponse makeUserEditionModerator(Long userId, Long editionId, String username) {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-        User requestedUser =  userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+        User requestedUser = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        if(!edition.getModerators().contains(moderator)) {
+        if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!requestedUser.getRoles().contains(new Role().setName(RoleName.ROLE_MODERATOR))) {
+        if(!edition.getParticipants().contains(requestedUser)) {
+            throw new BadRequestException("User is not participant of this edition");
+        }
+        if (!isModerator(requestedUser)) {
             throw new BadRequestException("Requested user is not moderator");
         }
 
         edition.getModerators().add(requestedUser);
-        return new ApiResponse("User " + username + " become moderator of edition " + editionId);
+        return new ApiResponse("User " + username + " become moderator of edition " + edition.getName());
+    }
+
+    private boolean isModerator(User requestedUser) {
+        return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
     }
 }

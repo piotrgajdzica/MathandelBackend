@@ -21,7 +21,6 @@ import java.util.Set;
 import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
-@RequestMapping("/api/editions")
 public class EditionController {
 
     private final EditionService editionService;
@@ -93,7 +92,8 @@ public class EditionController {
         return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
-    @GetMapping(editionModeratorsPath)
+    //todo tego stringa trzeba przerobic na obiekt
+    @PostMapping(editionModeratorsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
     ApiResponse makeUserEditionModerator(@CurrentUser UserPrincipal currentUser,

@@ -1,9 +1,7 @@
-POST http://localhost:8080/api/editions
+POST http://localhost:8080/api/editions/3/moderators
 Content-Type: Application/Json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM5NjI0OTkyLCJleHAiOjE1NDAyMjk3OTJ9.zzY1-XDQTQSkOXGO8jaXKyW-EidmixcgNUQD4YurXi-xrsxE-9oC57zUu-DKatmynVeKsH6x1vDgBjFbZ6Q5Bw
 
-< createEdition.json
+< makeUserEditionModerator.json
 
 ###
-   #
-   ####

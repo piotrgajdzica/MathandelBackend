@@ -4,21 +4,18 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.ModeratorRequestTO;
-import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.model.server.ModeratorRequest;
 import mathandel.backend.model.server.ModeratorRequestStatus;
 import mathandel.backend.model.server.ModeratorRequestStatusName;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.ModeratorRequestsRepository;
-import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import mathandel.backend.utils.ServerToClientDataConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequest;

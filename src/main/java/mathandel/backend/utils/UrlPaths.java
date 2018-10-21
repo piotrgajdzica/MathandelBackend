@@ -4,8 +4,8 @@ public class UrlPaths {
 
     // /api/auth
     public static final String authPath = "/api/auth";
-    public static final String signInPath = authPath + "/signInPath";
-    public static final String signUpPath = authPath + "/signUpPath";
+    public static final String signInPath = authPath + "/signIn";
+    public static final String signUpPath = authPath + "/signUp";
 
     // /api/editions
     public static final String editionsPath = "/api/editions";
@@ -27,12 +27,14 @@ public class UrlPaths {
     // /api/editions/{editionId}/defined-groups/{groupId}
     public static final String definedGroup = definedGroups + "/{groupId}";
     // /api/editions/{editionId}/defined-groups/{groupId}/products
-    public static final String defunedGroupProducts = definedGroup + "/products";
+    public static final String definedGroupProducts = definedGroup + "/products";
 
     // /api/products
     public static final String productsPath = "/api/products";
     // /api/products/{productId}
     public static final String productPath = productsPath + "/{productId}";
+    // /api.products/{productId}/images
+    public static final String productImagePath = productPath + "/images";
     // /api/products/not-assigned
     public static final String notAssignedProductsPath = productsPath + "/not-assigned";
 
@@ -44,5 +46,8 @@ public class UrlPaths {
     public static final String userMePath = usersPath + "/me";
     // /api/users/me/password
     public static final String userMePasswordPath = userMePath + "/password";
+
+    // /api/images/{imageName}
+    public static final String imagePath = "/images/{imageName]";
 
 }
