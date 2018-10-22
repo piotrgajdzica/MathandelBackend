@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 public class ProductTO {
 
@@ -13,6 +14,8 @@ public class ProductTO {
     @NotBlank
     private String description;
     private Long userId;
+
+    private Set<String> images;
 
     public Long getId() {
         return id;
@@ -47,6 +50,15 @@ public class ProductTO {
 
     public ProductTO setUserId(Long userId) {
         this.userId = userId;
+        return this;
+    }
+
+    public Set<String> getImages() {
+        return images;
+    }
+
+    public ProductTO setImages(Set<String> images) {
+        this.images = images;
         return this;
     }
 

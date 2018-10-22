@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
     Boolean existsByName(String name);
+    Optional<Image> findByName(String name);
 }

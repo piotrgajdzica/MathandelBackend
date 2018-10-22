@@ -5,17 +5,14 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.server.Edition;
-import mathandel.backend.model.server.EditionStatusType;
-import mathandel.backend.model.server.Product;
-import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -119,11 +116,19 @@ public class ProductService {
                 .setId(product.getId())
                 .setName(product.getName())
                 .setDescription(product.getDescription())
-                .setUserId(product.getUser().getId());
-
+                .setUserId(product.getUser().getId())
+                .setImages(product.getImages() == null ? Collections.emptySet() : mapImages(product.getImages()));
     }
 
     private Set<ProductTO> mapProducts(Set<Product> products) {
         return products.stream().map(this::mapProduct).collect(Collectors.toSet());
+    }
+
+    private Set<String> mapImages(Set<Image> images) {
+        return images.stream().map(this::mapImage).collect(Collectors.toSet());
+    }
+
+    private String mapImage(Image image) {
+        return image.getName();
     }
 }

@@ -33,8 +33,10 @@ public class UrlPaths {
     public static final String productsPath = "/api/products";
     // /api/products/{productId}
     public static final String productPath = productsPath + "/{productId}";
-    // /api.products/{productId}/images
-    public static final String productImagePath = productPath + "/images";
+    // /api/products/{productId}/images
+    public static final String productImagesPath = productPath + "/images";
+    // /api/products/{productId}/images/{imageName}
+    public static final String productImagePath = productImagesPath + "/{imageName}";
     // /api/products/not-assigned
     public static final String notAssignedProductsPath = productsPath + "/not-assigned";
 
@@ -48,6 +50,6 @@ public class UrlPaths {
     public static final String userMePasswordPath = userMePath + "/password";
 
     // /api/images/{imageName}
-    public static final String imagePath = "/images/{imageName]";
+    public static final String imagePath = "/images/{imageName}";
 
 }

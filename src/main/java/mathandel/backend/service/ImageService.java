@@ -11,15 +11,9 @@ import mathandel.backend.repository.ImageRepository;
 import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,21 +49,21 @@ public class ImageService {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         String basePath = new File("").getAbsolutePath();
         String extension = getExtension(file.getContentType());
-        String name = generateName(userId, productId) + "." + extension;
+        String name = "a" + generateName(userId, productId) + "." + extension;
 
-        if(!product.getUser().equals(user)) {
+        if (!product.getUser().equals(user)) {
             throw new BadRequestException("You are not the owner of this product");
         }
-        if(product.getImages().size() == maxImagesPerProduct) {
+        if (product.getImages().size() == maxImagesPerProduct) {
             throw new BadRequestException("Product already has 3 images");
         }
-        if(file.getSize() > maxSize) {
+        if (file.getSize() > maxSize) {
             throw new BadRequestException("File cannot exceed 5mb");
         }
-        if(!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
+        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
             throw new BadRequestException("You can only upload an image");
         }
-        if(extension == null) {
+        if (extension == null) {
             throw new BadRequestException("File type not supported");
         }
 
@@ -98,18 +92,32 @@ public class ImageService {
     }
 
     public byte[] getImage(String imageName) {
+        try {
+            String basePath = new File("").getAbsolutePath();
+            return Files.readAllBytes(Paths.get(basePath + "\\src\\main\\resources\\images\\" + imageName));
+        } catch (IOException e) {
+            throw new BadRequestException("Requested file does not exist");
+        }
+    }
+
+    public ApiResponse deleteImage(Long userId, Long productId, String imageName) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        Image image = imageRepository.findByName(imageName).orElseThrow(() -> new ResourceNotFoundException("Image", "name", imageName));
         String basePath = new File("").getAbsolutePath();
 
-        try {
-            File imgPath = new File(basePath + "\\src\\main\\resources\\images\\" + imageName);
-            BufferedImage bufferedImage = null;
-            bufferedImage = ImageIO.read(imgPath);
-            WritableRaster raster = bufferedImage .getRaster();
-            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-            return ( data.getData() );
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new BadRequestException("cos sie zepsulo");
+        if(!product.getUser().getId().equals(userId)) {
+            throw new BadRequestException("You are not the owner of this product");
         }
+        if(!product.getImages().contains(image)) {
+            throw new BadRequestException("This image does not belong to your this product");
+        }
+
+        product.getImages().remove(image);
+        imageRepository.delete(image);
+        File file = new File(basePath + "\\src\\main\\resources\\images\\" + imageName);
+        if(!file.delete()) {
+           throw new AppException("Could not delete file - server internal error");
+        }
+        return new ApiResponse("Image deleted successfully");
     }
 }

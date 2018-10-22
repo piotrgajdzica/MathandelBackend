@@ -25,12 +25,14 @@ public class AuthController {
     }
 
     @PostMapping(signInPath)
-    public @ResponseBody JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
+    public @ResponseBody
+    JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
 
     @PostMapping(signUpPath)
-    public @ResponseBody ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    public @ResponseBody
+    ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
     }
 }
