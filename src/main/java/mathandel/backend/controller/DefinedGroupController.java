@@ -16,7 +16,6 @@ import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
 
-//todo think about urls
 @Controller
 public class DefinedGroupController {
 
@@ -52,7 +51,6 @@ public class DefinedGroupController {
         return definedGroupService.getDefinedGroupsFromEdition(currentUser.getId(), editionId);
     }
 
-    //todo GroupProductTO for me makes no sense but is only for now
     @PostMapping(defunedGroupProducts)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ApiResponse addProductToDefinedGroup(@CurrentUser UserPrincipal currentUser,

@@ -3,32 +3,38 @@ package mathandel.backend.utils;
 import mathandel.backend.model.client.*;
 import mathandel.backend.model.server.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServerToClientDataConverter {
     public static ModeratorRequestTO mapModeratorRequest(ModeratorRequest moderatorRequest) {
-                return new ModeratorRequestTO()
-                        .setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().getName())
-                        .setReason(moderatorRequest.getReason())
-                        .setUser(mapUserFull(moderatorRequest.getUser()));
+        return new ModeratorRequestTO()
+                .setModeratorRequestStatus(moderatorRequest.getModeratorRequestStatus().getName())
+                .setReason(moderatorRequest.getReason())
+                .setUserId(moderatorRequest.getUser().getId())
+                .setId(moderatorRequest.getId());
     }
 
-    private static UserTO mapUserFull(User user) {
-        // todo merge
-        return null;
-    }
 
     public static PreferenceTO mapPreference(Preference preference) {
-        return new PreferenceTO()
-                .setDefinedGroupId(mapDefinedGroup(preference.getDefinedGroup()))
-                .setHaveProductId(mapProduct(preference.getHaveProduct()))
-                .setWantProductId(mapProduct(preference.getWantProduct()))
+
+        PreferenceTO preferenceTO = new PreferenceTO()
+                .setHaveProductId(preference.getHaveProduct().getId())
                 .setId(preference.getId())
                 .setUserId(preference.getUser().getId());
+
+        preferenceTO.getWantedProducts().addAll(preference.getWantedProducts().stream().map(e->e.getId()).collect(Collectors.toSet()));
+        preferenceTO.getWantedDefinedGroups().addAll(preference.getWantedDefinedGroups().stream().map(e->e.getId()).collect(Collectors.toSet()));
+        return preferenceTO;
     }
-    public static RoleTO mapRole(Role role){
+
+    private static Collection<DefinedGroupTO> mapDefinedGroups(Set<DefinedGroup> wantedDefinedGroups) {
+        return wantedDefinedGroups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
+    }
+
+    public static RoleTO mapRole(Role role) {
         return new RoleTO().setRoleName(role.getName());
     }
 
@@ -53,7 +59,7 @@ public class ServerToClientDataConverter {
         return all.stream().map(ServerToClientDataConverter::mapEdition).collect(Collectors.toList());
     }
 
-    public static EditionTO mapEdition(Edition edition){
+    public static EditionTO mapEdition(Edition edition) {
         return new EditionTO()
                 .setId(edition.getId())
                 .setName(edition.getName())
@@ -68,5 +74,42 @@ public class ServerToClientDataConverter {
                 .setId(definedGroup.getId())
                 .setName(definedGroup.getName())
                 .setNumberOfProducts(definedGroup.getProducts().size());
+    }
+
+
+    public static UserTO mapUser(User user) {
+        return new UserTO()
+                .setId(user.getId())
+                .setName(user.getName())
+                .setSurname(user.getSurname())
+                .setUsername(user.getUsername())
+                .setEmail(user.getEmail())
+                .setRoles(mapRoles(user.getRoles()));
+    }
+
+    public static Set<RateTO> mapRates(Set<Rate> rates) {
+        return rates.stream().map(rate -> mapRate(rate)).collect(Collectors.toSet());
+    }
+
+    private static RateTO mapRate(Rate rate) {
+        return new RateTO()
+                .setId(rate.getId())
+                .setComment(rate.getComment())
+                .setRateName(rate.getRateName())
+                .setResultId(rate.getResult().getId())
+                .setRaterId(rate.getRater().getId());
+    }
+
+    private static ResultTO mapResult(Result result){
+        return new ResultTO()
+                .setId(result.getId())
+                .setReceiverId(result.getReceiver().getId())
+                .setSenderId(result.getReceiver().getId())
+                .setEditionId(result.getEdition().getId());
+
+    }
+
+    public static Set<ResultTO> mapResults(Set<Result> results){
+        return results.stream().map(ServerToClientDataConverter::mapResult).collect(Collectors.toSet());
     }
 }

@@ -21,7 +21,6 @@ import java.util.Set;
 import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
-@RequestMapping("/api/editions")
 public class EditionController {
 
     private final EditionService editionService;
@@ -102,29 +101,37 @@ public class EditionController {
         return editionService.makeUserEditionModerator(currentUser.getId(), editionId, username);
     }
 
-    //todo paths to utils
     //todo request body preferenceTO
-    @PostMapping("/{editonId}/preferences")
+    @PostMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ApiResponse addPreference(@CurrentUser UserPrincipal currentUser,
-                              @RequestBody Long haveProductId, Long wantProductId,
+                              @RequestBody PreferenceTO preferenceTO,
                               @RequestParam Long editionId) {
-        return preferenceService.addPreference(currentUser.getId(), haveProductId, wantProductId, editionId);
+        ApiResponse apiResponse = null;
+        for (Long wantProductId : preferenceTO.getWantedProducts()) {
+            apiResponse = preferenceService.addPreference(currentUser.getId(), preferenceTO.getHaveProduct(), wantProductId, editionId);
+        }
+        return apiResponse;
     }
 
     //todo the same as above
-    @PostMapping("/{editonId}/groupPreferences")
+    @PostMapping(editionGroupPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ApiResponse addGroupPreference(@CurrentUser UserPrincipal currentUser,
-                                   @RequestBody Long haveGroupId, Long wantProductId,
+                                   @RequestBody PreferenceTO preferenceTO,
                                    @RequestParam Long editionId) {
-        return preferenceService.addGroupPreference(currentUser.getId(), haveGroupId, wantProductId, editionId);
+
+        ApiResponse apiResponse = null;
+        for (Long wantGroupId : preferenceTO.getWantedDefinedGroups()) {
+            apiResponse = preferenceService.addGroupPreference(currentUser.getId(), preferenceTO.getHaveProduct(), wantGroupId, editionId);
+        }
+        return apiResponse;
     }
 
     //todo rename typo
-    @GetMapping("/{editonId}/preferences")
+    @GetMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public Set<PreferenceTO> getMyPreferencesFromOneEdtion(@CurrentUser UserPrincipal currentUser,
                                                            @RequestParam Long editionId) {

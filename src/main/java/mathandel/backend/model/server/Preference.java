@@ -1,30 +1,54 @@
 package mathandel.backend.model.server;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "preferences")
 public class Preference {
 
-    //todo maybe GenerationType.AUTO
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @NaturalId
+    @OneToOne
     private Product haveProduct;
 
-    @ManyToOne
-    private Product wantProduct;
+    @OneToMany
+    private Set<Product> wantedProducts = new HashSet<>();
 
-    @ManyToOne
-    private DefinedGroup definedGroup;
+    @OneToMany
+    private Set<DefinedGroup> wantedDefinedGroups = new HashSet<>();
 
     @ManyToOne
     private Edition edition;
+
+
+    public Set<DefinedGroup> getWantedDefinedGroups() {
+        return wantedDefinedGroups;
+    }
+
+    public Set<Product> getWantedProducts() {
+        return wantedProducts;
+    }
+
+    public Preference setWantedProducts(Set<Product> wantedProducts) {
+        this.wantedProducts = wantedProducts;
+        return this;
+    }
+
+    public Preference setWantedDefinedGroups(Set<DefinedGroup> wantedDefinedGroups) {
+        this.wantedDefinedGroups = wantedDefinedGroups;
+        return this;
+    }
+
 
     public Long getId() {
         return id;
@@ -53,23 +77,6 @@ public class Preference {
         return this;
     }
 
-    public Product getWantProduct() {
-        return wantProduct;
-    }
-
-    public Preference setWantProduct(Product wantProduct) {
-        this.wantProduct = wantProduct;
-        return this;
-    }
-
-    public DefinedGroup getDefinedGroup() {
-        return definedGroup;
-    }
-
-    public Preference setDefinedGroup(DefinedGroup definedGroup) {
-        this.definedGroup = definedGroup;
-        return this;
-    }
 
     public Edition getEdition() {
         return edition;
@@ -79,5 +86,7 @@ public class Preference {
         this.edition = edition;
         return this;
     }
+
+
 }
 

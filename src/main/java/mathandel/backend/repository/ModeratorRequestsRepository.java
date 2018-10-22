@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequest, Long> {
@@ -18,5 +19,7 @@ public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequ
     List<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
 
     Optional<ModeratorRequest> findModeratorRequestsByUser_Id(Long id);
+
+
 
 }

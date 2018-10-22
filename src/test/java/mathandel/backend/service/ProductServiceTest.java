@@ -222,7 +222,7 @@ public class ProductServiceTest {
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
                 () -> productService.assignProductToEdition(userId, editionId, productId));
-        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this product");
+        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this role");
     }
 
     @Test

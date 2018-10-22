@@ -2,10 +2,12 @@ package mathandel.backend.utils;
 
 public class UrlPaths {
 
+    // todo tringi finale drukowanymi
+
     // /api/auth
     public static final String authPath = "/api/auth";
-    public static final String signInPath = authPath + "/signInPath";
-    public static final String signUpPath = authPath + "/signUpPath";
+    public static final String signInPath = authPath + "/signIn";
+    public static final String signUpPath = authPath + "/signUp";
 
     // /api/editions
     public static final String editionsPath = "/api/editions";
@@ -21,6 +23,12 @@ public class UrlPaths {
     public static final String editionMyProductsPath = editionProductsPath + "/my";
     // /api/editions/{editionId}/moderators
     public static final String editionModeratorsPath = editionPath + "/moderators";
+    // /api/editions/{editonId}/preferences
+    public static final String editionPreferencesPath =  editionPath +  "/{editonId}/preferences";
+    // /api/editions/{editonId}/groupPreferences
+    public static final String editionGroupPreferencesPath =  editionPath +  "/{editonId}/groupPreferences";
+
+
 
     // /api/editions/{editionId}/defined-groups
     public static final String definedGroups = editionPath + "/defined-groups";
@@ -44,5 +52,26 @@ public class UrlPaths {
     public static final String userMePath = usersPath + "/me";
     // /api/users/me/password
     public static final String userMePasswordPath = userMePath + "/password";
+
+    // /api/moderatorRequests
+    public static final String moderatorRequestsPath = "/api/moderatorRequests";
+    // /api/moderatorRequests
+    public static final String moderatorRequestsResolvePath = moderatorRequestsPath + "/resolve";
+    // /api/moderatorRequests
+    public static final String moderatorRequestsGetMyRequests = moderatorRequestsPath + "/my";
+
+
+    // /api/results/
+
+    public static final String resultsRequestsPath = "/api/results/";
+
+    public static final String resultsProductsToSendByUserPath = "/api/results/{editionId}/send";
+
+    public static final String resultsProductsToReceiveByUserPath = "/api/results/{editionId}/receive";
+
+
+
+
+
 
 }

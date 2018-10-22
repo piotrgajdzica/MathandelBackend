@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapRoles;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapUser;
 
 //todo it tests
 @Service
@@ -73,15 +74,6 @@ public class UserService {
         return new ApiResponse("Password changed successfully");
     }
 
-    public static UserTO mapUser(User user) {
-        return new UserTO()
-                .setId(user.getId())
-                .setName(user.getName())
-                .setSurname(user.getSurname())
-                .setUsername(user.getUsername())
-                .setEmail(user.getEmail())
-                .setRoles(mapRoles(user.getRoles()));
-    }
 
 
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequest;
@@ -50,17 +51,15 @@ public class RoleService {
         return new ApiResponse("Request submitted");
     }
 
-    // todo mapRequests static method
     public List<ModeratorRequestTO> getModeratorRequests() {
         return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toList());
     }
 
-    public ApiResponse resolveModeratorRequests(List<ModeratorRequestTO> resolvedRequests) {
+    public ApiResponse resolveModeratorRequests(Set<ModeratorRequestTO> resolvedRequests) {
         ModeratorRequest moderatorRequest;
 
         for (ModeratorRequestTO resolvedRequest : resolvedRequests) {
-            //todo findByModeratorRequest_Id
-            moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(resolvedRequest.getUserId())
+            moderatorRequest = moderatorRequestsRepository.findById(resolvedRequest.getId())
                     .orElseThrow(() -> new AppException("No entry in moderator_requests for user " + resolvedRequest.getUserId()));
 
             moderatorRequest
