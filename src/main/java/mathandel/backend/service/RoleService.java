@@ -35,7 +35,7 @@ public class RoleService {
         this.userRepository = userRepository;
     }
 
-    public ApiResponse requestModerator(@Valid ModeratorRequestTO moderatorRequestTO, Long userId) {
+    public ApiResponse requestModerator( ModeratorRequestTO moderatorRequestTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         if(moderatorRequestsRepository.existsByUser(user)) {
@@ -51,8 +51,8 @@ public class RoleService {
         return new ApiResponse("Request submitted");
     }
 
-    public List<ModeratorRequestTO> getModeratorRequests() {
-        return moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING).stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toList());
+    public Set<ModeratorRequestTO> getModeratorRequests() {
+        return ServerToClientDataConverter.mapModeratorRequests(moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING));
     }
 
     public ApiResponse resolveModeratorRequests(Set<ModeratorRequestTO> resolvedRequests) {
@@ -72,6 +72,7 @@ public class RoleService {
         return new ApiResponse("Requests resolved");
     }
 
+    // todo sprawic by zwracalo najnowszy request i napisac test
     public ModeratorRequestTO getUserRequests(Long userId) {
         ModeratorRequest moderatorRequest =
                 moderatorRequestsRepository

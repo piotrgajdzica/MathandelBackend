@@ -101,33 +101,25 @@ public class EditionController {
         return editionService.makeUserEditionModerator(currentUser.getId(), editionId, username);
     }
 
-    //todo request body preferenceTO
     @PostMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse addPreference(@CurrentUser UserPrincipal currentUser,
-                              @RequestBody PreferenceTO preferenceTO,
-                              @RequestParam Long editionId) {
-        ApiResponse apiResponse = null;
-        for (Long wantProductId : preferenceTO.getWantedProducts()) {
-            apiResponse = preferenceService.addPreference(currentUser.getId(), preferenceTO.getHaveProduct(), wantProductId, editionId);
-        }
-        return apiResponse;
+    ApiResponse addEditPreference(@CurrentUser UserPrincipal currentUser,
+                                  @RequestBody PreferenceTO preferenceTO,
+                                  @RequestParam Long editionId) {
+
+        return preferenceService.addEditPreference(currentUser.getId(), preferenceTO.getHaveProductId(), preferenceTO.getWantedProductsIds(), editionId);
     }
 
-    //todo the same as above
+
     @PostMapping(editionGroupPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse addGroupPreference(@CurrentUser UserPrincipal currentUser,
-                                   @RequestBody PreferenceTO preferenceTO,
-                                   @RequestParam Long editionId) {
+    ApiResponse addEditGroupPreference(@CurrentUser UserPrincipal currentUser,
+                                       @RequestBody PreferenceTO preferenceTO,
+                                       @RequestParam Long editionId) {
 
-        ApiResponse apiResponse = null;
-        for (Long wantGroupId : preferenceTO.getWantedDefinedGroups()) {
-            apiResponse = preferenceService.addGroupPreference(currentUser.getId(), preferenceTO.getHaveProduct(), wantGroupId, editionId);
-        }
-        return apiResponse;
+        return preferenceService.addEditGroupPreference(currentUser.getId(), preferenceTO.getHaveProductId(), preferenceTO.getWantedDefinedGroupsIds(), editionId);
     }
 
     //todo rename typo

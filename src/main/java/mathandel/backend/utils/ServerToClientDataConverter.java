@@ -16,6 +16,10 @@ public class ServerToClientDataConverter {
                 .setUserId(moderatorRequest.getUser().getId())
                 .setId(moderatorRequest.getId());
     }
+    // todo doimplementowac wszedzie equalks i hascode
+    public static Set<ModeratorRequestTO> mapModeratorRequests(Set<ModeratorRequest> moderatorRequests){
+        return moderatorRequests.stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toSet());
+    }
 
 
     public static PreferenceTO mapPreference(Preference preference) {
@@ -25,8 +29,8 @@ public class ServerToClientDataConverter {
                 .setId(preference.getId())
                 .setUserId(preference.getUser().getId());
 
-        preferenceTO.getWantedProducts().addAll(preference.getWantedProducts().stream().map(e->e.getId()).collect(Collectors.toSet()));
-        preferenceTO.getWantedDefinedGroups().addAll(preference.getWantedDefinedGroups().stream().map(e->e.getId()).collect(Collectors.toSet()));
+        preferenceTO.getWantedProductsIds().addAll(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toSet()));
+        preferenceTO.getWantedDefinedGroupsIds().addAll(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
         return preferenceTO;
     }
 
@@ -87,17 +91,17 @@ public class ServerToClientDataConverter {
                 .setRoles(mapRoles(user.getRoles()));
     }
 
-    public static Set<RateTO> mapRates(Set<Rate> rates) {
-        return rates.stream().map(rate -> mapRate(rate)).collect(Collectors.toSet());
+    public static Set<TransactionRateTO> mapRates(Set<TransactionRate> transactionRates) {
+        return transactionRates.stream().map(transactionRate -> mapRate(transactionRate)).collect(Collectors.toSet());
     }
 
-    private static RateTO mapRate(Rate rate) {
-        return new RateTO()
-                .setId(rate.getId())
-                .setComment(rate.getComment())
-                .setRateName(rate.getRateName())
-                .setResultId(rate.getResult().getId())
-                .setRaterId(rate.getRater().getId());
+    private static TransactionRateTO mapRate(TransactionRate transactionRate) {
+        return new TransactionRateTO()
+                .setId(transactionRate.getId())
+                .setComment(transactionRate.getComment())
+                .setRateName(transactionRate.getRate().getName())
+                .setResultId(transactionRate.getResult().getId())
+                .setRaterId(transactionRate.getRater().getId());
     }
 
     private static ResultTO mapResult(Result result){

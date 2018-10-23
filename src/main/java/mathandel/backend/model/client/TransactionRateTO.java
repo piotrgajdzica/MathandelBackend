@@ -4,7 +4,7 @@ import mathandel.backend.model.server.enums.RateName;
 
 import java.util.Objects;
 
-public class RateTO {
+public class TransactionRateTO {
     private Long id;
     private Long raterId;
     private Long resultId;
@@ -16,7 +16,7 @@ public class RateTO {
         return comment;
     }
 
-    public RateTO setComment(String comment) {
+    public TransactionRateTO setComment(String comment) {
         this.comment = comment;
         return this;
     }
@@ -25,7 +25,7 @@ public class RateTO {
         return id;
     }
 
-    public RateTO setId(Long id) {
+    public TransactionRateTO setId(Long id) {
         this.id = id;
         return this;
     }
@@ -34,7 +34,7 @@ public class RateTO {
         return raterId;
     }
 
-    public RateTO setRaterId(Long raterId) {
+    public TransactionRateTO setRaterId(Long raterId) {
         this.raterId = raterId;
         return this;
     }
@@ -43,7 +43,7 @@ public class RateTO {
         return resultId;
     }
 
-    public RateTO setResultId(Long resultId) {
+    public TransactionRateTO setResultId(Long resultId) {
         this.resultId = resultId;
         return this;
     }
@@ -52,7 +52,7 @@ public class RateTO {
         return rateName;
     }
 
-    public RateTO setRateName(RateName rateName) {
+    public TransactionRateTO setRateName(RateName rateName) {
         this.rateName = rateName;
         return this;
     }
@@ -60,11 +60,11 @@ public class RateTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RateTO)) return false;
-        RateTO rateTO = (RateTO) o;
-        return Objects.equals(id, rateTO.id) &&
-                Objects.equals(raterId, rateTO.raterId) &&
-                Objects.equals(resultId, rateTO.resultId);
+        if (!(o instanceof TransactionRateTO)) return false;
+        TransactionRateTO transactionRateTO = (TransactionRateTO) o;
+        return Objects.equals(id, transactionRateTO.id) &&
+                Objects.equals(raterId, transactionRateTO.raterId) &&
+                Objects.equals(resultId, transactionRateTO.resultId);
     }
 
     @Override

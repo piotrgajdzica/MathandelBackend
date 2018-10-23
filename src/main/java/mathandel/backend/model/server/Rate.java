@@ -1,30 +1,24 @@
 package mathandel.backend.model.server;
 
-
 import mathandel.backend.model.server.enums.RateName;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "rates")
 public class Rate {
 
-    // todo pododawac size w TO
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private User rater;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 60)
+    private RateName name;
 
-    private RateName rateName;
-
-    @OneToOne
-    private Result result;
-
-    @Size(min = 4, max = 160)
-    private String comment;
+    public Rate() {
+    }
 
     public Long getId() {
         return id;
@@ -35,40 +29,12 @@ public class Rate {
         return this;
     }
 
-    public User getRater() {
-        return rater;
+    public RateName getName() {
+        return name;
     }
 
-    public Rate setRater(User rater) {
-        this.rater = rater;
-        return this;
-    }
-
-    public RateName getRateName() {
-        return rateName;
-    }
-
-    public Rate setRateName(RateName rateName) {
-        this.rateName = rateName;
-        return this;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public Rate setComment(String comment) {
-        this.comment = comment;
-        return this;
-    }
-
-
-    public Result getResult() {
-        return result;
-    }
-
-    public Rate setResult(Result result) {
-        this.result = result;
+    public Rate setName(RateName name) {
+        this.name = name;
         return this;
     }
 }

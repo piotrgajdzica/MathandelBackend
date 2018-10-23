@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.moderatorRequestsGetMyRequests;
 import static mathandel.backend.utils.UrlPaths.moderatorRequestsResolvePath;
@@ -37,7 +38,7 @@ public class RoleController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
-    List<ModeratorRequestTO> getModeratorRequests() {
+    Set<ModeratorRequestTO> getModeratorRequests() {
         return roleService.getModeratorRequests();
     }
 

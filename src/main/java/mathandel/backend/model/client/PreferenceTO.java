@@ -8,11 +8,11 @@ public class PreferenceTO {
 
     private Long userId;
 
-    private Long haveProduct;
+    private Long haveProductId;
 
-    private Set<Long> wantedProducts;
+    private Set<Long> wantedProductsIds;
 
-    private Set<Long> wantedDefinedGroups;
+    private Set<Long> wantedDefinedGroupsIds;
 
     public Long getId() {
         return id;
@@ -32,30 +32,30 @@ public class PreferenceTO {
         return this;
     }
 
-    public Long getHaveProduct() {
-        return haveProduct;
+    public Long getHaveProductId() {
+        return haveProductId;
     }
 
     public PreferenceTO setHaveProductId(Long haveProduct) {
-        this.haveProduct = haveProduct;
+        this.haveProductId = haveProduct;
         return this;
     }
 
-    public Set<Long> getWantedProducts() {
-        return wantedProducts;
+    public Set<Long> getWantedProductsIds() {
+        return wantedProductsIds;
     }
 
-    public PreferenceTO setWantedProducts(Set<Long> wantedProducts) {
-        this.wantedProducts = wantedProducts;
+    public PreferenceTO setWantedProductsIds(Set<Long> wantedProductsIds) {
+        this.wantedProductsIds = wantedProductsIds;
         return this;
     }
 
-    public Set<Long> getWantedDefinedGroups() {
-        return wantedDefinedGroups;
+    public Set<Long> getWantedDefinedGroupsIds() {
+        return wantedDefinedGroupsIds;
     }
 
-    public PreferenceTO setWantedDefinedGroups(Set<Long> wantedDefinedGroups) {
-        this.wantedDefinedGroups = wantedDefinedGroups;
+    public PreferenceTO setWantedDefinedGroupsIds(Set<Long> wantedDefinedGroupsIds) {
+        this.wantedDefinedGroupsIds = wantedDefinedGroupsIds;
         return this;
     }
 

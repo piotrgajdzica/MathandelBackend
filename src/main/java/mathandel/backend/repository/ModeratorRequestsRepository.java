@@ -16,9 +16,12 @@ public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequ
     Boolean existsByUser(User user);
 
     //todo change to set
-    List<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
+
+    Set<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
 
     Optional<ModeratorRequest> findModeratorRequestsByUser_Id(Long id);
+
+
 
 
 

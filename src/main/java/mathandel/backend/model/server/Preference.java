@@ -21,10 +21,10 @@ public class Preference {
     @OneToOne
     private Product haveProduct;
 
-    @OneToMany
+    @ManyToMany
     private Set<Product> wantedProducts = new HashSet<>();
 
-    @OneToMany
+    @ManyToMany
     private Set<DefinedGroup> wantedDefinedGroups = new HashSet<>();
 
     @ManyToOne

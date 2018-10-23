@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.model.client.RateTO;
+import mathandel.backend.model.client.TransactionRateTO;
 import mathandel.backend.model.client.ResultTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -26,14 +26,14 @@ public class ResultController {
     @PostMapping(resultsRequestsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse rateResult(@CurrentUser UserPrincipal currentUser, @RequestBody RateTO rateTO) {
-        return resultService.rateResult(currentUser.getId(), rateTO);
+    ApiResponse rateResult(@CurrentUser UserPrincipal currentUser, @RequestBody TransactionRateTO transactionRateTO) {
+        return resultService.rateResult(currentUser.getId(), transactionRateTO);
     }
 
     @GetMapping(resultsRequestsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<RateTO> getUserRates(@CurrentUser UserPrincipal currentUser) {
+    Set<TransactionRateTO> getUserRates(@CurrentUser UserPrincipal currentUser) {
         return resultService.getUserRates(currentUser.getId());
     }
 

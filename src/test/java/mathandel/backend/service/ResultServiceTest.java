@@ -1,15 +1,20 @@
 package mathandel.backend.service;
 
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.server.Role;
-import mathandel.backend.model.server.enums.RoleName;
-import mathandel.backend.client.request.SignUpRequest;
-import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.repository.*;
+import mathandel.backend.model.client.TransactionRateTO;
+import mathandel.backend.model.server.Result;
+import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.RateName;
+import mathandel.backend.repository.ResultRepository;
+import mathandel.backend.repository.TransactionRateRepository;
+import mathandel.backend.repository.UserRepository;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,26 +22,31 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ResultServiceTest {
 
-    private SignUpRequest signUpRequest = new SignUpRequest()
-            .setUsername("username")
-            .setEmail("email@email.com")
-            .setName("name")
-            .setSurname("surname")
-            .setPassword("password");
+    private TransactionRateTO transactionRateTO = new TransactionRateTO();
+    private final Long resultId = 1L;
+    private final Long receiverId = 1L;
+    private final Long notReceiverId = 2L;
+    private RateName rateName = RateName.NAME1;
+    @Mock
+    Result result;
+
+    @Mock
+    User receicer;
 
     @MockBean
     UserRepository userRepository;
 
     @MockBean
-    RateRepository rateRepository;
+    TransactionRateRepository transactionRateRepository;
 
     @MockBean
     ResultRepository resultRepository;
@@ -44,22 +54,84 @@ public class ResultServiceTest {
     @Autowired
     ResultService resultService;
 
-    @MockBean
-    DBDataInitializer DBDataInitializer;
 
-    @Test
-    public void shouldSignUp() {
-        //given
-        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(new Role().setName(RoleName.ROLE_USER)));
 
-        //when
-        ApiResponse apiResponse = authService.signUp(signUpRequest);
-
-        //then
-        assertThat(apiResponse.getMessage()).isEqualTo("User registered successfully");
+    @After
+    public void tearDown(){
+        clearInvocations(result,receicer,userRepository,transactionRateRepository,resultRepository);
     }
 
+    @Test
+    public void shouldRateResult() {
+        //given
+        initializeTransactionRateTO();
+
+        when(resultRepository.findById(resultId)).thenReturn(Optional.of(result));
+        when(result.getReceiver()).thenReturn(receicer);
+        when(receicer.getId()).thenReturn(receiverId);
+        when(userRepository.findById(receiverId)).thenReturn(Optional.of(receicer));
+
+
+        //when
+        ApiResponse apiResponse = resultService.rateResult(receiverId, transactionRateTO);
+
+        //then
+        assertEquals(apiResponse.getMessage(), "Result rated succesfully");
+    }
+
+
+    @Test
+
+    public void shouldThrowExceptionWhenUserIsNotReceiverOfProductThatHeWantsToRate() {
+        //given
+        initializeTransactionRateTO();
+
+        when(resultRepository.findById(resultId)).thenReturn(Optional.of(result));
+        when(result.getReceiver()).thenReturn(receicer);
+        when(receicer.getId()).thenReturn(receiverId);
+        when(userRepository.findById(receiverId)).thenReturn(Optional.of(receicer));
+
+
+        //when & then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> resultService.rateResult(notReceiverId, transactionRateTO));
+
+        assertEquals(badRequestException.getMessage(), "User is not receiver of role");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUserIsNotInDB() {
+        //given
+        initializeTransactionRateTO();
+
+        when(resultRepository.findById(resultId)).thenReturn(Optional.of(result));
+        when(result.getReceiver()).thenReturn(receicer);
+        when(receicer.getId()).thenReturn(receiverId);
+        when(userRepository.findById(receiverId)).thenReturn(Optional.empty());
+
+        //when & then
+        AppException appException = assertThrows(AppException.class, () -> resultService.rateResult(receiverId, transactionRateTO));
+
+        assertEquals(appException.getMessage(), "User not in db");
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenResultDoesntExist() {
+        //given
+        initializeTransactionRateTO();
+
+        when(resultRepository.findById(resultId)).thenReturn(Optional.empty());
+
+        //when & then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> resultService.rateResult(receiverId, transactionRateTO));
+
+        assertEquals(badRequestException.getMessage(), "Result doesn't exist");
+    }
+
+    private void initializeTransactionRateTO() {
+        transactionRateTO
+                .setResultId(resultId)
+                .setRateName(rateName)
+                .setComment("comment");
+    }
 
 }

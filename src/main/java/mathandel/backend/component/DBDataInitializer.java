@@ -1,12 +1,15 @@
 package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
-import mathandel.backend.model.server.enums.EditionStatusName;
-import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.Rate;
 import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.RateName;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.EditionStatusTypeRepository;
+import mathandel.backend.repository.RateRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -24,12 +27,14 @@ public class DBDataInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
+    private final RateRepository rateRepository;
 
-    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository) {
+    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
+        this.rateRepository = rateRepository;
     }
 
     @Override
@@ -37,6 +42,7 @@ public class DBDataInitializer implements ApplicationRunner {
         insertRolesToDB();
         insertEditionStatusesToDB();
         insertAdminToDB();
+        insertRatesToDB();
     }
 
     private void insertRolesToDB() {
@@ -52,6 +58,14 @@ public class DBDataInitializer implements ApplicationRunner {
             EditionStatusType editionStatusType = new EditionStatusType();
             editionStatusType.setEditionStatusName(editionStatusName);
             editionStatusTypeRepository.save(editionStatusType);
+        }
+    }
+
+    private void insertRatesToDB() {
+        for (RateName rateName : RateName.values()) {
+            Rate rate = new Rate();
+            rate.setName(rateName);
+            rateRepository.save(rate);
         }
     }
 
