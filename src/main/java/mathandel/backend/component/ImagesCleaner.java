@@ -10,19 +10,19 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 
-@Component
-public class ImagesCleaner implements ApplicationRunner {
+//@Component
+public class ImagesCleaner {
 
-    private static final Logger logger = LoggerFactory.getLogger(ImagesCleaner.class);
-
-    @Override
-    public void run(ApplicationArguments args) {
-        File images = new File(new File("").getAbsolutePath() + "\\src\\main\\resources\\images");
-        try {
-            FileUtils.cleanDirectory(images);
-            logger.info("Server ready to go...");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private static final Logger logger = LoggerFactory.getLogger(ImagesCleaner.class);
+//
+//    @Override
+//    public void run(ApplicationArguments args) {
+//        File images = new File(new File("").getAbsolutePath() + "\\src\\main\\resources\\images");
+//        try {
+//            FileUtils.cleanDirectory(images);
+//            logger.info("Server ready to go...");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
