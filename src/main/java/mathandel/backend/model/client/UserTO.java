@@ -30,6 +30,9 @@ public class UserTO {
     @Email
     private String email;
 
+    @NotBlank
+    private String address;
+
     private Set<RoleTO> roles;
 
     public Long getId() {
@@ -106,6 +109,15 @@ public class UserTO {
                 .append(email, userTO.email)
                 .append(roles, userTO.roles)
                 .isEquals();
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public UserTO setAddress(String address) {
+        this.address = address;
+        return this;
     }
 
     @Override

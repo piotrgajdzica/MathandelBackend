@@ -56,8 +56,14 @@ public class DBDataInitializer implements ApplicationRunner {
     }
 
     private void insertAdminToDB() {
-        User user = new User("admin", "admin", "admin", "admin@admin.admin", "admin");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User()
+                .setName("admin")
+                .setSurname("admin")
+                .setUsername("admin")
+                .setEmail("admin@admin.admin")
+                .setPassword(passwordEncoder.encode("admin"))
+                .setAddress("admin");
+
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("User Role not set."));
         Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)

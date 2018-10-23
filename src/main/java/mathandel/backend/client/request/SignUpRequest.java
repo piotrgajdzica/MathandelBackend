@@ -30,6 +30,9 @@ public class SignUpRequest {
     @Size(min = 6, max = 20)
     private String password;
 
+    @NotBlank
+    private String address;
+
     public String getName() {
         return name;
     }
@@ -72,6 +75,15 @@ public class SignUpRequest {
 
     public SignUpRequest setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public SignUpRequest setAddress(String address) {
+        this.address = address;
         return this;
     }
 

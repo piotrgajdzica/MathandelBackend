@@ -33,7 +33,12 @@ import static org.mockito.Mockito.when;
 public class EditionServiceTest {
 
     private final Long userId = 1L;
-    private final User user = new User("James", "Smith", "jsmith", "jsmith@gmail.com", "jsmith123");
+    private User user = new User()
+            .setName("James")
+            .setSurname("Smith")
+            .setUsername("jsmith")
+            .setEmail("jsmith@gmail.com")
+            .setPassword("jsmith123");
 
     private EditionTO editionTO = new EditionTO()
             .setName("Mathandel 4000")

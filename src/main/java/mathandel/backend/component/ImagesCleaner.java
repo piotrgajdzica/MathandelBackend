@@ -17,6 +17,7 @@ public class ImagesCleaner implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(ImagesCleaner.class);
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void run(ApplicationArguments args) {
 
@@ -26,15 +27,14 @@ public class ImagesCleaner implements ApplicationRunner {
             File images = new File(path);
             try {
                 FileUtils.cleanDirectory(images);
-                logger.info("Server ready to go...");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         else {
-            if (new File(path).mkdir()) {
-                logger.info("Server ready to go...");
-            }
+            new File(path).mkdir();
         }
+        logger.info("Server ready to go...");
     }
 }

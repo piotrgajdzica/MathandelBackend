@@ -1,8 +1,11 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.client.request.SignInFacebookRequest;
 import mathandel.backend.client.request.SignInRequest;
+import mathandel.backend.client.request.SignUpFacebookRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.client.response.FacebookResponse;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.service.AuthService;
 import org.springframework.stereotype.Controller;
@@ -34,5 +37,19 @@ public class AuthController {
     public @ResponseBody
     ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
+    }
+
+
+    @PostMapping("/api/facebookSignIn")
+    public @ResponseBody
+    FacebookResponse facebookSignIn(@Valid @RequestBody SignInFacebookRequest signInFacebookRequest) {
+        return authService.facebookSignIn(signInFacebookRequest);
+    }
+
+    @PostMapping("/api/facebookSignUp")
+    public @ResponseBody
+    FacebookResponse facebookSignUp(@Valid @RequestBody SignUpFacebookRequest signUpFacebookRequest) {
+
+        return authService.facebookSignUp(signUpFacebookRequest);
     }
 }

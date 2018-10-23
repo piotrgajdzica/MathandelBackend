@@ -1,28 +1,38 @@
 package mathandel.backend.service;
 
+import mathandel.backend.client.request.SignInFacebookRequest;
+import mathandel.backend.client.request.SignInRequest;
+import mathandel.backend.client.request.SignUpFacebookRequest;
+import mathandel.backend.client.request.SignUpRequest;
+import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.client.response.FacebookJwtAuthenticationResponse;
+import mathandel.backend.client.response.FacebookResponse;
+import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.server.Role;
-import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.model.server.User;
-import mathandel.backend.client.request.SignInRequest;
-import mathandel.backend.client.request.SignUpRequest;
-import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.client.response.JwtAuthenticationResponse;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import mathandel.backend.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
 @Service
 public class AuthService {
+
+    @Value("${facebook.secret}")
+    private String facebookPassword;
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -39,17 +49,12 @@ public class AuthService {
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken(authentication);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationResponse(getToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
     }
 
     public ApiResponse signUp(SignUpRequest signUpRequest) {
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                () -> new AppException("User Role not in database"));
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new BadRequestException("Username is already in use");
@@ -59,21 +64,78 @@ public class AuthService {
             throw new BadRequestException("Email Address already in use");
         }
 
-        User user = new User(
-                signUpRequest.getName(),
-                signUpRequest.getSurname(),
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                signUpRequest.getPassword()
-        );
+        User user = new User()
+                .setName(signUpRequest.getName())
+                .setSurname(signUpRequest.getSurname())
+                .setUsername(signUpRequest.getUsername())
+                .setEmail(signUpRequest.getEmail())
+                .setPassword(passwordEncoder.encode(signUpRequest.getPassword()))
+                .setAddress(signUpRequest.getAddress())
+                .setRoles(Collections.singleton(userRole));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return new ApiResponse("User registered successfully");
+    }
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not in database"));
+    public FacebookResponse facebookSignIn(SignInFacebookRequest signInFacebookRequest) {
 
-        user.setRoles(Collections.singleton(userRole));
+        Facebook facebook = new FacebookTemplate(signInFacebookRequest.getToken());
+        String[] fields = {"id"};
+        org.springframework.social.facebook.api.User userProfile =
+                facebook.fetchObject("me", org.springframework.social.facebook.api.User.class, fields);
+
+        if (!userRepository.existsByFacebookId(userProfile.getId())) {
+            return new FacebookResponse().setUserExists(false);
+        }
+
+        mathandel.backend.model.server.User user = userRepository.findByFacebookId(userProfile.getId())
+                .orElseThrow(() -> new AppException("User does not exist"));
+
+        return new FacebookJwtAuthenticationResponse()
+                .setAccessToken(getToken(user.getEmail(), facebookPassword))
+                .setUserExists(true);
+    }
+
+    public FacebookResponse facebookSignUp(SignUpFacebookRequest signUpFacebookRequest) {
+
+        Facebook facebook = new FacebookTemplate(signUpFacebookRequest.getToken());
+        String[] fields = {"id"};
+        org.springframework.social.facebook.api.User userProfile =
+                facebook.fetchObject("me", org.springframework.social.facebook.api.User.class, fields);
+
+        if (userRepository.existsByFacebookId(userProfile.getId())) {
+            throw new BadRequestException("User already exists");
+        }
+        if (userRepository.existsByUsername(signUpFacebookRequest.getUsername())) {
+            throw new BadRequestException("Username already taken");
+        }
+        if (userRepository.existsByEmail(signUpFacebookRequest.getEmail())) {
+            throw new BadRequestException("Email already taken");
+        }
+
+        mathandel.backend.model.server.User user = new mathandel.backend.model.server.User()
+                .setName(signUpFacebookRequest.getName())
+                .setSurname(signUpFacebookRequest.getSurname())
+                .setUsername(signUpFacebookRequest.getUsername())
+                .setEmail(signUpFacebookRequest.getEmail())
+                .setFacebookId(userProfile.getId())
+                .setRoles(Collections.singleton(roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
+                        () -> new AppException("User Role not in database"))))
+                .setPassword(passwordEncoder.encode(facebookPassword));
+
         userRepository.save(user);
 
-        return new ApiResponse("User registered successfully");
+        return new FacebookJwtAuthenticationResponse()
+                .setAccessToken(getToken(user.getEmail(), facebookPassword))
+                .setUserExists(true);
+    }
+
+    private String getToken(String usernameOrEmail, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(usernameOrEmail, password));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return tokenProvider.generateToken(authentication);
     }
 }

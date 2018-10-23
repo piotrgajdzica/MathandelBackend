@@ -60,7 +60,8 @@ public class UserService {
                 .setName(userTO.getName())
                 .setSurname(userTO.getSurname())
                 .setUsername(userTO.getUsername())
-                .setEmail(userTO.getEmail());
+                .setEmail(userTO.getEmail())
+                .setAddress(userTO.getAddress());
 
         userRepository.save(user);
         return new ApiResponse("Successfully edited user");
@@ -80,7 +81,8 @@ public class UserService {
                 .setSurname(user.getSurname())
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
-                .setRoles(mapRoles(user.getRoles()));
+                .setRoles(mapRoles(user.getRoles()))
+                .setAddress(user.getAddress());
     }
 
 

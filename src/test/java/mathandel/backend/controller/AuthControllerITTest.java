@@ -45,6 +45,7 @@ public class AuthControllerITTest {
     private final String username = "jsmith";
     private final String email = "jsmith@gmail.com";
     private final String password = "jsmith123";
+    private final String address = "address";
 
     private Gson gson = new Gson();
 
@@ -53,7 +54,8 @@ public class AuthControllerITTest {
             .setSurname(surname)
             .setUsername(username)
             .setEmail(email)
-            .setPassword(password);
+            .setPassword(password)
+            .setAddress(address);
 
     @Test
     @Transactional

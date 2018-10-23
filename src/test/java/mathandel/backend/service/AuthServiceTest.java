@@ -33,7 +33,8 @@ public class AuthServiceTest {
             .setEmail("email@email.com")
             .setName("name")
             .setSurname("surname")
-            .setPassword("password");
+            .setPassword("password")
+            .setAddress("address");
 
     @MockBean
     UserRepository userRepository;
@@ -82,6 +83,7 @@ public class AuthServiceTest {
     @Test
     public void shouldAlreadyExistsByEmail() {
         //given
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(new Role().setName(RoleName.ROLE_USER)));
         when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);
 
@@ -93,6 +95,7 @@ public class AuthServiceTest {
     @Test
     public void shouldFailOnSignUpUsernameInUse() {
         //given
+        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(new Role().setName(RoleName.ROLE_USER)));
         when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(true);
 
         //when then

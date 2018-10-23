@@ -1,0 +1,6 @@
+POST http://localhost:8080/api/facebookSignUp
+Content-Type: Application/Json
+
+< facebookSignUp.json
+
+###

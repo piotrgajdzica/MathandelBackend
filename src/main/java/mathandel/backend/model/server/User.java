@@ -1,6 +1,7 @@
 package mathandel.backend.model.server;
 
 import org.hibernate.annotations.NaturalId;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +17,9 @@ import java.util.Set;
         }),
         @UniqueConstraint(columnNames = {
                 "email"
+        }),
+        @UniqueConstraint(columnNames = {
+                "facebookId"
         })
 })
 public class User {
@@ -45,6 +49,13 @@ public class User {
     @Size(max = 100)
     private String password;
 
+    @Nullable
+    @NaturalId
+    private String facebookId;
+
+    @NotBlank
+    private String address;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -52,14 +63,6 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     public User() {
-    }
-
-    public User(String name, String surname, String username, String email, String password) {
-        this.name = name;
-        this.surname = surname;
-        this.username = username;
-        this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
@@ -122,6 +125,24 @@ public class User {
 
     public User setRoles(Set<Role> roles) {
         this.roles = roles;
+        return this;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public User setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+        return this;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public User setAddress(String address) {
+        this.address = address;
         return this;
     }
 }

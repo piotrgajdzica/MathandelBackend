@@ -46,13 +46,15 @@ public class UserControllerITTest {
     private final String username = "jsmith";
     private final String email = "jsmith@gmail.com";
     private final String password = "jsmith123";
+    private final String address = "address";
 
     private SignUpRequest signUpRequest = new SignUpRequest()
             .setName(name)
             .setSurname(surname)
             .setUsername(username)
             .setEmail(email)
-            .setPassword(password);
+            .setPassword(password)
+            .setAddress(address);
 
     private SignInRequest signInRequest = new SignInRequest()
             .setUsernameOrEmail(email)
