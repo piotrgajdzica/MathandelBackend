@@ -1,5 +1,6 @@
 package mathandel.backend.service;
 
+import mathandel.backend.model.client.DefinedGroupContentTO;
 import mathandel.backend.model.client.DefinedGroupTO;
 import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
@@ -17,9 +18,11 @@ import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static mathandel.backend.utils.ServerToClientDataConverter.mapGroupContent;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapProducts;
 
 
@@ -88,45 +91,60 @@ public class DefinedGroupService {
         return definedGroups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
     }
 
+    public ApiResponse updateDefinedGroupContent(Long userId, Long editionId, Long groupId, DefinedGroupContentTO definedGroupContentTO) {
+        DefinedGroup group = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
 
-
-    public ApiResponse addProductToDefinedGroup(Long userId, Long editionId, Long groupId, Long productId) {
-        DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
-
-        if(!definedGroup.getEdition().getId().equals(editionId)) {
+        if(!group.getEdition().getId().equals(editionId)) {
             throw new BadRequestException("Group " + groupId + " is not in edition " + editionId);
         }
-        if(!definedGroup.getUser().getId().equals(userId)) {
+        if(!group.getUser().getId().equals(userId)) {
             throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
         }
-        if(product.getEdition() == null) {
-            throw new BadRequestException("Product is not assigned to any edition yet");
-        }
-        if(!product.getEdition().getId().equals(editionId)) {
-            throw new BadRequestException("Product is not in the same edition as defined group");
-        }
-        if(product.getUser().getId().equals(userId)) {
-            throw new BadRequestException("Product belongs to user");
-        }
-        if(definedGroup.getProducts().contains(product)) {
-            throw new BadRequestException("Product already in this group");
+
+        Set<Product> products = new HashSet<>();
+        Set<DefinedGroup> groups = new HashSet<>();
+
+        for(Long productId: definedGroupContentTO.getProductsIds()) {
+            Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+            if(product.getUser().getId().equals(userId)){
+                throw new BadRequestException("Product belongs to user " + userId);
+            }
+            if(!product.getEdition().getId().equals(editionId)) {
+                throw new BadRequestException("Product does not belong to edition " + editionId);
+            }
+            products.add(product);
         }
 
-        definedGroup.getProducts().add(product);
-        definedGroupRepository.save(definedGroup);
+        for(Long definedGroupId: definedGroupContentTO.getGroupIds()) {
+            DefinedGroup definedGroup = definedGroupRepository.findById(definedGroupId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", definedGroupId));
 
-        return new ApiResponse("Product successfully added to group");
+            if(!definedGroup.getUser().getId().equals(userId)){
+                throw new BadRequestException("Group does not belong to user " + userId);
+            }
+            if(!definedGroup.getEdition().getId().equals(editionId)) {
+                throw new BadRequestException("Group does not belong to edition " + editionId);
+            }
+            groups.add(definedGroup);
+        }
+
+        group.setProducts(products);
+        group.setGroups(groups);
+
+        definedGroupRepository.save(group);
+        return new ApiResponse("Group successfully updated");
+
     }
 
-    public Set<ProductTO> getNamedGroupProducts(Long userId, Long editionID, Long groupId) {
+    public DefinedGroupContentTO getNamedGroupProducts(Long userId, Long editionID, Long groupId) {
         DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
         Set<Product> products = definedGroup.getProducts();
+        Set<DefinedGroup> groups = definedGroup.getGroups();
 
         if(!definedGroup.getUser().getId().equals(userId)) {
             throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
         }
 
-        return mapProducts(products);
+        return mapGroupContent(products, groups);
     }
 }

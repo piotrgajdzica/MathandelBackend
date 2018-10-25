@@ -26,8 +26,8 @@ public class UrlPaths {
     public static final String definedGroups = editionPath + "/defined-groups";
     // /api/editions/{editionId}/defined-groups/{groupId}
     public static final String definedGroup = definedGroups + "/{groupId}";
-    // /api/editions/{editionId}/defined-groups/{groupId}/products
-    public static final String definedGroupProducts = definedGroup + "/products";
+    // /api/editions/{editionId}/defined-groups/{groupId}/content
+    public static final String definedGroupContent = definedGroup + "/content";
 
     // /api/products
     public static final String productsPath = "/api/products";

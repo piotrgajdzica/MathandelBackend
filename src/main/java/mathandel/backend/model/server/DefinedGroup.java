@@ -27,6 +27,9 @@ public class DefinedGroup {
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Product> products = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<DefinedGroup> groups = new HashSet<>();
+
     public DefinedGroup() {
     }
 
@@ -72,6 +75,15 @@ public class DefinedGroup {
 
     public DefinedGroup setProducts(Set<Product> products) {
         this.products = products;
+        return this;
+    }
+
+    public Set<DefinedGroup> getGroups() {
+        return groups;
+    }
+
+    public DefinedGroup setGroups(Set<DefinedGroup> groups) {
+        this.groups = groups;
         return this;
     }
 }

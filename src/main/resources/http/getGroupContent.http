@@ -1,7 +1,5 @@
-POST http://localhost:8080/api/editions/2/defined-groups
+GET http://localhost:8080//api/editions/2/defined-groups/7/content
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQwNDk1Njk2LCJleHAiOjE1NDExMDA0OTZ9.wjURykwIyWTpifKf3BK6fe7tP61TkprA_lrwUxM0hCpxl3ogHpJ5Okcw5ywXovHAPKyhDn6Sc8D4ZIhUUVDs4g
-
-< createDefinedGroup.json
 
 ###

@@ -69,4 +69,14 @@ public class ServerToClientDataConverter {
                 .setName(definedGroup.getName())
                 .setNumberOfProducts(definedGroup.getProducts().size());
     }
+
+    public static DefinedGroupContentTO mapGroupContent(Set<Product> products, Set<DefinedGroup> groups) {
+
+        Set<Long> productIds = products.stream().map(Product::getId).collect(Collectors.toSet());
+        Set<Long> groupIds = groups.stream().map(DefinedGroup::getId).collect(Collectors.toSet());
+
+        return new DefinedGroupContentTO()
+                .setProductsIds(productIds)
+                .setGroupIds(groupIds);
+    }
 }

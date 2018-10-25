@@ -1,9 +1,8 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.DefinedGroupContentTO;
 import mathandel.backend.model.client.DefinedGroupTO;
-import mathandel.backend.model.client.GroupProductTO;
-import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.DefinedGroupService;
@@ -53,21 +52,20 @@ public class DefinedGroupController {
         return definedGroupService.getDefinedGroupsFromEdition(currentUser.getId(), editionId);
     }
 
-    //todo GroupProductTO for me makes no sense but is only for now
-    @PostMapping(definedGroupProducts)
+    @PostMapping(definedGroupContent)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse addProductToDefinedGroup(@CurrentUser UserPrincipal currentUser,
+    ApiResponse updateDefinedGroupContent(@CurrentUser UserPrincipal currentUser,
                                          @PathVariable Long editionId,
                                          @PathVariable Long groupId,
-                                         @Valid @RequestBody GroupProductTO groupProductTO) {
-        return definedGroupService.addProductToDefinedGroup(currentUser.getId(), editionId, groupId, groupProductTO.getProductId());
+                                         @Valid @RequestBody DefinedGroupContentTO definedGroupContentTO) {
+        return definedGroupService.updateDefinedGroupContent(currentUser.getId(), editionId, groupId, definedGroupContentTO);
     }
 
-    @GetMapping(definedGroupProducts)
+    @GetMapping(definedGroupContent)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ProductTO> getNamedGroupProducts(@CurrentUser UserPrincipal currentUser,
+    DefinedGroupContentTO getNamedGroupContent(@CurrentUser UserPrincipal currentUser,
                                          @PathVariable Long editionId,
                                          @PathVariable Long groupId) {
         return definedGroupService.getNamedGroupProducts(currentUser.getId(), editionId, groupId);

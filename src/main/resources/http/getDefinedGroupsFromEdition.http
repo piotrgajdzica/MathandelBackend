@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/editions/2/defined-groups
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM5MjgwODA3LCJleHAiOjE1Mzk4ODU2MDd9.Do8HQAqz-qK926OEtgulpcULC87RWliQaJYOA-jcWjcIqXq8Tp3CBoEnGStmK55R9pCuVnuuUF1bGjmXHElrfg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQwNDk1Njk2LCJleHAiOjE1NDExMDA0OTZ9.wjURykwIyWTpifKf3BK6fe7tP61TkprA_lrwUxM0hCpxl3ogHpJ5Okcw5ywXovHAPKyhDn6Sc8D4ZIhUUVDs4g
 
 ###
