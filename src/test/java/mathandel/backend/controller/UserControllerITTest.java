@@ -47,6 +47,9 @@ public class UserControllerITTest {
     private final String email = "jsmith@gmail.com";
     private final String password = "jsmith123";
     private final String address = "address";
+    private final String city = "city";
+    private final String postaCode = "postal code";
+    private final String coutry = "country";
 
     private SignUpRequest signUpRequest = new SignUpRequest()
             .setName(name)
@@ -54,7 +57,10 @@ public class UserControllerITTest {
             .setUsername(username)
             .setEmail(email)
             .setPassword(password)
-            .setAddress(address);
+            .setAddress(address)
+            .setCity(city)
+            .setPostalCode(postaCode)
+            .setCountry(coutry);
 
     private SignInRequest signInRequest = new SignInRequest()
             .setUsernameOrEmail(email)

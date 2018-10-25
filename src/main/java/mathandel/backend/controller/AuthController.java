@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping(signUpPath)
     public @ResponseBody
-    ApiResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+    JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
     }
 

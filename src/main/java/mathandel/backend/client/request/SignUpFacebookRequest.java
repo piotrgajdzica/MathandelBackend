@@ -26,6 +26,15 @@ public class SignUpFacebookRequest extends SignInFacebookRequest {
     @NotBlank
     private String address;
 
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String postalCode;
+
+    @NotBlank
+    private String country;
+
     public String getName() {
         return name;
     }
@@ -68,6 +77,33 @@ public class SignUpFacebookRequest extends SignInFacebookRequest {
 
     public SignUpFacebookRequest setAddress(String address) {
         this.address = address;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public SignUpFacebookRequest setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public SignUpFacebookRequest setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public SignUpFacebookRequest setCountry(String country) {
+        this.country = country;
         return this;
     }
 }

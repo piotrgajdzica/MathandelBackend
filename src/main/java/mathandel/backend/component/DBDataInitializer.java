@@ -62,7 +62,10 @@ public class DBDataInitializer implements ApplicationRunner {
                 .setUsername("admin")
                 .setEmail("admin@admin.admin")
                 .setPassword(passwordEncoder.encode("admin"))
-                .setAddress("admin");
+                .setAddress("admin")
+                .setCity("admin")
+                .setPostalCode("admin")
+                .setCountry("admin");
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("User Role not set."));

@@ -33,6 +33,15 @@ public class UserTO {
     @NotBlank
     private String address;
 
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String postalCode;
+
+    @NotBlank
+    private String country;
+
     private Set<RoleTO> roles;
 
     public Long getId() {
@@ -86,6 +95,33 @@ public class UserTO {
 
     public UserTO setRoles(Set<RoleTO> roles) {
         this.roles = roles;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public UserTO setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public UserTO setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public UserTO setCountry(String country) {
+        this.country = country;
         return this;
     }
 

@@ -82,7 +82,10 @@ public class UserService {
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail())
                 .setRoles(mapRoles(user.getRoles()))
-                .setAddress(user.getAddress());
+                .setAddress(user.getAddress())
+                .setCity(user.getCity())
+                .setPostalCode(user.getPostalCode())
+                .setCountry(user.getCountry());
     }
 
 

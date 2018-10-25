@@ -46,6 +46,9 @@ public class AuthControllerITTest {
     private final String email = "jsmith@gmail.com";
     private final String password = "jsmith123";
     private final String address = "address";
+    private final String city = "city";
+    private final String postaCode = "postal code";
+    private final String coutry = "country";
 
     private Gson gson = new Gson();
 
@@ -55,7 +58,10 @@ public class AuthControllerITTest {
             .setUsername(username)
             .setEmail(email)
             .setPassword(password)
-            .setAddress(address);
+            .setAddress(address)
+            .setCity(city)
+            .setPostalCode(postaCode)
+            .setCountry(coutry);
 
     @Test
     @Transactional
@@ -64,8 +70,7 @@ public class AuthControllerITTest {
         mockMvc.perform(post(signUpPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("{\"message\":\"User registered successfully\"}"));
+                .andExpect(status().isOk());
 
         //then
         userRepository.findByUsername(username).ifPresent(user -> {
@@ -109,7 +114,6 @@ public class AuthControllerITTest {
                 .andReturn();
 
         JwtAuthenticationResponse jwtAuthenticationResponse = gson.fromJson(mvcResult.getResponse().getContentAsString(), JwtAuthenticationResponse.class);
-        assertThat(jwtAuthenticationResponse.getTokenType()).isEqualTo("Bearer");
         assertThat(jwtAuthenticationResponse.getAccessToken().length()).isEqualTo(168);
     }
 

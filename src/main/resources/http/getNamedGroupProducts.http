@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/editions/2/namedGroups/3/products
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNTM5NDUyMzIwLCJleHAiOjE1NDAwNTcxMjB9.T0JJfU2gdAhgdSx8vOF-p_yV-QjR28sinZqpLh5lmmFYtGDpNRY7NwA1JDtvNBvdnNHqt6tZJkzcj0C1OEfO-w
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNTM5NDUyMzIwLCJleHAiOjE1NDAwNTcxMjB9.T0JJfU2gdAhgdSx8vOF-p_yV-QjR28sinZqpLh5lmmFYtGDpNRY7NwA1JDtvNBvdnNHqt6tZJkzcj0C1OEfO-w
 
 ###

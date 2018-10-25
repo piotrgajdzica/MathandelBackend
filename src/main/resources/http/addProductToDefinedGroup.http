@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/editions/2/defined-groups/3/products
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM5NjMwMjY4LCJleHAiOjE1NDAyMzUwNjh9.hqR4anBN6mk4j1SXFCJBgnCdKdWdlpVQVHoLgcuT5PkLwU0cw0VN4jfSIUvRQk7FltgnYCjXwyXwJSNkuuQoOA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTM5NjMwMjY4LCJleHAiOjE1NDAyMzUwNjh9.hqR4anBN6mk4j1SXFCJBgnCdKdWdlpVQVHoLgcuT5PkLwU0cw0VN4jfSIUvRQk7FltgnYCjXwyXwJSNkuuQoOA
 
 < addProductToDefinedGroup.json
 

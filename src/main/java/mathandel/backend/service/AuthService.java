@@ -52,7 +52,7 @@ public class AuthService {
         return new JwtAuthenticationResponse(getToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
     }
 
-    public ApiResponse signUp(SignUpRequest signUpRequest) {
+    public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                 () -> new AppException("User Role not in database"));
 
@@ -71,10 +71,13 @@ public class AuthService {
                 .setEmail(signUpRequest.getEmail())
                 .setPassword(passwordEncoder.encode(signUpRequest.getPassword()))
                 .setAddress(signUpRequest.getAddress())
+                .setCity(signUpRequest.getCity())
+                .setPostalCode(signUpRequest.getPostalCode())
+                .setCountry(signUpRequest.getCountry())
                 .setRoles(Collections.singleton(userRole));
 
         userRepository.save(user);
-        return new ApiResponse("User registered successfully");
+        return new JwtAuthenticationResponse(getToken(signUpRequest.getEmail(), signUpRequest.getPassword()));
     }
 
     public FacebookResponse facebookSignIn(SignInFacebookRequest signInFacebookRequest) {
@@ -119,6 +122,10 @@ public class AuthService {
                 .setUsername(signUpFacebookRequest.getUsername())
                 .setEmail(signUpFacebookRequest.getEmail())
                 .setFacebookId(userProfile.getId())
+                .setAddress(signUpFacebookRequest.getAddress())
+                .setCity(signUpFacebookRequest.getCity())
+                .setPostalCode(signUpFacebookRequest.getPostalCode())
+                .setCountry(signUpFacebookRequest.getCountry())
                 .setRoles(Collections.singleton(roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(
                         () -> new AppException("User Role not in database"))))
                 .setPassword(passwordEncoder.encode(facebookPassword));
@@ -130,7 +137,7 @@ public class AuthService {
                 .setUserExists(true);
     }
 
-    private String getToken(String usernameOrEmail, String password) {
+    String getToken(String usernameOrEmail, String password) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(usernameOrEmail, password));
 

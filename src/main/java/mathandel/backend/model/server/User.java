@@ -56,6 +56,15 @@ public class User {
     @NotBlank
     private String address;
 
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String postalCode;
+
+    @NotBlank
+    private String country;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -143,6 +152,33 @@ public class User {
 
     public User setAddress(String address) {
         this.address = address;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public User setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public User setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public User setCountry(String country) {
+        this.country = country;
         return this;
     }
 }

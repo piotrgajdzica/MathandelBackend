@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/editions/3/products
 Content-Type: Application/Json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNTM5MDI1MTY2LCJleHAiOjE1Mzk2Mjk5NjZ9.nzyFXbO3kk59GcWAy6HPdeQ8cdCozXe8ZEC8ysWQHSFSWBuG0aAajD-nMccWZ8h5qd-npQ8Jdb11xhrnofQySQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1IiwiaWF0IjoxNTM5MDI1MTY2LCJleHAiOjE1Mzk2Mjk5NjZ9.nzyFXbO3kk59GcWAy6HPdeQ8cdCozXe8ZEC8ysWQHSFSWBuG0aAajD-nMccWZ8h5qd-npQ8Jdb11xhrnofQySQ
 
 ###

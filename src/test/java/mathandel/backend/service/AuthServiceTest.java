@@ -1,12 +1,11 @@
 package mathandel.backend.service;
 
+import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.enums.RoleName;
-import mathandel.backend.client.request.SignUpRequest;
-import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
@@ -24,6 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+//todo teste signUp and to signIn
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AuthServiceTest {
@@ -53,20 +53,6 @@ public class AuthServiceTest {
 
     @MockBean
     DBDataInitializer DBDataInitializer;
-
-    @Test
-    public void shouldSignUp() {
-        //given
-        when(userRepository.existsByUsername(signUpRequest.getUsername())).thenReturn(false);
-        when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(RoleName.ROLE_USER)).thenReturn(Optional.of(new Role().setName(RoleName.ROLE_USER)));
-
-        //when
-        ApiResponse apiResponse = authService.signUp(signUpRequest);
-
-        //then
-        assertThat(apiResponse.getMessage()).isEqualTo("User registered successfully");
-    }
 
     @Test
     public void shouldNotFindUserRole() {

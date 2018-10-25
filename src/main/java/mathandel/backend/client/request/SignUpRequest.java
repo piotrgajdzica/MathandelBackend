@@ -33,6 +33,15 @@ public class SignUpRequest {
     @NotBlank
     private String address;
 
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String postalCode;
+
+    @NotBlank
+    private String country;
+
     public String getName() {
         return name;
     }
@@ -84,6 +93,33 @@ public class SignUpRequest {
 
     public SignUpRequest setAddress(String address) {
         this.address = address;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public SignUpRequest setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public SignUpRequest setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public SignUpRequest setCountry(String country) {
+        this.country = country;
         return this;
     }
 

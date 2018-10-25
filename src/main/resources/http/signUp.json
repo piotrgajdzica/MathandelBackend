@@ -1,8 +1,11 @@
 {
   "name": "ASDASD",
   "surname": "asdasdasd",
-  "username": "dsadasdsadsa",
+  "username": "dsadsadsa",
   "email": "dsa@gmail.com",
   "password": "hejohejo",
-  "address": "ul.Robotnicza 98 Sanok 38-500 Polska"
+  "address": "ul.Robotnicza 98",
+  "city": "Sanok",
+  "postalCode": "38-500",
+  "country": "Polska"
 }
