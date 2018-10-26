@@ -42,7 +42,7 @@ public class UserTO {
     @NotBlank
     private String country;
 
-    private Set<RoleTO> roles;
+    private Set<String> roles;
 
     public Long getId() {
         return id;
@@ -89,11 +89,11 @@ public class UserTO {
         return this;
     }
 
-    public Set<RoleTO> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public UserTO setRoles(Set<RoleTO> roles) {
+    public UserTO setRoles(Set<String> roles) {
         this.roles = roles;
         return this;
     }

@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JwtAuthenticationResponseTest {
 
     private String payload = "{\"accessToken\":\"token\"}";
-    private JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("token");
+    private JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse().setAccessToken("token");
     private Gson gson = new Gson();
 
     @Test

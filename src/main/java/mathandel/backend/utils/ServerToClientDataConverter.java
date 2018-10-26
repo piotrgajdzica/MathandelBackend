@@ -28,11 +28,11 @@ public class ServerToClientDataConverter {
                 .setId(preference.getId())
                 .setUserId(preference.getUser().getId());
     }
-    public static RoleTO mapRole(Role role){
-        return new RoleTO().setRoleName(role.getName());
+    public static String mapRole(Role role){
+        return role.getName().toString();
     }
 
-    public static Set<RoleTO> mapRoles(Set<Role> roles) {
+    public static Set<String> mapRoles(Set<Role> roles) {
         return roles.stream().map(ServerToClientDataConverter::mapRole).collect(Collectors.toSet());
     }
 

@@ -27,6 +27,9 @@ import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Set;
+
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRoles;
 
 @Service
 public class AuthService {
@@ -49,7 +52,13 @@ public class AuthService {
     }
 
     public JwtAuthenticationResponse signIn(SignInRequest signInRequest) {
-        return new JwtAuthenticationResponse(getToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
+        JwtAuthenticationResponse response = new JwtAuthenticationResponse()
+                .setAccessToken(getToken(signInRequest.getUsernameOrEmail(), signInRequest.getPassword()));
+
+        User user = userRepository.findByUsernameOrEmail(signInRequest.getUsernameOrEmail(), signInRequest.getUsernameOrEmail())
+                .orElseThrow(() -> new AppException("User does not exist"));
+
+        return response.setRoles(mapRoles(user.getRoles()));
     }
 
     public JwtAuthenticationResponse signUp(SignUpRequest signUpRequest) {
@@ -64,6 +73,8 @@ public class AuthService {
             throw new BadRequestException("Email Address already in use");
         }
 
+        Set<Role> roles = Collections.singleton(userRole);
+
         User user = new User()
                 .setName(signUpRequest.getName())
                 .setSurname(signUpRequest.getSurname())
@@ -74,10 +85,12 @@ public class AuthService {
                 .setCity(signUpRequest.getCity())
                 .setPostalCode(signUpRequest.getPostalCode())
                 .setCountry(signUpRequest.getCountry())
-                .setRoles(Collections.singleton(userRole));
+                .setRoles(roles);
 
         userRepository.save(user);
-        return new JwtAuthenticationResponse(getToken(signUpRequest.getEmail(), signUpRequest.getPassword()));
+        return new JwtAuthenticationResponse()
+                .setAccessToken(getToken(signUpRequest.getEmail(), signUpRequest.getPassword()))
+                .setRoles(mapRoles(user.getRoles()));
     }
 
     public FacebookResponse facebookSignIn(SignInFacebookRequest signInFacebookRequest) {
@@ -96,6 +109,7 @@ public class AuthService {
 
         return new FacebookJwtAuthenticationResponse()
                 .setAccessToken(getToken(user.getEmail(), facebookPassword))
+                .setRoles(mapRoles(user.getRoles()))
                 .setUserExists(true);
     }
 
@@ -134,10 +148,11 @@ public class AuthService {
 
         return new FacebookJwtAuthenticationResponse()
                 .setAccessToken(getToken(user.getEmail(), facebookPassword))
+                .setRoles(mapRoles(user.getRoles()))
                 .setUserExists(true);
     }
 
-    String getToken(String usernameOrEmail, String password) {
+    private String getToken(String usernameOrEmail, String password) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(usernameOrEmail, password));
 

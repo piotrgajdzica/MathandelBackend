@@ -19,7 +19,7 @@ public class UserTOTest {
             .setSurname("Surname")
             .setUsername("Username")
             .setEmail("useremail@email.com")
-            .setRoles(Collections.singleton(new RoleTO().setRoleName(RoleName.ROLE_USER)));
+            .setRoles(Collections.singleton("ROLE_USER"));
     private Gson gson = new Gson();
 
 

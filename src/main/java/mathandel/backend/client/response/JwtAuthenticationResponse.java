@@ -1,14 +1,15 @@
 package mathandel.backend.client.response;
 
+import mathandel.backend.model.client.RoleTO;
+import mathandel.backend.model.server.Role;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Set;
+
 public class JwtAuthenticationResponse {
     private String accessToken;
-
-    public JwtAuthenticationResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
+    private Set<String> roles;
 
     public String getAccessToken() {
         return accessToken;
@@ -16,6 +17,15 @@ public class JwtAuthenticationResponse {
 
     public JwtAuthenticationResponse setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+        return this;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public JwtAuthenticationResponse setRoles(Set<String> roles) {
+        this.roles = roles;
         return this;
     }
 

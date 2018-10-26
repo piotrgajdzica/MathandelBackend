@@ -6,7 +6,9 @@ import mathandel.backend.model.client.UserTO;
 import mathandel.backend.client.request.SignInRequest;
 import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.client.response.JwtAuthenticationResponse;
+import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.enums.RoleName;
+import mathandel.backend.repository.RoleRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRoles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -40,6 +43,9 @@ public class UserControllerITTest {
 
     @Autowired
     AuthController authController;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     private final String name = "John";
     private final String surname = "Smith";
@@ -94,17 +100,14 @@ public class UserControllerITTest {
     @Transactional
     public void shouldGetAdminData() throws Exception {
         //given
-        Set<RoleTO> roles = new HashSet<>();
-        roles.add(new RoleTO().setRoleName(RoleName.ROLE_USER));
-        roles.add(new RoleTO().setRoleName(RoleName.ROLE_ADMIN));
-        roles.add(new RoleTO().setRoleName(RoleName.ROLE_MODERATOR));
+        Set<Role> roles = new HashSet<>(roleRepository.findAll());
         UserTO admin = new UserTO()
                 .setName("admin")
                 .setSurname("admin")
                 .setUsername("admin")
                 .setEmail("admin@admin.admin")
                 .setId(1L)
-                .setRoles(roles);
+                .setRoles(mapRoles(roles));
         String token = acquireTokenNormalUser();
 
         //when
