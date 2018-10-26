@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EditionTOTest {
 
-    private String payload = "{\"Id\":1,\"name\":\"Edition name\",\"description\":\"Edition description\",\"endDate\":{\"year\":2018,\"month\":10,\"day\":10},\"maxParticipants\":100,\"numberOfParticipants\":0}";
+    private String payload = "{\"Id\":1,\"name\":\"Edition name\",\"description\":\"Edition description\",\"endDate\":{\"year\":2018,\"month\":10,\"day\":10},\"maxParticipants\":100,\"numberOfParticipants\":0,\"isModerator\":false,\"isParticipant\":false}";
     private EditionTO editionTO = new EditionTO()
             .setId(1L)
             .setName("Edition name")

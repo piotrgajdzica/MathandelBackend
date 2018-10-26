@@ -105,19 +105,7 @@ public class UserServiceTest {
         assertThat(resourceNotFoundException).isEqualTo(expected);
     }
 
-    @Test
-    public void shouldGetUserData() {
-        //given
-        UserTO expected = mapUser(user);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-        //when
-        UserTO actual = userService.getUserData(userId);
-
-        //then
-        assertThat(actual).isEqualTo(expected);
-    }
+    // todo shouldGetUserData
 
     @Test
     public void shouldFailGetUserData() {

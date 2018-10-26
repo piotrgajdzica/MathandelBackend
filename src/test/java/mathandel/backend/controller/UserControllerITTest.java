@@ -93,7 +93,7 @@ public class UserControllerITTest {
         assertThat(userTO.getSurname()).isEqualTo(surname);
         assertThat(userTO.getUsername()).isEqualTo(username);
         assertThat(userTO.getEmail()).isEqualTo(email);
-        assertThat(userTO.getRoles()).isEqualTo(Collections.singleton(new RoleTO().setRoleName(RoleName.ROLE_USER)));
+        assertThat(userTO.getRoles()).isEqualTo(Collections.singleton(RoleName.ROLE_USER.toString()));
     }
 
     @Test

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTOTest {
 
-    private String payload = "{\"id\":1,\"name\":\"Name\",\"surname\":\"Surname\",\"username\":\"Username\",\"email\":\"useremail@email.com\",\"roles\":[{\"roleName\":\"ROLE_USER\"}]}";
+    private String payload = "{\"id\":1,\"name\":\"Name\",\"surname\":\"Surname\",\"username\":\"Username\",\"email\":\"useremail@email.com\",\"roles\":[\"ROLE_USER\"]}";
     private UserTO userTO = new UserTO()
             .setId(1L)
             .setName("Name")

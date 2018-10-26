@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +40,13 @@ public class EditionServiceTest {
             .setUsername("jsmith")
             .setEmail("jsmith@gmail.com")
             .setPassword("jsmith123");
+
+    private User admin = new User()
+            .setName("admin")
+            .setSurname("admin")
+            .setUsername("admin")
+            .setEmail("admin@admin.admin")
+            .setPassword("admin");
 
     private EditionTO editionTO = new EditionTO()
             .setName("Mathandel 4000")
@@ -65,7 +73,7 @@ public class EditionServiceTest {
         // given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED)).thenReturn(new EditionStatusType(EditionStatusName.OPENED));
-
+        when(userRepository.findByRolesContains(any())).thenReturn(Optional.of(admin));
         // when
         ApiResponse apiResponse = editionService.createEdition(editionTO, userId);
 
@@ -77,6 +85,7 @@ public class EditionServiceTest {
     public void shouldFailOnCreateUserDoesntExist() {
         // given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(userRepository.findByRolesContains(any())).thenReturn(Optional.of(admin));
 
         // when
         AppException appException = assertThrows(AppException.class, () -> editionService.createEdition(editionTO, userId));
