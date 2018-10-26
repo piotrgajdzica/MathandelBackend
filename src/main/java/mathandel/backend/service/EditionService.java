@@ -7,10 +7,12 @@ import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
+import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static mathandel.backend.model.server.enums.RoleName.ROLE_ADMIN;
 import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;
 
 //todo it tests
@@ -29,11 +32,13 @@ public class EditionService {
     private final EditionRepository editionRepository;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public EditionService(EditionRepository editionRepository, EditionStatusTypeRepository editionStatusTypeRepository, UserRepository userRepository) {
+    public EditionService(EditionRepository editionRepository, EditionStatusTypeRepository editionStatusTypeRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.editionRepository = editionRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public ApiResponse createEdition(EditionTO editionTO, Long userId) {
@@ -48,12 +53,17 @@ public class EditionService {
             throw new BadRequestException("Edition cannot have 0 max participants");
         }
 
+        Role adminRole = roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new AppException("Admin Role does not exist"));
+        User admin = userRepository.findByRolesContains(adminRole).orElseThrow(() -> new AppException("Admin does not exist"));
+        System.out.println(admin.getEmail());
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         Set<User> moderators = new HashSet<>();
         Set<User> participants = new HashSet<>();
         moderators.add(user);
+        moderators.add(admin);
         participants.add(user);
+        participants.add(admin);
 
         EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
         Edition edition = new Edition()
