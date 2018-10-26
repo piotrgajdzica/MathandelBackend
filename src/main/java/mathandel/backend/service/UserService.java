@@ -35,6 +35,9 @@ public class UserService {
         if (edition.getParticipants().size() == edition.getMaxParticipants()) {
             throw new BadRequestException("Edition is full");
         }
+        if (edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User already in this edition");
+        }
 
         edition.getParticipants().add(user);
         editionRepository.save(edition);

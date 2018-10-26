@@ -7,10 +7,8 @@ import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
-import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
-import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.UserRepository;
@@ -20,10 +18,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;
-import static mathandel.backend.utils.ServerToClientDataConverter.mapEditions;
-
 
 //todo it tests
 @Service
@@ -46,6 +43,9 @@ public class EditionService {
         }
         if (editionTO.getEndDate().isBefore(LocalDate.now())) {
             throw new BadRequestException("Edition end date cannot be in the past");
+        }
+        if (editionTO.getMaxParticipants() < 1) {
+            throw new BadRequestException("Edition cannot have 0 max participants");
         }
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
@@ -95,8 +95,8 @@ public class EditionService {
         return new ApiResponse("Edition edited successfully");
     }
 
-    public List<EditionTO> getEditions() {
-        return mapEditions(editionRepository.findAll());
+    public List<EditionTO> getEditions(Long userId) {
+        return mapEditions(editionRepository.findAll(), userId);
     }
 
     public ApiResponse makeUserEditionModerator(Long userId, Long editionId, String username) {
@@ -107,7 +107,7 @@ public class EditionService {
         if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!edition.getParticipants().contains(requestedUser)) {
+        if (!edition.getParticipants().contains(requestedUser)) {
             throw new BadRequestException("User is not participant of this edition");
         }
         if (!isModerator(requestedUser)) {
@@ -120,5 +120,22 @@ public class EditionService {
 
     private boolean isModerator(User requestedUser) {
         return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
+    }
+
+    public List<EditionTO> mapEditions(List<Edition> all, Long userId) {
+        return all.stream().map(edition -> mapEdition(edition, userId)).collect(Collectors.toList());
+    }
+
+    public EditionTO mapEdition(Edition edition, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        return new EditionTO()
+                .setId(edition.getId())
+                .setName(edition.getName())
+                .setDescription(edition.getDescription())
+                .setEndDate(edition.getEndDate())
+                .setNumberOfParticipants(edition.getParticipants().size())
+                .setMaxParticipants(edition.getMaxParticipants())
+                .setModerator(edition.getModerators().contains(user))
+                .setParticipant(edition.getParticipants().contains(user));
     }
 }

@@ -25,6 +25,8 @@ public class EditionTO {
     @NotNull
     private int maxParticipants;
     private int numberOfParticipants;
+    private boolean isModerator;
+    private boolean isParticipant;
 
     public Long getId() {
         return Id;
@@ -77,6 +79,24 @@ public class EditionTO {
 
     public EditionTO setNumberOfParticipants(int numberOfParticipants) {
         this.numberOfParticipants = numberOfParticipants;
+        return this;
+    }
+
+    public boolean isModerator() {
+        return isModerator;
+    }
+
+    public EditionTO setModerator(boolean moderator) {
+        isModerator = moderator;
+        return this;
+    }
+
+    public boolean isParticipant() {
+        return isParticipant;
+    }
+
+    public EditionTO setParticipant(boolean participant) {
+        isParticipant = participant;
         return this;
     }
 

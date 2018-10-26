@@ -46,8 +46,8 @@ public class EditionController {
     @GetMapping(editionsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    List<EditionTO> getEditions() {
-        return editionService.getEditions();
+    List<EditionTO> getEditions(@CurrentUser UserPrincipal current) {
+        return editionService.getEditions(current.getId());
     }
 
     @PutMapping(editionPath)

@@ -159,16 +159,5 @@ public class EditionServiceTest {
         assertThat(apiResponse.getMessage()).isEqualTo("Edition edited successfully");
     }
 
-    @Test
-    public void shouldGetEditionList() {
-        // given
-        List<Edition> editions = new ArrayList<>(Arrays.asList(new Edition(), new Edition()));
-        when(editionRepository.findAll()).thenReturn(editions);
-
-        // when
-        List<EditionTO> resultEdition = editionService.getEditions();
-
-        // then
-        assertThat(resultEdition.size()).isEqualTo(2);
-    }
+    //todo shouldGetEditionList
 }

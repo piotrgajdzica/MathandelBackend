@@ -49,20 +49,6 @@ public class ServerToClientDataConverter {
         return products.stream().map(ServerToClientDataConverter::mapProduct).collect(Collectors.toSet());
     }
 
-    public static List<EditionTO> mapEditions(List<Edition> all) {
-        return all.stream().map(ServerToClientDataConverter::mapEdition).collect(Collectors.toList());
-    }
-
-    public static EditionTO mapEdition(Edition edition){
-        return new EditionTO()
-                .setId(edition.getId())
-                .setName(edition.getName())
-                .setDescription(edition.getDescription())
-                .setEndDate(edition.getEndDate())
-                .setNumberOfParticipants(edition.getParticipants().size())
-                .setMaxParticipants(edition.getMaxParticipants());
-    }
-
     public static DefinedGroupTO mapDefinedGroup(DefinedGroup definedGroup) {
         return new DefinedGroupTO()
                 .setId(definedGroup.getId())
