@@ -25,6 +25,8 @@ public class UrlPaths {
     public static final String editionModeratorsPath = editionPath + "/moderators";
     // /api/editions/{editonId}/preferences
     public static final String editionPreferencesPath = editionPath + "/{editonId}/preferences";
+    // /api/editions/{editonId}/results
+    public static final String editionResultsPath = editionPath + "/{editonId}/results";
 
 
 

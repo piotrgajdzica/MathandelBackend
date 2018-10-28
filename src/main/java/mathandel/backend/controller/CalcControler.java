@@ -1,7 +1,11 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.security.CurrentUser;
+import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.CalcService;
+import mathandel.backend.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,21 +29,25 @@ public class CalcControler {
     private RestTemplate restTemplate;
 
     private CalcService calcService;
+
+    private EditionService editionService;
+
     private String CALC_SERVIE_URL = "http://localhost:8080";
 
 //    private static String WORKDIR;
 //
 //    private static String REQUEST_TO_DESERIALIZE_PATH;
 
-    public CalcControler(CalcService calcService) {
+    public CalcControler(CalcService calcService, EditionService editionService) {
         this.calcService = calcService;
+        this.editionService = editionService;
     }
 
 
     @PostMapping(closeEditionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    ApiResponse closeEdition(@PathVariable Long editionId) throws IOException {
+    ApiResponse closeEdition(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long editionId) throws IOException {
 
         // todo check Premissions after merge and if edition exists
 
@@ -48,6 +56,7 @@ public class CalcControler {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
+        editionService.changeEditionStatus(userPrincipal.getId(), editionId, EditionStatusName.CLOSED);
         String body = calcService.getMappedDataForEdition(editionId);
         // for testing
 //        WORKDIR = System.getProperty("user.dir");
@@ -64,7 +73,9 @@ public class CalcControler {
 
         calcService.saveResultsFromJsonData(editionId, result);
 
-        return new ApiResponse("Edtion closed, you can now check for results");
+        editionService.changeEditionStatus(userPrincipal.getId(), editionId, EditionStatusName.FINISHED);
+
+        return new ApiResponse("Edition closed, you can now check for results");
 
     }
 

@@ -115,4 +115,20 @@ public class EditionService {
         edition.getModerators().add(requestedUser);
         return new ApiResponse("User " + username + " become moderator of edition " + editionId);
     }
+
+    public ApiResponse changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+
+        edition.setEditionStatusType(edition.getEditionStatusType().setEditionStatusName(editionStatusName));
+
+        editionRepository.save(edition);
+
+        return new ApiResponse("Edition status changed");
+    }
 }

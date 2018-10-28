@@ -45,7 +45,7 @@ public class PreferenceService {
         Product haveProduct = productRepository.findById(preferenceTO.getHaveProductId()).orElseThrow(() -> new ResourceNotFoundException("Product", "id", preferenceTO.getHaveProductId()));
 
         if (!haveProduct.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User is not an owner of the first role");
+            throw new BadRequestException("User is not an owner of the first product");
         }
 
         Preference preference;

@@ -6,13 +6,9 @@ import mathandel.backend.model.client.ResultTO;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.TransactionRateTO;
-import mathandel.backend.model.server.Rate;
-import mathandel.backend.model.server.TransactionRate;
-import mathandel.backend.model.server.Result;
-import mathandel.backend.repository.ProductRepository;
-import mathandel.backend.repository.TransactionRateRepository;
-import mathandel.backend.repository.ResultRepository;
-import mathandel.backend.repository.UserRepository;
+import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.repository.*;
 import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +23,14 @@ public class ResultService {
     private UserRepository userRepository;
     private TransactionRateRepository transactionRateRepository;
     private ProductRepository productRepository;
+    private EditionRepository editionRepository;
 
-    public ResultService(UserRepository userRepositor, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, ProductRepository productRepository) {
+    public ResultService(UserRepository userRepositor, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, ProductRepository productRepository, EditionRepository editionRepository) {
         this.userRepository = userRepositor;
         this.resultRepository = resultRepository;
         this.transactionRateRepository = transactionRateRepository;
         this.productRepository = productRepository;
+        this.editionRepository = editionRepository;
     }
 
     // todo close edition
@@ -70,5 +68,20 @@ public class ResultService {
 
     public Set<ResultTO> getEditionProductsToReceiveForUser(Long userId, Long editionId) {
         return ServerToClientDataConverter.mapResults(resultRepository.findAllByReceiver_IdAndEdition_Id(userId, editionId)) ;
+    }
+
+    public Set<Result> getEditionResults(Long userId, Long editionId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not in db"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if(!edition.getModerators().contains(user)){
+            throw  new BadRequestException("User is not authorised to close this edition");
+        }
+
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.FINISHED)){
+            throw new BadRequestException("Edition is not finished. Please finish edition first");
+        }
+
+        return resultRepository.findAllByEdition_Id(editionId);
     }
 }

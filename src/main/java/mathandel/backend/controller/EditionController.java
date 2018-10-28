@@ -4,12 +4,10 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.client.ProductTO;
+import mathandel.backend.model.server.Result;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
-import mathandel.backend.service.EditionService;
-import mathandel.backend.service.PreferenceService;
-import mathandel.backend.service.ProductService;
-import mathandel.backend.service.UserService;
+import mathandel.backend.service.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +25,14 @@ public class EditionController {
     private final UserService userService;
     private final ProductService productService;
     private final PreferenceService preferenceService;
+    private final ResultService resultService;
 
-    public EditionController(EditionService editionService, UserService userService, ProductService productService, PreferenceService preferenceService) {
+    public EditionController(EditionService editionService, UserService userService, ProductService productService, PreferenceService preferenceService, ResultService resultService) {
         this.editionService = editionService;
         this.userService = userService;
         this.productService = productService;
         this.preferenceService = preferenceService;
+        this.resultService = resultService;
     }
 
     @PostMapping(editionsPath)
@@ -111,12 +111,20 @@ public class EditionController {
         return preferenceService.addEditPreference(currentUser.getId(), preferenceTO, editionId);
     }
 
-    //todo rename typo
     @GetMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
-    public Set<PreferenceTO> getMyPreferencesFromOneEdtion(@CurrentUser UserPrincipal currentUser,
-                                                           @PathVariable Long editionId) {
+    public Set<PreferenceTO> getMyPreferencesFromOneEdition(@CurrentUser UserPrincipal currentUser,
+                                                            @PathVariable Long editionId) {
         return preferenceService.getUserPreferencesFromOneEdtion(currentUser.getId(), editionId);
+    }
+
+
+    @GetMapping(editionResultsPath)
+    @PreAuthorize("hasRole('MODERATOR')")
+    public @ResponseBody
+    Set<Result> getEditionResults(@CurrentUser UserPrincipal currentUser,
+                                         @PathVariable Long editionId) {
+        return resultService.getEditionResults(currentUser.getId(), editionId);
     }
 
 

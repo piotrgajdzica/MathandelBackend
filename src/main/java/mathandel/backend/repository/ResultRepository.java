@@ -10,4 +10,6 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     Set<Result> findAllByReceiver_IdAndEdition_Id(Long receiver_id, Long edition_id);
 
+    Set<Result> findAllByEdition_Id(Long edition_id);
+
 }
