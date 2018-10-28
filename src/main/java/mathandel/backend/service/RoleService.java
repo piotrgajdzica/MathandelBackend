@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequest;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequests;
 
 @Service
 public class RoleService {
@@ -38,11 +39,13 @@ public class RoleService {
     public ApiResponse requestModerator( ModeratorRequestTO moderatorRequestTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
-        if(moderatorRequestsRepository.existsByUser(user)) {
-            throw new BadRequestException("Request already submitted");
+        ModeratorRequest moderatorRequest = moderatorRequestsRepository.findModeratorRequestsByUser_Id(userId).orElse(new ModeratorRequest());
+
+        if(moderatorRequestsRepository.existsByUser(user) &&  ModeratorRequestStatusName.PENDING.equals(moderatorRequest.getModeratorRequestStatus().getName()) ) {
+            throw new BadRequestException("Request already submitted and pending for acceptance/rejection");
         }
 
-        ModeratorRequest moderatorRequest = new ModeratorRequest().setUser(user)
+        moderatorRequest.setUser(user)
                 .setReason(moderatorRequestTO.getReason())
                 .setModeratorRequestStatus(new ModeratorRequestStatus().setName(ModeratorRequestStatusName.PENDING));
 
@@ -51,8 +54,8 @@ public class RoleService {
         return new ApiResponse("Request submitted");
     }
 
-    public Set<ModeratorRequestTO> getModeratorRequests() {
-        return ServerToClientDataConverter.mapModeratorRequests(moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING));
+    public Set<ModeratorRequestTO> getPendingModeratorRequests() {
+        return mapModeratorRequests(moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING));
     }
 
     public ApiResponse resolveModeratorRequests(Set<ModeratorRequestTO> resolvedRequests) {
@@ -72,14 +75,12 @@ public class RoleService {
         return new ApiResponse("Requests resolved");
     }
 
-    // todo sprawic by zwracalo najnowszy request i napisac test
-    public ModeratorRequestTO getUserRequests(Long userId) {
-        ModeratorRequest moderatorRequest =
+    public Set<ModeratorRequestTO> getUserRequests(Long userId) {
+        Set<ModeratorRequest> moderatorRequests =
                 moderatorRequestsRepository
-                        .findModeratorRequestsByUser_Id(userId)
-                        .orElseThrow(() -> new AppException("No entry in moderator_requests for user " + userId));
+                        .findAllByUser_Id(userId);
 
-        return mapModeratorRequest(moderatorRequest);
+        return mapModeratorRequests(moderatorRequests);
     }
 
     private boolean hasRole(RoleName roleName, User user) {

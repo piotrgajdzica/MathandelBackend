@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.moderatorRequestsGetMyRequests;
@@ -39,7 +38,7 @@ public class RoleController {
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
     Set<ModeratorRequestTO> getModeratorRequests() {
-        return roleService.getModeratorRequests();
+        return roleService.getPendingModeratorRequests();
     }
 
     @PutMapping(moderatorRequestsResolvePath)
@@ -52,7 +51,7 @@ public class RoleController {
     @GetMapping(moderatorRequestsGetMyRequests)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ModeratorRequestTO getMyRequest(@CurrentUser UserPrincipal currentUser) {
+    Set<ModeratorRequestTO> getMyRequest(@CurrentUser UserPrincipal currentUser) {
         return roleService.getUserRequests(currentUser.getId());
     }
 

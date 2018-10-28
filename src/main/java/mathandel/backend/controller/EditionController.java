@@ -106,27 +106,16 @@ public class EditionController {
     public @ResponseBody
     ApiResponse addEditPreference(@CurrentUser UserPrincipal currentUser,
                                   @RequestBody PreferenceTO preferenceTO,
-                                  @RequestParam Long editionId) {
+                                  @PathVariable Long editionId) {
 
-        return preferenceService.addEditPreference(currentUser.getId(), preferenceTO.getHaveProductId(), preferenceTO.getWantedProductsIds(), editionId);
-    }
-
-
-    @PostMapping(editionGroupPreferencesPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    ApiResponse addEditGroupPreference(@CurrentUser UserPrincipal currentUser,
-                                       @RequestBody PreferenceTO preferenceTO,
-                                       @RequestParam Long editionId) {
-
-        return preferenceService.addEditGroupPreference(currentUser.getId(), preferenceTO.getHaveProductId(), preferenceTO.getWantedDefinedGroupsIds(), editionId);
+        return preferenceService.addEditPreference(currentUser.getId(), preferenceTO, editionId);
     }
 
     //todo rename typo
     @GetMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public Set<PreferenceTO> getMyPreferencesFromOneEdtion(@CurrentUser UserPrincipal currentUser,
-                                                           @RequestParam Long editionId) {
+                                                           @PathVariable Long editionId) {
         return preferenceService.getUserPreferencesFromOneEdtion(currentUser.getId(), editionId);
     }
 

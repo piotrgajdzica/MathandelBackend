@@ -116,4 +116,8 @@ public class ServerToClientDataConverter {
     public static Set<ResultTO> mapResults(Set<Result> results){
         return results.stream().map(ServerToClientDataConverter::mapResult).collect(Collectors.toSet());
     }
+
+    public static Set<PreferenceTO> mapPreferences(Set<Preference> preferences) {
+        return preferences.stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
+    }
 }

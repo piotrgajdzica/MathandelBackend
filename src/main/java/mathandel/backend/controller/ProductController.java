@@ -1,9 +1,11 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
+import mathandel.backend.service.PreferenceService;
 import mathandel.backend.service.ProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,15 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @Controller
 public class ProductController {
 
     private ProductService productService;
+    private PreferenceService preferenceService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, PreferenceService preferenceService) {
         this.productService = productService;
+        this.preferenceService = preferenceService;
     }
 
     @PostMapping(productsPath)
@@ -49,6 +52,12 @@ public class ProductController {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody Set<ProductTO> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
         return productService.getNotAssignedProducts(current.getId());
+    }
+
+    @GetMapping(preferencesForProductPath)
+    @PreAuthorize("hasRole('USER')")
+    public @ResponseBody Set<PreferenceTO> getPreferencesForProduct(@CurrentUser UserPrincipal current, @PathVariable Long productId) {
+        return preferenceService.getPreferencesForProduct(current.getId(), productId);
     }
 
 }

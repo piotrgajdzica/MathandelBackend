@@ -24,9 +24,7 @@ public class UrlPaths {
     // /api/editions/{editionId}/moderators
     public static final String editionModeratorsPath = editionPath + "/moderators";
     // /api/editions/{editonId}/preferences
-    public static final String editionPreferencesPath =  editionPath +  "/{editonId}/preferences";
-    // /api/editions/{editonId}/groupPreferences
-    public static final String editionGroupPreferencesPath =  editionPath +  "/{editonId}/groupPreferences";
+    public static final String editionPreferencesPath = editionPath + "/{editonId}/preferences";
 
 
 
@@ -37,12 +35,16 @@ public class UrlPaths {
     // /api/editions/{editionId}/defined-groups/{groupId}/products
     public static final String defunedGroupProducts = definedGroup + "/products";
 
+
     // /api/products
     public static final String productsPath = "/api/products";
     // /api/products/{productId}
     public static final String productPath = productsPath + "/{productId}";
     // /api/products/not-assigned
     public static final String notAssignedProductsPath = productsPath + "/not-assigned";
+    // /api/products/{productId}/preferences
+    public static final String preferencesForProductPath =   productsPath + "/{productId}/preferences";
+
 
     // /api/users
     public static final String usersPath = "/api/users";
@@ -54,7 +56,7 @@ public class UrlPaths {
     public static final String userMePasswordPath = userMePath + "/password";
 
     // /api/moderatorRequests
-    public static final String moderatorRequestsPath = "/api/moderatorRequests";
+    public static final String moderatorRequestsPath = "/api/moderator-requests";
     // /api/moderatorRequests
     public static final String moderatorRequestsResolvePath = moderatorRequestsPath + "/resolve";
     // /api/moderatorRequests
@@ -65,13 +67,15 @@ public class UrlPaths {
 
     public static final String resultsRequestsPath = "/api/results/";
 
+    public static final String userRatesRequestPath = "/api/results/{userId}";
+
     public static final String resultsProductsToSendByUserPath = "/api/results/{editionId}/send";
 
     public static final String resultsProductsToReceiveByUserPath = "/api/results/{editionId}/receive";
 
+    // /api/finish/{editionId}
 
-
-
+    public static final String closeEditionPath = "/api/finish/{editionId}";
 
 
 }

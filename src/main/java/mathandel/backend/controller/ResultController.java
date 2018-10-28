@@ -30,24 +30,24 @@ public class ResultController {
         return resultService.rateResult(currentUser.getId(), transactionRateTO);
     }
 
-    @GetMapping(resultsRequestsPath)
+    @GetMapping(userRatesRequestPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<TransactionRateTO> getUserRates(@CurrentUser UserPrincipal currentUser) {
-        return resultService.getUserRates(currentUser.getId());
+    Set<TransactionRateTO> getUserRates(@PathVariable Long userId) {
+        return resultService.getUserRates(userId);
     }
 
     @GetMapping(resultsProductsToSendByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ResultTO> getEditionProductsToSendForUser(@CurrentUser UserPrincipal currentUser, @RequestParam Long editionId) {
+    Set<ResultTO> getEditionProductsToSendForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
         return resultService.getEditionProductsToSendForUser(currentUser.getId(), editionId);
     }
 
     @GetMapping(resultsProductsToReceiveByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ResultTO> getEditionProductsToReceiveForUser(@CurrentUser UserPrincipal currentUser, @RequestParam Long editionId) {
+    Set<ResultTO> getEditionProductsToReceiveForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
         return resultService.getEditionProductsToReceiveForUser(currentUser.getId(), editionId);
     }
 

@@ -1,6 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.ResultTO;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
@@ -40,7 +41,7 @@ public class ResultService {
     public ApiResponse rateResult(Long userId, TransactionRateTO transactionRateTO) {
 
         Result result = resultRepository
-                .findById(transactionRateTO.getResultId()).orElseThrow(() -> new BadRequestException("Result doesn't exist"));
+                .findById(transactionRateTO.getResultId()).orElseThrow(() -> new ResourceNotFoundException("Result","id" ,transactionRateTO.getResultId()));
 
         if (!userId.equals(result.getReceiver().getId())) {
             throw new BadRequestException("User is not receiver of role");

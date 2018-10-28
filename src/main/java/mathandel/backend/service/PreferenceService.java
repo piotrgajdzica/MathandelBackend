@@ -11,6 +11,7 @@ import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,17 +38,18 @@ public class PreferenceService {
     }
 
 
-    public ApiResponse addEditPreference(Long userId, Long haveProductId, Set<Long> wantProductIds, Long editionId) {
 
-        Product haveProduct = productRepository.findById(haveProductId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", haveProductId));
+
+    public ApiResponse addEditPreference(Long userId, PreferenceTO preferenceTO, Long editionId) {
+
+        Product haveProduct = productRepository.findById(preferenceTO.getHaveProductId()).orElseThrow(() -> new ResourceNotFoundException("Product", "id", preferenceTO.getHaveProductId()));
 
         if (!haveProduct.getUser().getId().equals(userId)) {
             throw new BadRequestException("User is not an owner of the first role");
         }
 
-
         Preference preference;
-        if (preferenceRepository.findByHaveProduct_Id(haveProductId) == null) {
+        if (preferenceRepository.findByHaveProduct_Id(preferenceTO.getHaveProductId()) == null) {
             preference = new Preference()
                     .setHaveProduct(haveProduct)
                     .setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId)))
@@ -55,42 +57,15 @@ public class PreferenceService {
 
 
         } else {
-            preference = preferenceRepository.findByHaveProduct_Id(haveProductId);
+            preference = preferenceRepository.findByHaveProduct_Id(preferenceTO.getHaveProductId());
         }
 
-        for (Long wantProductId : wantProductIds) {
-            preference.getWantedProducts().add(productRepository.findById(wantProductId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", wantProductId)));
-        }
-
-
-        preferenceRepository.save(preference);
-
-        return new ApiResponse("Preference saved");
-
-    }
-
-    public ApiResponse addEditGroupPreference(Long userId, Long haveProductId, Set<Long> wantGroupIds, Long editionId) {
-
-        Product haveProduct = productRepository.findById(haveProductId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", haveProductId));
-
-        if (!haveProduct.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User is not an owner of the first role");
-        }
-
-        Preference preference;
-        if (preferenceRepository.findByHaveProduct_Id(haveProductId) == null) {
-            preference = new Preference()
-                    .setHaveProduct(haveProduct)
-                    .setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId)))
-                    .setEdition(editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId)));
-
-
-        } else {
-            preference = preferenceRepository.findByHaveProduct_Id(haveProductId);
-        }
-
-        for (Long wantGroupId : wantGroupIds) {
+        for (Long wantGroupId : preferenceTO.getWantedDefinedGroupsIds()) {
             preference.getWantedDefinedGroups().add(definedGroupRepository.findById(wantGroupId).orElseThrow(() -> new ResourceNotFoundException("Group", "id", wantGroupId)));
+        }
+
+        for (Long wantProductId : preferenceTO.getWantedProductsIds()) {
+            preference.getWantedProducts().add(productRepository.findById(wantProductId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", wantProductId)));
         }
 
         preferenceRepository.save(preference);
@@ -101,6 +76,25 @@ public class PreferenceService {
     public Set<PreferenceTO> getUserPreferencesFromOneEdtion(Long userId, Long editionId) {
         return preferenceRepository.findAllByUser_IdAndEdition_Id(userId, editionId).stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
 
+    }
+
+    public Set<PreferenceTO> getPreferencesForProduct(Long userId, Long productId){
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        if(!product.getUser().getId().equals(userId)){
+            throw new BadRequestException("User is not allowed to know other's user products preferences");
+        }
+
+        Preference havePreference =  preferenceRepository.findByHaveProduct_Id(productId);
+
+        Set<Product> products = new HashSet<Product>();
+        products.add(product);
+
+        Set<Preference> wantPreferences = preferenceRepository.findAllByWantedProductsContains(products);
+
+        wantPreferences.add(havePreference);
+
+        return ServerToClientDataConverter.mapPreferences(wantPreferences);
     }
 
 }

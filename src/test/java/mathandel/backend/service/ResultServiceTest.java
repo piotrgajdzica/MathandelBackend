@@ -12,6 +12,7 @@ import mathandel.backend.repository.ResultRepository;
 import mathandel.backend.repository.TransactionRateRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.when;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ResultServiceTest {
