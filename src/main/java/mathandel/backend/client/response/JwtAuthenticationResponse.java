@@ -1,5 +1,7 @@
-package mathandel.backend.model.client.response;
+package mathandel.backend.client.response;
 
+import mathandel.backend.model.client.RoleTO;
+import mathandel.backend.model.server.Role;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

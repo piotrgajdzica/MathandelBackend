@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static mathandel.backend.model.server.enums.RoleName.ROLE_ADMIN;
 import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;

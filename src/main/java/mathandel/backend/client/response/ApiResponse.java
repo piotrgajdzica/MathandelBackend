@@ -1,18 +1,22 @@
-package mathandel.backend.model.client.request;
+package mathandel.backend.client.response;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class PasswordRequest {
-    private String newPassword;
+public class ApiResponse {
 
-    public String getNewPassword() {
-        return newPassword;
+    private String message;
+
+    public ApiResponse(String message) {
+        this.message = message;
     }
 
-    public PasswordRequest setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-        return this;
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -25,17 +29,17 @@ public class PasswordRequest {
             return false;
         }
 
-        PasswordRequest that = (PasswordRequest) o;
+        ApiResponse that = (ApiResponse) o;
 
         return new EqualsBuilder()
-                .append(newPassword, that.newPassword)
+                .append(message, that.message)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
-                .append(newPassword)
+                .append(message)
                 .toHashCode();
     }
 }

@@ -1,7 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.model.client.EditionTO;
-import mathandel.backend.model.client.response.ApiResponse;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.server.Edition;
@@ -19,6 +19,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

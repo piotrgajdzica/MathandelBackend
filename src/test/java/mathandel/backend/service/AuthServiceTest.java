@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.request.SignUpRequest;
+import mathandel.backend.client.request.SignUpRequest;
 import mathandel.backend.component.DBDataInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;

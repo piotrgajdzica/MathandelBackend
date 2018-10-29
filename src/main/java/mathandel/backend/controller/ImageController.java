@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;

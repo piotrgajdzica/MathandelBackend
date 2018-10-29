@@ -1,4 +1,4 @@
-package mathandel.backend.model.client.request;
+package mathandel.backend.client.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

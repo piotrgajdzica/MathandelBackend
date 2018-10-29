@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.model.client.ProductTO;
-import mathandel.backend.model.client.response.ApiResponse;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;
@@ -9,6 +9,7 @@ import mathandel.backend.service.ProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 

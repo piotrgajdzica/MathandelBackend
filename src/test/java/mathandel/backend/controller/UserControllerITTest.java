@@ -1,10 +1,11 @@
 package mathandel.backend.controller;
 
 import com.google.gson.Gson;
+import mathandel.backend.model.client.RoleTO;
 import mathandel.backend.model.client.UserTO;
-import mathandel.backend.model.client.request.SignInRequest;
-import mathandel.backend.model.client.request.SignUpRequest;
-import mathandel.backend.model.client.response.JwtAuthenticationResponse;
+import mathandel.backend.client.request.SignInRequest;
+import mathandel.backend.client.request.SignUpRequest;
+import mathandel.backend.client.response.JwtAuthenticationResponse;
 import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.RoleRepository;

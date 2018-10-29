@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
+import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.model.client.DefinedGroupContentTO;
 import mathandel.backend.model.client.DefinedGroupTO;
 import mathandel.backend.security.CurrentUser;

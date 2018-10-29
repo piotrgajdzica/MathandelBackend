@@ -1,4 +1,4 @@
-package mathandel.backend.model.client.response;
+package mathandel.backend.client.response;
 
 import java.util.Set;
 
