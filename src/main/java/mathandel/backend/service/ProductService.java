@@ -1,7 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.model.client.ProductTO;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;

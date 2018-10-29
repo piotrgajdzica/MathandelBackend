@@ -1,4 +1,4 @@
-package mathandel.backend.client.request;
+package mathandel.backend.model.client.request;
 
 import com.google.gson.Gson;
 import org.junit.Test;

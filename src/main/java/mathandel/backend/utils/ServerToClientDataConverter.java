@@ -65,4 +65,20 @@ public class ServerToClientDataConverter {
                 .setProductsIds(productIds)
                 .setGroupIds(groupIds);
     }
+
+    public static List<EditionTO> mapEditions(List<Edition> all, Long userId) {
+        return all.stream().map(edition -> mapEdition(edition, userId)).collect(Collectors.toList());
+    }
+
+    public static EditionTO mapEdition(Edition edition, Long userId) {
+        return new EditionTO()
+                .setId(edition.getId())
+                .setName(edition.getName())
+                .setDescription(edition.getDescription())
+                .setEndDate(edition.getEndDate())
+                .setNumberOfParticipants(edition.getParticipants().size())
+                .setMaxParticipants(edition.getMaxParticipants())
+                .setModerator(edition.getModerators().stream().anyMatch(participant -> participant.getId().equals(userId)))
+                .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)));
+    }
 }

@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/editions
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQwNTcxNjI1LCJleHAiOjE1NDExNzY0MjV9.3svTFAxzoJUoK1GlFyIGivzrZ3dSPUQqqNT_lNoFL7UOLwE2-HYhYzaGo4THCtZ4aVVAU1EzF-Fs6Y1z8b5WiQ
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQwODQ3NTM4LCJleHAiOjE1NDE0NTIzMzh9.4ZtfxIarzjGC4ZpbCfYdgcEv4qclmdg6vTbtvZyEGi9Hlj_9_fqO60kEBgTbCSfAzENQ4VjT1JALDb4UZfWglA
 
 ###

@@ -1,7 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.model.client.UserTO;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -21,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collections;
 import java.util.Optional;
 
-import static mathandel.backend.service.UserService.mapUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;

@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -20,10 +20,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static mathandel.backend.model.server.enums.RoleName.ROLE_ADMIN;
 import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapEditions;
 
 //todo it tests
 @Service
@@ -50,7 +50,7 @@ public class EditionService {
             throw new BadRequestException("Edition end date cannot be in the past");
         }
         if (editionTO.getMaxParticipants() < 1) {
-            throw new BadRequestException("Edition cannot have 0 max participants");
+            throw new BadRequestException("Incorrect max participants value - has to be more than 0");
         }
 
         Role adminRole = roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new AppException("Admin Role does not exist"));
@@ -117,35 +117,20 @@ public class EditionService {
         if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if (!edition.getParticipants().contains(requestedUser)) {
-            throw new BadRequestException("User is not participant of this edition");
-        }
         if (!isModerator(requestedUser)) {
             throw new BadRequestException("Requested user is not moderator");
         }
+        if(edition.getParticipants().size() == edition.getMaxParticipants() && !edition.getParticipants().contains(requestedUser)) {
+            throw new BadRequestException("Requested moderator is not participant of this edition and this edition already has max participants");
+        }
 
         edition.getModerators().add(requestedUser);
+        edition.getParticipants().add(requestedUser);
+        editionRepository.save(edition);
         return new ApiResponse("User " + username + " become moderator of edition " + edition.getName());
     }
 
     private boolean isModerator(User requestedUser) {
         return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
-    }
-
-    public List<EditionTO> mapEditions(List<Edition> all, Long userId) {
-        return all.stream().map(edition -> mapEdition(edition, userId)).collect(Collectors.toList());
-    }
-
-    public EditionTO mapEdition(Edition edition, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
-        return new EditionTO()
-                .setId(edition.getId())
-                .setName(edition.getName())
-                .setDescription(edition.getDescription())
-                .setEndDate(edition.getEndDate())
-                .setNumberOfParticipants(edition.getParticipants().size())
-                .setMaxParticipants(edition.getMaxParticipants())
-                .setModerator(edition.getModerators().contains(user))
-                .setParticipant(edition.getParticipants().contains(user));
     }
 }

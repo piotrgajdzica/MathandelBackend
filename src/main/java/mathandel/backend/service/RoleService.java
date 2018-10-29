@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.ModeratorRequestTO;

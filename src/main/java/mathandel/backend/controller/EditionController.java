@@ -1,6 +1,7 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.request.MakeUserEditionModeratorRequest;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.client.ProductTO;
@@ -92,14 +93,13 @@ public class EditionController {
         return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
-    //todo tego stringa trzeba przerobic na obiekt
     @PostMapping(editionModeratorsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
     ApiResponse makeUserEditionModerator(@CurrentUser UserPrincipal currentUser,
                                          @PathVariable Long editionId,
-                                         @Valid @RequestBody String username) {
-        return editionService.makeUserEditionModerator(currentUser.getId(), editionId, username);
+                                         @Valid @RequestBody MakeUserEditionModeratorRequest makeUserEditionModeratorRequest) {
+        return editionService.makeUserEditionModerator(currentUser.getId(), editionId, makeUserEditionModeratorRequest.getUsername());
     }
 
     //todo paths to utils
