@@ -8,10 +8,7 @@ import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.model.server.enums.RateName;
 import mathandel.backend.model.server.enums.RoleName;
-import mathandel.backend.repository.EditionStatusTypeRepository;
-import mathandel.backend.repository.RateRepository;
-import mathandel.backend.repository.RoleRepository;
-import mathandel.backend.repository.UserRepository;
+import mathandel.backend.repository.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,13 +25,28 @@ public class DBDataInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
     private final RateRepository rateRepository;
+    private final EditionRepository editionRepository;
+    private final DefinedGroupRepository definedGroupRepository;
+    private final ProductRepository productRepository;
+    private final ResultRepository resultRepository;
+    private final TransactionRateRepository transactionRateRepository;
+    private final PreferenceRepository preferenceRepository;
+    private  FullDBPopulator fullDBPopulator;
 
-    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository) {
+
+    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
         this.rateRepository = rateRepository;
+        this.editionRepository = editionRepository;
+        this.definedGroupRepository = definedGroupRepository;
+        this.productRepository = productRepository;
+        this.resultRepository = resultRepository;
+        this.transactionRateRepository = transactionRateRepository;
+        this.preferenceRepository = preferenceRepository;
+        this.fullDBPopulator = new FullDBPopulator(roleRepository,userRepository,editionStatusTypeRepository,rateRepository,editionRepository,definedGroupRepository,productRepository,resultRepository,transactionRateRepository, this.preferenceRepository);
     }
 
     @Override
@@ -43,6 +55,8 @@ public class DBDataInitializer implements ApplicationRunner {
         insertEditionStatusesToDB();
         insertAdminToDB();
         insertRatesToDB();
+        fullDBPopulator.populate();
+
     }
 
     private void insertRolesToDB() {

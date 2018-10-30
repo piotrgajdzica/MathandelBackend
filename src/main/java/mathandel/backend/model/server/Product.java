@@ -15,10 +15,10 @@ public class Product {
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Edition edition;
 
     public Product() {

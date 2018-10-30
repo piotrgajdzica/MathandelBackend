@@ -12,17 +12,10 @@ import mathandel.backend.model.server.User;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
-import mathandel.backend.utils.ServerToClientDataConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequest;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequests;
 
 @Service
@@ -31,7 +24,7 @@ public class RoleService {
     private final ModeratorRequestsRepository moderatorRequestsRepository;
     private final UserRepository userRepository;
 
-    public RoleService(ModeratorRequestsRepository moderatorRequestsRepository, UserRepository userRepository) {
+    public RoleService(ModeratorRequestsRepository moderatorRequestsRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.moderatorRequestsRepository = moderatorRequestsRepository;
         this.userRepository = userRepository;
     }

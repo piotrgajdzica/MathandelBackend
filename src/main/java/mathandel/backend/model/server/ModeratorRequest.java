@@ -16,7 +16,7 @@ public class ModeratorRequest {
     @Column(length = 300)
     private String reason;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private ModeratorRequestStatus moderatorRequestStatus;
 
     public ModeratorRequest() {
