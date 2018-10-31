@@ -7,6 +7,7 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.utils.ServerToClientDataConverter;
 import mathandel.backend.model.server.DefinedGroup;
 import mathandel.backend.model.server.Edition;
@@ -46,6 +47,9 @@ public class DefinedGroupService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         String groupName = definedGroupTO.getName();
 
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition " + edition.getName() + " is not opened");
+        }
         if(definedGroupRepository.existsByNameAndUser_IdAndEdition_Id(groupName, userId, editionId)) {
             throw new BadRequestException("You already have a definedGroup named \"" + groupName + "\" in edition " + edition.getName());
         }

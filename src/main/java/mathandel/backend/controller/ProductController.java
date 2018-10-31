@@ -19,11 +19,9 @@ import static mathandel.backend.utils.UrlPaths.*;
 public class ProductController {
 
     private ProductService productService;
-    private ImageService imageService;
 
-    public ProductController(ProductService productService, ImageService imageService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.imageService = imageService;
     }
 
     @PostMapping(productsPath)

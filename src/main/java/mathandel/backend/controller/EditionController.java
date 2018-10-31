@@ -56,7 +56,7 @@ public class EditionController {
     public @ResponseBody
     ApiResponse editEdition(@CurrentUser UserPrincipal currentUser,
                             @Valid @RequestBody EditionTO editionTO,
-                            @PathVariable("editionId") Long editionId) {
+                            @PathVariable Long editionId) {
         return editionService.editEdition(editionTO, editionId, currentUser.getId());
     }
 
@@ -64,7 +64,7 @@ public class EditionController {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ApiResponse joinEdition(@CurrentUser UserPrincipal currentUser,
-                            @PathVariable("editionId") Long editionId) {
+                            @PathVariable Long editionId) {
         return userService.joinEdition(currentUser.getId(), editionId);
     }
 
