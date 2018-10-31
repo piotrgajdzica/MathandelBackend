@@ -6,8 +6,10 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
@@ -40,6 +42,7 @@ public class UserServiceTest {
 
     private Edition edition = new Edition()
             .setId(editionId)
+            .setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.OPENED))
             .setMaxParticipants(10);
 
     private User user = new User()
