@@ -15,23 +15,22 @@ import java.util.stream.Collectors;
 @Service
 public class CalcService {
 
-    PreferenceRepository preferenceRepository;
+    private PreferenceRepository preferenceRepository;
 
-    DefinedGroupRepository definedGroupRepository;
+    private DefinedGroupRepository definedGroupRepository;
 
-    ResultRepository resultRepository;
+    private ResultRepository resultRepository;
 
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
-    EditionRepository editionRepository;
+    private EditionRepository editionRepository;
 
-
-    public CalcService(PreferenceRepository preferenceReposiory, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository) {
-        this.productRepository = productRepository;
-        this.editionRepository = editionRepository;
+    public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository) {
         this.preferenceRepository = preferenceRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.resultRepository = resultRepository;
+        this.productRepository = productRepository;
+        this.editionRepository = editionRepository;
     }
 
 
@@ -54,8 +53,8 @@ public class CalcService {
         Long receiversProductId = node.getLong("receiver");
         Long productToSentId = node.getLong("sender");
 
-        Product productToSent = productRepository.findById(productToSentId).orElseThrow(() -> new AppException("Product not found"));
-        Product receiversProduct = productRepository.findById(receiversProductId).orElseThrow(() -> new AppException("Product not found"));
+        Product productToSent = productRepository.findById(productToSentId).orElseThrow(() -> new AppException("Product not found, probably the calculation data have been corrupted"));
+        Product receiversProduct = productRepository.findById(receiversProductId).orElseThrow(() -> new AppException("Product not found,probably the calculation data have been corrupted"));
 
         User receiver = receiversProduct.getUser();
         User sender = productToSent.getUser();

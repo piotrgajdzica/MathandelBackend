@@ -64,9 +64,13 @@ public class FullDBPopulator {
 
     private void save() {
         userRepository.saveAll(users);
+        Thread.yield();
         editionRepository.saveAll(editions);
+        Thread.yield();
         productRepository.saveAll(products);
+        Thread.yield();
         definedGroupRepository.saveAll(definedGroups);
+        Thread.yield();
         preferenceRepository.saveAll(preferences);
 
 
@@ -196,7 +200,7 @@ public class FullDBPopulator {
         for (int j = 0; j < definedGroups.size() - 1; j++) {
             if (definedGroupBelongToTheSameEdition(definedGroups.get(j), definedGroups.get(j + 1))
                     && definedGroupsBelongToTheSameUser(definedGroups.get(j), definedGroups.get(j + 1))
-                    && random.nextInt(2) == 1) {
+                    && random.nextInt(3) == 1) {
 
                 definedGroups.get(j).getDefinedGroups().add(definedGroups.get(j + 1));
             }
@@ -219,10 +223,10 @@ public class FullDBPopulator {
     private void createPreferences() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < products.size() - 1; j++) {
-                if (areNeightbourProductsInTheSameEdition(products.get(i), products.get(i + 1))
-                        && !productsBelongsToTheSameUser(products.get(i), products.get(i + 1))
+                if (areNeightbourProductsInTheSameEdition(products.get(j), products.get(j + 1))
+                        && !productsBelongsToTheSameUser(products.get(j), products.get(j + 1))
                         && random.nextInt(2) == 1) {
-                    preferences.add(createPreference(products.get(i), products.get(i + 1)));
+                    preferences.add(createPreference(products.get(j), products.get(j + 1)));
                 }
             }
             Collections.shuffle(products);
@@ -235,8 +239,8 @@ public class FullDBPopulator {
                         && !definedGroupsAndProductBelongToTheSameUser(products.get(i), definedGroups.get(j))
                         && random.nextInt(2) == 1) {
 
-                    if (preferencesOfProduct.containsKey(products.get(i).getId())) {
-                        preferencesOfProduct.get(products.get(i).getId()).getWantedDefinedGroups().add(definedGroups.get(j));
+                    if (preferencesOfProduct.containsKey(products.get(i).getName())) {
+                        preferencesOfProduct.get(products.get(i).getName()).getWantedDefinedGroups().add(definedGroups.get(j));
                     }
                 }
             }
@@ -265,11 +269,11 @@ public class FullDBPopulator {
         return product.getUser().getEmail().equals(product1.getUser().getEmail());
     }
 
-    private Map<Long, Preference> preferencesOfProduct = new HashMap<>();
+    private Map<String, Preference> preferencesOfProduct = new HashMap<>();
 
     private Preference createPreference(Product product, Product product1) {
 
-        Preference preference = preferencesOfProduct.get(product.getId());
+        Preference preference = preferencesOfProduct.get(product.getName());
         if (preference == null) {
             preference = new Preference()
                     .setUser(product.getUser())
@@ -278,7 +282,7 @@ public class FullDBPopulator {
                     .setWantedProducts(new HashSet<>())
                     .setWantedDefinedGroups(new HashSet<>())
                     .setEdition(product.getEdition());
-            preferencesOfProduct.put(product.getId(), preference);
+            preferencesOfProduct.put(product.getName(), preference);
         }
         preference.getWantedProducts().add(product1);
 

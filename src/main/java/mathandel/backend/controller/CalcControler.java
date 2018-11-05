@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import static mathandel.backend.utils.UrlPaths.closeEditionPath;
 
 @Controller
@@ -32,11 +28,7 @@ public class CalcControler {
 
     private EditionService editionService;
 
-    private String CALC_SERVIE_URL = "http://localhost:8080";
-
-//    private static String WORKDIR;
-//
-//    private static String REQUEST_TO_DESERIALIZE_PATH;
+    private final String CALC_SERVIE_URL = "http://localhost:5000";
 
     public CalcControler(CalcService calcService, EditionService editionService) {
         this.calcService = calcService;
@@ -47,27 +39,17 @@ public class CalcControler {
     @PostMapping(closeEditionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    ApiResponse closeEdition(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long editionId) throws IOException {
+    ApiResponse closeEdition(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long editionId) {
 
-        // todo check Premissions after merge and if edition exists
-
-        String url = CALC_SERVIE_URL + "/api/solve"; //  todo wklepac jakis uniwersalny
+        String url = CALC_SERVIE_URL + "/solve/";
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
 
         editionService.changeEditionStatus(userPrincipal.getId(), editionId, EditionStatusName.CLOSED);
         String body = calcService.getMappedDataForEdition(editionId);
-        // for testing
-//        WORKDIR = System.getProperty("user.dir");
-//        REQUEST_TO_DESERIALIZE_PATH = "/src/main/resources/exampleCalsServiceResponseData.json";
-//        String body = new String(Files.readAllBytes(Paths.get(WORKDIR + REQUEST_TO_DESERIALIZE_PATH)), StandardCharsets.UTF_8);
 
-        Map bodyMap = new HashMap<String, String>();
-        bodyMap.put("body", body);
-
-
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(bodyMap, headers);
+        HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 
         String result = restTemplate.postForObject(url, httpEntity, String.class);
 

@@ -125,10 +125,11 @@ public class EditionService {
             throw new BadRequestException("You have no access to this resource");
         }
 
-        edition.setEditionStatusType(edition.getEditionStatusType().setEditionStatusName(editionStatusName));
+        edition.setEditionStatusType(editionStatusTypeRepository.findByEditionStatusName(editionStatusName));
 
         editionRepository.save(edition);
 
         return new ApiResponse("Edition status changed");
     }
+
 }
