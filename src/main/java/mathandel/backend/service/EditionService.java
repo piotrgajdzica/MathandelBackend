@@ -115,6 +115,9 @@ public class EditionService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User requestedUser = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
+        if (!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition is not opened");
+        }
         if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
