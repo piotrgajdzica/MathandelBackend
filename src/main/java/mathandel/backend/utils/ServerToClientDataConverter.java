@@ -41,8 +41,9 @@ public class ServerToClientDataConverter {
                 .setId(product.getId())
                 .setName(product.getName())
                 .setDescription(product.getDescription())
-                .setUserId(product.getUser().getId());
-
+                .setUserId(product.getUser().getId())
+                .setEditionId(product.getEdition() != null ? product.getEdition().getId() : null)
+                .setImages(mapImages(product.getImages()));
     }
 
     public static Set<ProductTO> mapProducts(Set<Product> products) {
@@ -80,5 +81,15 @@ public class ServerToClientDataConverter {
                 .setMaxParticipants(edition.getMaxParticipants())
                 .setModerator(edition.getModerators().stream().anyMatch(participant -> participant.getId().equals(userId)))
                 .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)));
+    }
+
+    private static Set<ImageTO> mapImages(Set<Image> images) {
+        return images.stream().map(ServerToClientDataConverter::mapImage).collect(Collectors.toSet());
+    }
+
+    public static ImageTO mapImage(Image image) {
+        return new ImageTO()
+                .setId(image.getId())
+                .setName(image.getName());
     }
 }

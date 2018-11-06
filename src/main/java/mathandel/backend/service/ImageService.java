@@ -4,6 +4,7 @@ import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.ImageTO;
 import mathandel.backend.model.server.Image;
 import mathandel.backend.model.server.Product;
 import mathandel.backend.model.server.User;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import static mathandel.backend.utils.ImageTypeMap.getExtension;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapImage;
 
 @Service
 public class ImageService {
@@ -44,7 +46,7 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-    public ApiResponse addImage(Long userId, Long productId, MultipartFile file) {
+    public ImageTO addImage(Long userId, Long productId, MultipartFile file) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         String basePath = new File("").getAbsolutePath();
@@ -81,8 +83,8 @@ public class ImageService {
 
         product.getImages().add(image);
 
-        imageRepository.save(image);
-        return new ApiResponse("Uploaded file successfully");
+        Image uploadedImage = imageRepository.save(image);
+        return mapImage(uploadedImage);
     }
 
     private String generateName(Long userId, Long productId) {

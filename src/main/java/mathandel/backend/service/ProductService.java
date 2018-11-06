@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static mathandel.backend.utils.ServerToClientDataConverter.mapProduct;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapProducts;
+
 
 //todo it tests
 @Service
@@ -31,13 +34,23 @@ public class ProductService {
         this.editionRepository = editionRepository;
     }
 
-    public ProductTO createProduct(Long userId, ProductTO productTO) {
+    //todo set images
+    public ProductTO createProduct(Long userId, Long editionId, ProductTO productTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
+            throw new BadRequestException("Edition is not opened");
+        }
+        if (!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User is not in this edition");
+        }
 
         Product product = new Product()
                 .setName(productTO.getName())
                 .setDescription(productTO.getDescription())
-                .setUser(user);
+                .setUser(user)
+                .setEdition(edition);
 
         return mapProduct(productRepository.save(product));
     }
@@ -71,11 +84,15 @@ public class ProductService {
     }
 
     public ApiResponse assignProductToEdition(Long userId, Long editionId, Long productId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
+        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
             throw new BadRequestException("Edition is not opened");
+        }
+        if (!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User is not in this edition");
         }
         if (!userId.equals(product.getUser().getId())) {
             throw new BadRequestException("You have no access to this product");
@@ -95,7 +112,7 @@ public class ProductService {
     }
 
     public Set<ProductTO> getProductsFromEdition(Long userId, Long editionId) {
-        if(editionRepository.existsById(editionId)) {
+        if (editionRepository.existsById(editionId)) {
             return mapProducts(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
         } else {
             throw new ResourceNotFoundException("Edition", "id", editionId);
@@ -103,31 +120,10 @@ public class ProductService {
     }
 
     public Set<ProductTO> getMyProductsFromEdition(Long userId, Long editionId) {
-        if(editionRepository.existsById(editionId)) {
+        if (editionRepository.existsById(editionId)) {
             return mapProducts(productRepository.findByEdition_IdAndUser_Id(editionId, userId));
         } else {
             throw new ResourceNotFoundException("Edition", "id", editionId);
         }
-    }
-
-    private ProductTO mapProduct(Product product) {
-        return new ProductTO()
-                .setId(product.getId())
-                .setName(product.getName())
-                .setDescription(product.getDescription())
-                .setUserId(product.getUser().getId())
-                .setImages(product.getImages() == null ? Collections.emptySet() : mapImages(product.getImages()));
-    }
-
-    private Set<ProductTO> mapProducts(Set<Product> products) {
-        return products.stream().map(this::mapProduct).collect(Collectors.toSet());
-    }
-
-    private Set<String> mapImages(Set<Image> images) {
-        return images.stream().map(this::mapImage).collect(Collectors.toSet());
-    }
-
-    private String mapImage(Image image) {
-        return image.getName();
     }
 }

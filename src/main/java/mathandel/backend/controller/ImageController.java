@@ -1,6 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.ImageTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;
@@ -27,9 +28,9 @@ public class ImageController {
     @PostMapping(productImagesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse addImage(@CurrentUser UserPrincipal current,
-                         @PathVariable Long productId,
-                         @RequestParam("image") MultipartFile multipartFile) {
+    ImageTO addImage(@CurrentUser UserPrincipal current,
+                     @PathVariable Long productId,
+                     @RequestParam("image") MultipartFile multipartFile) {
         return imageService.addImage(current.getId(), productId, multipartFile);
     }
 

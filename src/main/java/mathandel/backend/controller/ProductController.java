@@ -24,11 +24,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping(productsPath)
+    //todo i think it should also assign product to edition
+    @PostMapping(editionProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user,
+                                                 @PathVariable Long editionId,
                                                  @RequestBody ProductTO productTO) {
-        return productService.createProduct(user.getId(), productTO);
+        return productService.createProduct(user.getId(), editionId, productTO);
     }
 
     @PutMapping(productPath)

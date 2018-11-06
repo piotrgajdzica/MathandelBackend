@@ -84,7 +84,7 @@ public class ProductServiceTest {
         when(productRepository.save(any())).thenReturn(product);
 
         //when
-        ProductTO actual = productService.createProduct(userId, productTOrequest);
+        ProductTO actual = productService.createProduct(userId, editionId, productTOrequest);
 
         //then
         assertThat(actual).isEqualTo(productTO);
@@ -98,7 +98,7 @@ public class ProductServiceTest {
 
         //when then
         AppException appException = assertThrows(AppException.class,
-                () -> productService.createProduct(userId, productTOrequest));
+                () -> productService.createProduct(userId, editionId, productTOrequest));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
     }
 

@@ -14,8 +14,9 @@ public class ProductTO {
     @NotBlank
     private String description;
     private Long userId;
+    private Long editionId;
 
-    private Set<String> images;
+    private Set<ImageTO> images;
 
     public Long getId() {
         return id;
@@ -53,42 +54,51 @@ public class ProductTO {
         return this;
     }
 
-    public Set<String> getImages() {
+    public Set<ImageTO> getImages() {
         return images;
     }
 
-    public ProductTO setImages(Set<String> images) {
+    public ProductTO setImages(Set<ImageTO> images) {
         this.images = images;
+        return this;
+    }
+
+    public Long getEditionId() {
+        return editionId;
+    }
+
+    public ProductTO setEditionId(Long editionId) {
+        this.editionId = editionId;
         return this;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ProductTO productTO = (ProductTO) o;
+        ProductTO product = (ProductTO) o;
 
         return new EqualsBuilder()
-                .append(id, productTO.id)
-                .append(name, productTO.name)
-                .append(description, productTO.description)
-                .append(userId, productTO.userId)
+                .append(id, product.id)
+                .append(name, product.name)
+                .append(description, product.description)
+                .append(userId, product.userId)
+                .append(editionId, product.editionId)
+                .append(images, product.images)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
                 .append(description)
                 .append(userId)
+                .append(editionId)
+                .append(images)
                 .toHashCode();
     }
 }

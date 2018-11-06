@@ -1,6 +1,7 @@
 package mathandel.backend.model.server;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,7 +23,7 @@ public class Product {
     private Edition edition;
 
     @OneToMany
-    private Set<Image> images;
+    private Set<Image> images = new HashSet<>();
 
     public Product() {
     }

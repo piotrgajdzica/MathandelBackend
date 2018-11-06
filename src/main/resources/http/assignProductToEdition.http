@@ -1,5 +1,5 @@
-PUT http://localhost:8080/api/editions/2/products/5
+PUT http://localhost:8080/api/editions/3/products/2
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQwNDk1NzE5LCJleHAiOjE1NDExMDA1MTl9.dyXBnbpmeqbr6kEl4g2rMRMfh6FXCALDK40pIh8EIYsq33tkvcK3equJqus-8OLz7W6OIBKsC3XfzAWvfXwm3g
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQxNDk5NTEwLCJleHAiOjE1NDIxMDQzMTB9.efiZD_OmlQ6_ePblzLhCvGbY2tyJ_pCcRpGg6nZheu5xl2Ew3McsW_ow-HtEkp-AgDndOqg2wzyChRYSjduheQ
 
 ###
