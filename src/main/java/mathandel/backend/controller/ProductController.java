@@ -33,7 +33,7 @@ public class ProductController {
 
     @PutMapping(productPath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ApiResponse editProduct(@CurrentUser UserPrincipal user,
+    public @ResponseBody ProductTO editProduct(@CurrentUser UserPrincipal user,
                                                  @RequestBody ProductTO productTO,
                                                  @PathVariable Long productId) {
         return productService.editProduct(user.getId(), productTO, productId);
@@ -44,6 +44,31 @@ public class ProductController {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO getProduct(@PathVariable Long productId) {
         return productService.getProduct(productId);
+    }
+
+    @PutMapping(editionProductPath)
+    @PreAuthorize("hasRole('USER')")
+    public @ResponseBody
+    ApiResponse assignProductToEdition(@CurrentUser UserPrincipal currentUser,
+                                       @PathVariable Long editionId,
+                                       @PathVariable Long productId) {
+        return productService.assignProductToEdition(currentUser.getId(), editionId, productId);
+    }
+
+    @GetMapping(editionProductsPath)
+    @PreAuthorize("hasRole('USER')")
+    public @ResponseBody
+    Set<ProductTO> getProductsFromEdition(@CurrentUser UserPrincipal currentUser,
+                                          @PathVariable Long editionId) {
+        return productService.getProductsFromEdition(currentUser.getId(), editionId);
+    }
+
+    @GetMapping(editionMyProductsPath)
+    @PreAuthorize("hasRole('USER')")
+    public @ResponseBody
+    Set<ProductTO> getMyProductsFromEdition(@CurrentUser UserPrincipal currentUser,
+                                            @PathVariable Long editionId) {
+        return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
     @GetMapping(notAssignedProductsPath)

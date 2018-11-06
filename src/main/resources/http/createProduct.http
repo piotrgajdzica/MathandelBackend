@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/products
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQwNDk1NzE5LCJleHAiOjE1NDExMDA1MTl9.dyXBnbpmeqbr6kEl4g2rMRMfh6FXCALDK40pIh8EIYsq33tkvcK3equJqus-8OLz7W6OIBKsC3XfzAWvfXwm3g
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQxNTAxNjM1LCJleHAiOjE1NDIxMDY0MzV9.hPsv6IU5ZTMFrDETThPPvhc2aA8vURB0xMRMCey95Z-8pMTkBsZqfw_Tjpb9kTKYdW6Ocgkl21LtlnOQSCP3aw
 
 < createProduct.json
 

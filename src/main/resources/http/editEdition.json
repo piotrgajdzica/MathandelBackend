@@ -1,5 +1,6 @@
 {
-  "name": "Wymiana widelców",
-  "endDate": "2017-12-04",
-  "maxUsers": 20
+  "name": "Wymiana widelców 2",
+  "endDate": "2018-12-04",
+  "maxParticipants": 20,
+  "description": "new description"
 }

@@ -14,6 +14,7 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
+import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 import static mathandel.backend.model.server.enums.RoleName.ROLE_ADMIN;
 import static mathandel.backend.model.server.enums.RoleName.ROLE_MODERATOR;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapEdition;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapEditions;
 
 //todo it tests
@@ -41,7 +43,7 @@ public class EditionService {
         this.roleRepository = roleRepository;
     }
 
-    public ApiResponse createEdition(EditionTO editionTO, Long userId) {
+    public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
         if (editionRepository.existsByName(editionTO.getName())) {
             throw new BadRequestException("Edition name already exists");
@@ -75,12 +77,10 @@ public class EditionService {
                 .setDescription(editionTO.getDescription())
                 .setMaxParticipants(editionTO.getMaxParticipants());
 
-        editionRepository.save(edition);
-
-        return new ApiResponse("Edition added successfully");
+        return mapEdition(editionRepository.save(edition), userId);
     }
 
-    public ApiResponse editEdition(EditionTO editionTO, Long editionId, Long userId) {
+    public EditionTO editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
@@ -100,9 +100,10 @@ public class EditionService {
 
         edition.setName(editionTO.getName());
         edition.setEndDate(editionTO.getEndDate());
-        editionRepository.save(edition);
+        edition.setDescription(editionTO.getDescription());
+        edition.setMaxParticipants(editionTO.getMaxParticipants());
 
-        return new ApiResponse("Edition edited successfully");
+        return mapEdition(editionRepository.save(edition), userId);
     }
 
     public List<EditionTO> getEditions(Long userId) {

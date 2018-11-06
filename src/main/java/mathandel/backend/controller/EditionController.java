@@ -39,7 +39,7 @@ public class EditionController {
     @PostMapping(editionsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    ApiResponse createEdition(@CurrentUser UserPrincipal currentUser,
+    EditionTO createEdition(@CurrentUser UserPrincipal currentUser,
                               @Valid @RequestBody EditionTO editionTO) {
         return editionService.createEdition(editionTO, currentUser.getId());
     }
@@ -54,7 +54,7 @@ public class EditionController {
     @PutMapping(editionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    ApiResponse editEdition(@CurrentUser UserPrincipal currentUser,
+    EditionTO editEdition(@CurrentUser UserPrincipal currentUser,
                             @Valid @RequestBody EditionTO editionTO,
                             @PathVariable Long editionId) {
         return editionService.editEdition(editionTO, editionId, currentUser.getId());
@@ -66,31 +66,6 @@ public class EditionController {
     ApiResponse joinEdition(@CurrentUser UserPrincipal currentUser,
                             @PathVariable Long editionId) {
         return userService.joinEdition(currentUser.getId(), editionId);
-    }
-
-    @PutMapping(editionProductPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    ApiResponse assignProductToEdition(@CurrentUser UserPrincipal currentUser,
-                                       @PathVariable Long editionId,
-                                       @PathVariable Long productId) {
-        return productService.assignProductToEdition(currentUser.getId(), editionId, productId);
-    }
-
-    @GetMapping(editionProductsPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    Set<ProductTO> getProductsFromEdition(@CurrentUser UserPrincipal currentUser,
-                                          @PathVariable Long editionId) {
-        return productService.getProductsFromEdition(currentUser.getId(), editionId);
-    }
-
-    @GetMapping(editionMyProductsPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    Set<ProductTO> getMyProductsFromEdition(@CurrentUser UserPrincipal currentUser,
-                                            @PathVariable Long editionId) {
-        return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
     @PostMapping(editionModeratorsPath)

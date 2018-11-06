@@ -43,7 +43,7 @@ public class ProductService {
     }
 
     //todo if preferences exists shouldnt be able to do this
-    public ApiResponse editProduct(Long userId, ProductTO productTO, Long productId) {
+    public ProductTO editProduct(Long userId, ProductTO productTO, Long productId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
@@ -62,8 +62,7 @@ public class ProductService {
         product.setDescription(productTO.getDescription())
                 .setName(productTO.getName());
 
-        productRepository.save(product);
-        return new ApiResponse("Product edited successfully");
+        return mapProduct(productRepository.save(product));
     }
 
     public ProductTO getProduct(Long productId) {
