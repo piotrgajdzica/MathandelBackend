@@ -74,11 +74,15 @@ public class EditionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED)).thenReturn(new EditionStatusType(EditionStatusName.OPENED));
         when(userRepository.findByRolesContains(any())).thenReturn(Optional.of(admin));
+        when(editionRepository.save(any())).thenReturn(editionTO);
+
         // when
-        ApiResponse apiResponse = editionService.createEdition(editionTO, userId);
+        EditionTO edition = editionService.createEdition(editionTO, userId);
 
         // then
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition added successfully");
+        assertThat(edition.getEndDate()).isEqualTo(editionTO.getEndDate());
+        assertThat(edition.getName()).isEqualTo(editionTO.getName());
+        assertThat(edition.getDescription()).isEqualTo(editionTO.getDescription());
     }
 
     @Test
@@ -160,12 +164,16 @@ public class EditionServiceTest {
         edition.getModerators().add(user);
         when(editionRepository.existsByName(editionTO.getName())).thenReturn(false);
         editionTO.setEndDate(LocalDate.now().plusDays(1));
+        when(editionRepository.save(any())).thenReturn(editionTO);
 
         // when
-        ApiResponse apiResponse = editionService.editEdition(editionTO, editionId, userId);
+        EditionTO edition = editionService.editEdition(editionTO, editionId, userId);
 
         // then
-        assertThat(apiResponse.getMessage()).isEqualTo("Edition edited successfully");
+        assertThat(edition.getEndDate()).isEqualTo(editionTO.getEndDate());
+        assertThat(edition.getName()).isEqualTo(editionTO.getName());
+        assertThat(edition.getDescription()).isEqualTo(editionTO.getDescription());
+
     }
 
     //todo shouldGetEditionList

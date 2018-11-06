@@ -107,12 +107,16 @@ public class ProductServiceTest {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(productRepository.save(any())).thenReturn(productTO);
+
 
         //when
-        ApiResponse apiResponse = productService.editProduct(userId, productTOrequest, productId);
+        ProductTO product = productService.editProduct(userId, productTOrequest, productId);
 
         //then
-        assertThat(apiResponse.getMessage()).isEqualTo("Product edited successfully");
+        assertThat(product.getName()).isEqualTo(productTO.getName());
+        assertThat(product.getDescription()).isEqualTo(productTO.getDescription());
+        assertThat(product.getUserId()).isEqualTo(productTO.getUserId());
     }
 
     @Test
