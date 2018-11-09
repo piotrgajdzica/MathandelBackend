@@ -14,6 +14,7 @@ public class ImageTypeMap {
         typesToExtensions.put("image/ief", "ief");
         typesToExtensions.put("image/tiff", "tiff");
         typesToExtensions.put("image/png", "png");
+        typesToExtensions.put("image/jpeg", "jpg");
     }
 
     public static String getExtension(String type) {

@@ -108,7 +108,8 @@ public class ProductService {
     }
 
     public Set<ProductTO> getNotAssignedProducts(Long userId) {
-        return mapProducts(productRepository.findByUser_IdAndEditionIsNull(userId));
+        Set<Product> products = productRepository.findByUser_IdAndEditionIsNull(userId);
+        return mapProducts(products);
     }
 
     public Set<ProductTO> getProductsFromEdition(Long userId, Long editionId) {

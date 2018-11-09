@@ -24,7 +24,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-    //todo i think it should also assign product to edition
     @PostMapping(editionProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody ProductTO createProduct(@CurrentUser UserPrincipal user,

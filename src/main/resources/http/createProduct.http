@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/editions/2/products
+POST http://localhost:8080/api/editions/1/products
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQxNTE5NzMxLCJleHAiOjE1NDIxMjQ1MzF9._6zeJs5BEQ7q9J5fLAkDFVuiiMpNfNt9Lpg5Fig20CSFRR39_u3nkhGZ6Gv04reL8z7RDjyUxN6_9Sln7m2sMQ
 

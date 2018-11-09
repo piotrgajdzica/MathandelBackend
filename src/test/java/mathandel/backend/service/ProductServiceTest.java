@@ -1,10 +1,10 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Product;
@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,7 +54,8 @@ public class ProductServiceTest {
             .setUserId(userId)
             .setName(productName)
             .setDescription(productDescription)
-            .setId(productId);
+            .setId(productId)
+            .setImages(new HashSet<>());
 
     private Product product = new Product()
             .setName(productName)
@@ -63,7 +65,8 @@ public class ProductServiceTest {
 
     private Edition edition = new Edition()
             .setId(editionId)
-            .setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.OPENED));
+            .setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.OPENED))
+            .setParticipants(Collections.singleton(user));
 
     @MockBean
     UserRepository userRepository;
@@ -82,6 +85,7 @@ public class ProductServiceTest {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.save(any())).thenReturn(product);
+        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 
         //when
         ProductTO actual = productService.createProduct(userId, editionId, productTOrequest);
@@ -107,7 +111,7 @@ public class ProductServiceTest {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        when(productRepository.save(any())).thenReturn(productTO);
+        when(productRepository.save(any())).thenReturn(product);
 
 
         //when
@@ -195,6 +199,7 @@ public class ProductServiceTest {
     @Test
     public void shouldAssignProductToEdition() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 
@@ -210,6 +215,7 @@ public class ProductServiceTest {
         //given
         when(productRepository.findById(productId)).thenReturn(Optional.of(product.setEdition(new Edition())));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
@@ -220,6 +226,7 @@ public class ProductServiceTest {
     @Test
     public void shouldFailOnAssignProductToEditionNoAccess() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product.setUser(new User().setId(10L))));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 
@@ -234,6 +241,7 @@ public class ProductServiceTest {
         //given
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition.setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED))));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
@@ -245,6 +253,7 @@ public class ProductServiceTest {
     public void shouldFailOnAssignProductToEditionEditionDoesntExist() {
         //given
         ResourceNotFoundException expected = new ResourceNotFoundException("Edition", "id", editionId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         when(editionRepository.findById(editionId)).thenReturn(Optional.empty());
 
@@ -259,6 +268,7 @@ public class ProductServiceTest {
         //given
         ResourceNotFoundException expected = new ResourceNotFoundException("Product", "id", editionId);
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class,

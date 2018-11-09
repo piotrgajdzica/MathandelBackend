@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "preferences")
 public class Preference {
 
-    //todo maybe GenerationType.AUTO
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

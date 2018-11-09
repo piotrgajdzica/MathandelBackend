@@ -1,9 +1,8 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.EditionTO;
-import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.User;
@@ -19,9 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,6 +31,7 @@ public class EditionServiceTest {
 
     private final Long userId = 1L;
     private User user = new User()
+            .setId(userId)
             .setName("James")
             .setSurname("Smith")
             .setUsername("jsmith")
@@ -51,10 +48,14 @@ public class EditionServiceTest {
     private EditionTO editionTO = new EditionTO()
             .setName("Mathandel 4000")
             .setMaxParticipants(100)
-            .setEndDate(LocalDate.now().plusMonths(2));
+            .setEndDate(LocalDate.now().plusMonths(2))
+            .setDescription("Hello Darkness my old friend");
 
     private Long editionId = 1L;
-    private Edition edition = new Edition();
+    private Edition edition = new Edition()
+            .setName("Mathandel 4000")
+            .setEndDate(LocalDate.now().plusMonths(2))
+            .setDescription("Hello Darkness my old friend");
 
     @MockBean
     UserRepository userRepository;
@@ -74,7 +75,7 @@ public class EditionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED)).thenReturn(new EditionStatusType(EditionStatusName.OPENED));
         when(userRepository.findByRolesContains(any())).thenReturn(Optional.of(admin));
-        when(editionRepository.save(any())).thenReturn(editionTO);
+        when(editionRepository.save(any())).thenReturn(edition);
 
         // when
         EditionTO edition = editionService.createEdition(editionTO, userId);
@@ -164,7 +165,7 @@ public class EditionServiceTest {
         edition.getModerators().add(user);
         when(editionRepository.existsByName(editionTO.getName())).thenReturn(false);
         editionTO.setEndDate(LocalDate.now().plusDays(1));
-        when(editionRepository.save(any())).thenReturn(editionTO);
+        when(editionRepository.save(any())).thenReturn(edition);
 
         // when
         EditionTO edition = editionService.editEdition(editionTO, editionId, userId);

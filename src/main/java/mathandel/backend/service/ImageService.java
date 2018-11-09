@@ -51,7 +51,7 @@ public class ImageService {
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         String basePath = new File("").getAbsolutePath();
         String extension = getExtension(file.getContentType());
-        String name = "a" + generateName(userId, productId) + "." + extension;
+        String name = generateName(userId, productId) + "." + extension;
 
         if (!product.getUser().equals(user)) {
             throw new BadRequestException("You are not the owner of this product");
