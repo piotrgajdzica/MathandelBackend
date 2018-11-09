@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import com.google.gson.Gson;
 import mathandel.backend.model.client.ProductTO;
@@ -15,7 +15,6 @@ public class ProductTOTest {
             .setDescription("Product description")
             .setUserId(1L);
     private Gson gson = new Gson();
-
 
     @Test
     public void shouldMarshalProductTO() {

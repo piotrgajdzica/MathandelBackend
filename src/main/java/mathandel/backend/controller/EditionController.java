@@ -1,10 +1,9 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.request.MakeUserEditionModeratorRequest;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.request.MakeUserEditionModeratorRequest;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
-import mathandel.backend.model.client.ProductTO;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -24,14 +23,12 @@ public class EditionController {
 
     private final EditionService editionService;
     private final UserService userService;
-    private final ProductService productService;
     private final PreferenceService preferenceService;
     private final ResultService resultService;
 
     public EditionController(EditionService editionService, UserService userService, ProductService productService, PreferenceService preferenceService, ResultService resultService) {
         this.editionService = editionService;
         this.userService = userService;
-        this.productService = productService;
         this.preferenceService = preferenceService;
         this.resultService = resultService;
     }
@@ -40,7 +37,7 @@ public class EditionController {
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
     EditionTO createEdition(@CurrentUser UserPrincipal currentUser,
-                              @Valid @RequestBody EditionTO editionTO) {
+                            @Valid @RequestBody EditionTO editionTO) {
         return editionService.createEdition(editionTO, currentUser.getId());
     }
 
@@ -55,8 +52,8 @@ public class EditionController {
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
     EditionTO editEdition(@CurrentUser UserPrincipal currentUser,
-                            @Valid @RequestBody EditionTO editionTO,
-                            @PathVariable Long editionId) {
+                          @Valid @RequestBody EditionTO editionTO,
+                          @PathVariable Long editionId) {
         return editionService.editEdition(editionTO, editionId, currentUser.getId());
     }
 
@@ -99,7 +96,7 @@ public class EditionController {
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
     Set<Result> getEditionResults(@CurrentUser UserPrincipal currentUser,
-                                         @PathVariable Long editionId) {
+                                  @PathVariable Long editionId) {
         return resultService.getEditionResults(currentUser.getId(), editionId);
     }
 

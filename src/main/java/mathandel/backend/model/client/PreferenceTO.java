@@ -5,13 +5,9 @@ import java.util.Set;
 public class PreferenceTO {
 
     private Long id;
-
     private Long userId;
-
     private Long haveProductId;
-
     private Set<Long> wantedProductsIds;
-
     private Set<Long> wantedDefinedGroupsIds;
 
     public Long getId() {

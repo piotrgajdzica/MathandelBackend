@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class ProductTO {
@@ -15,7 +16,7 @@ public class ProductTO {
     private String description;
     private Long userId;
     private Long editionId;
-
+    @NotNull
     private Set<ImageTO> images;
 
     public Long getId() {

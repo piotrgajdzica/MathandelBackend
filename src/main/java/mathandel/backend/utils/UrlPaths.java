@@ -1,12 +1,13 @@
 package mathandel.backend.utils;
 
+//todo should paths be upper case?
 public class UrlPaths {
-
-    // todo tringi finale drukowanymi
 
     // /api/auth
     public static final String authPath = "/api/auth";
+    // /api/auth/signIn
     public static final String signInPath = authPath + "/signIn";
+    // /api/auth/signUp
     public static final String signUpPath = authPath + "/signUp";
 
     // /api/editions
@@ -23,12 +24,12 @@ public class UrlPaths {
     public static final String editionMyProductsPath = editionProductsPath + "/my";
     // /api/editions/{editionId}/moderators
     public static final String editionModeratorsPath = editionPath + "/moderators";
-    // /api/editions/{editonId}/preferences
-    public static final String editionPreferencesPath = editionPath + "/{editonId}/preferences";
-    // /api/editions/{editonId}/results
-    public static final String editionResultsPath = editionPath + "/{editonId}/results";
-
-
+    // /api/editions/{editionId}/preferences
+    public static final String editionPreferencesPath = editionPath + "/preferences";
+    // /api/editions/{editionId}/results
+    public static final String editionResultsPath = editionPath + "/results";
+    // /api/editions/{editionId}/finish
+    public static final String closeEditionPath = editionPath + "/close";
 
     // /api/editions/{editionId}/defined-groups
     public static final String definedGroups = editionPath + "/defined-groups";
@@ -48,8 +49,7 @@ public class UrlPaths {
     // /api/products/not-assigned
     public static final String notAssignedProductsPath = productsPath + "/not-assigned";
     // /api/products/{productId}/preferences
-    public static final String preferencesForProductPath =   productsPath + "/{productId}/preferences";
-
+    public static final String preferencesForProductPath = productsPath + "/{productId}/preferences";
 
     // /api/users
     public static final String usersPath = "/api/users";
@@ -70,20 +70,12 @@ public class UrlPaths {
     // /api/moderatorRequests
     public static final String moderatorRequestsGetMyRequests = moderatorRequestsPath + "/my";
 
-
-    // /api/results/
-
-    public static final String resultsRequestsPath = "/api/results/";
-
-    public static final String userRatesRequestPath = "/api/results/{userId}";
-
-    public static final String resultsProductsToSendByUserPath = "/api/results/{editionId}/send";
-
-    public static final String resultsProductsToReceiveByUserPath = "/api/results/{editionId}/receive";
-
-    // /api/finish/{editionId}
-
-    public static final String closeEditionPath = "/api/finish/{editionId}";
-
-
+    // /api/rates/
+    public static final String ratesPath = "/api/rates/";
+    // /api/rates/{userId}
+    public static final String userRatesPath = ratesPath + "/{userId}";
+    // /api/editions/{editionId}/results-send
+    public static final String resultsProductsToSendByUserPath = editionPath + "/results-send";
+    // /api/editions/{editionId}/results-receive
+    public static final String resultsProductsToReceiveByUserPath = editionPath + "/results-receive";
 }

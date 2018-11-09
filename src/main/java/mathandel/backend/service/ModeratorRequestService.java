@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.ModeratorRequestTO;
@@ -10,24 +10,21 @@ import mathandel.backend.model.server.ModeratorRequestStatusName;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.ModeratorRequestsRepository;
+import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
-import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Set;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapModeratorRequests;
 
 @Service
-public class RoleService {
+public class ModeratorRequestService {
 
     private final ModeratorRequestsRepository moderatorRequestsRepository;
     private final UserRepository userRepository;
 
-    public RoleService(ModeratorRequestsRepository moderatorRequestsRepository, UserRepository userRepository, RoleRepository roleRepository) {
+    public ModeratorRequestService(ModeratorRequestsRepository moderatorRequestsRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.moderatorRequestsRepository = moderatorRequestsRepository;
         this.userRepository = userRepository;
     }
@@ -77,9 +74,5 @@ public class RoleService {
                         .findAllByUser_Id(userId);
 
         return mapModeratorRequests(moderatorRequests);
-    }
-
-    private boolean hasRole(RoleName roleName, User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals(roleName));
     }
 }

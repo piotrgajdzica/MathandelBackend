@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import com.google.gson.Gson;
 import mathandel.backend.model.client.RoleTO;
@@ -13,7 +13,6 @@ public class RoleTOTest {
     private RoleTO roleTO = new RoleTO()
             .setRoleName(RoleName.ROLE_USER);
     private Gson gson = new Gson();
-
 
     @Test
     public void shouldMarshalRoleTO() {

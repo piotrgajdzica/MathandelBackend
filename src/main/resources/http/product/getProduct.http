@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/products/3
+GET http://localhost:8080/api/products/1
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQxNTE3OTY3LCJleHAiOjE1NDIxMjI3Njd9.cgcy1a5I3coSgwtUqByg_X47SXBi3ePXmigLtBS3O1tQ1yLSJ9LhPM9hQLpccwvXIHSe8eOxb2GzJ-YBAdIO4w
 

@@ -17,7 +17,6 @@ public class ImagesCleaner implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(ImagesCleaner.class);
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public void run(ApplicationArguments args) {
 

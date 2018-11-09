@@ -15,18 +15,15 @@ import java.nio.file.Paths;
 @Controller
 public class TestControler {
 
-    private static String WORKDIR;
-
+    private static String WORK_DIR;
     private static String REQUEST_TO_DESERIALIZE_PATH;
-
 
     @PostMapping("/api/solve")
     public @ResponseBody
     String solve(@RequestBody String data) throws IOException {
         System.out.println(data);
-        WORKDIR = System.getProperty("user.dir");
+        WORK_DIR = System.getProperty("user.dir");
         REQUEST_TO_DESERIALIZE_PATH = "/src/main/resources/exampleCalsServiceResponseData.json";
-        return new String(Files.readAllBytes(Paths.get(WORKDIR + REQUEST_TO_DESERIALIZE_PATH)), StandardCharsets.UTF_8);
-
+        return new String(Files.readAllBytes(Paths.get(WORK_DIR + REQUEST_TO_DESERIALIZE_PATH)), StandardCharsets.UTF_8);
     }
 }

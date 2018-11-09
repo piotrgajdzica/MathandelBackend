@@ -13,22 +13,18 @@ import java.util.*;
 @Component
 public class FullDBPopulator {
 
-
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
-    private final RateRepository rateRepository;
     private final EditionRepository editionRepository;
     private final DefinedGroupRepository definedGroupRepository;
     private final ProductRepository productRepository;
-    private final ResultRepository resultRepository;
-    private final TransactionRateRepository transactionRateRepository;
     private final PreferenceRepository preferenceRepository;
 
     private int editionNumb = 5;
     private int usersNumb = 10;
     private int productNumb = 30;
-    private int defifnedGroupsNumb = 20;
+    private int definedGroupsNumb = 20;
     private List<Edition> editions = new LinkedList<>();
     private List<User> users = new LinkedList<>();
     private List<Product> products = new LinkedList<>();
@@ -36,17 +32,13 @@ public class FullDBPopulator {
     private List<Preference> preferences = new LinkedList<>();
     private Random random;
 
-
     public FullDBPopulator(RoleRepository roleRepository, UserRepository userRepository, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
-        this.rateRepository = rateRepository;
         this.editionRepository = editionRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.productRepository = productRepository;
-        this.resultRepository = resultRepository;
-        this.transactionRateRepository = transactionRateRepository;
         this.preferenceRepository = preferenceRepository;
         random = new Random();
     }
@@ -72,8 +64,6 @@ public class FullDBPopulator {
         definedGroupRepository.saveAll(definedGroups);
         Thread.yield();
         preferenceRepository.saveAll(preferences);
-
-
     }
 
     private void createUsers() {
@@ -81,7 +71,6 @@ public class FullDBPopulator {
             Set<Role> roles = new HashSet<>();
             roles.add(roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("Roles not initialized correctly")));
             User user = new User()
-//                    .setId((long) i)
                     .setEmail(randMail())
                     .setName(randName(i))
                     .setPassword(randPasswd(i))
@@ -95,7 +84,6 @@ public class FullDBPopulator {
     private void createEditions() {
         for (int i = 0; i < editionNumb; i++) {
             Edition edition = new Edition()
-//                    .setId((long) i)
                     .setEditionStatusType(createEditionStatusType())
                     .setEndDate(LocalDate.of(2020, 10, 10))
                     .setMaxParticipants(random.nextInt(10) + 10)
@@ -124,9 +112,7 @@ public class FullDBPopulator {
                         user.getRoles().add((roleRepository.findByName(RoleName.ROLE_MODERATOR).orElseThrow(() -> new AppException("Roles not initialized correctly"))));
                         moderators.add(user);
                     }
-
                 }
-
             }
             if (moderators.isEmpty()) {
                 moderators.add(users.get(random.nextInt(usersNumb)));
@@ -146,7 +132,6 @@ public class FullDBPopulator {
             User user = edition.getParticipants().iterator().next();
             Product product = new Product()
                     .setName(randName(i))
-//                    .setId((long) i)
                     .setDescription(randName(i))
                     .setEdition(edition)
                     .setUser(user);
@@ -156,7 +141,7 @@ public class FullDBPopulator {
 
     private void createDefinedGroups() {
         int curProductsNumb = productNumb;
-        for (int i = 0; i < defifnedGroupsNumb; i++) {
+        for (int i = 0; i < definedGroupsNumb; i++) {
             Edition edition = getRandEdition();
 
             while (edition.getParticipants().isEmpty()) {
@@ -173,15 +158,12 @@ public class FullDBPopulator {
             DefinedGroup definedGroup = new DefinedGroup()
                     .setEdition(edition)
                     .setName(randName(i))
-//                    .setId((long) i)
                     .setProducts(new HashSet<>())
-                    .setDefinedGroups(new HashSet<>())
+                    .setGroups(new HashSet<>())
                     .setUser(user);
-
 
             for (int j = curProductsNumb; j < copy + 3; j++) {
                 Product product = new Product()
-//                        .setId((long)j)
                         .setName(randName(j))
                         .setDescription(randName(j))
                         .setEdition(edition)
@@ -192,17 +174,15 @@ public class FullDBPopulator {
             }
             curProductsNumb = copy;
             definedGroups.add(definedGroup);
-
         }
-        productNumb += (defifnedGroupsNumb * 3);
-
+        productNumb += (definedGroupsNumb * 3);
 
         for (int j = 0; j < definedGroups.size() - 1; j++) {
             if (definedGroupBelongToTheSameEdition(definedGroups.get(j), definedGroups.get(j + 1))
                     && definedGroupsBelongToTheSameUser(definedGroups.get(j), definedGroups.get(j + 1))
                     && random.nextInt(3) == 1) {
 
-                definedGroups.get(j).getDefinedGroups().add(definedGroups.get(j + 1));
+                definedGroups.get(j).getGroups().add(definedGroups.get(j + 1));
             }
         }
     }
@@ -216,7 +196,6 @@ public class FullDBPopulator {
             ret = iterator.next();
             if (random.nextInt(3) == 1) break;
         }
-
         return ret;
     }
 
@@ -244,9 +223,7 @@ public class FullDBPopulator {
                     }
                 }
             }
-
         }
-
     }
 
     private boolean definedGroupsAndProductBelongToTheSameUser(Product product, DefinedGroup definedGroup) {
@@ -295,9 +272,9 @@ public class FullDBPopulator {
 
     private Edition getRandEdition() {
         int i = random.nextInt(editionNumb);
+        System.out.println(i);
         return editions.get(i);
     }
-
 
     private String randUsername(int i) {
         return "userName" + i;
@@ -322,5 +299,4 @@ public class FullDBPopulator {
     private EditionStatusType createEditionStatusType() {
         return editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
     }
-
 }

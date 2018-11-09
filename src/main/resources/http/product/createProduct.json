@@ -1,4 +1,14 @@
 {
   "name": "Catan",
-  "description": "Game is almost new - used maybe 2 times"
+  "description": "Game is almost new - used maybe 2 times",
+  "images": [
+    {
+      "id": 1,
+      "name": "image1.png"
+    },
+    {
+      "id": 2,
+      "name": "image2.png"
+    }
+  ]
 }

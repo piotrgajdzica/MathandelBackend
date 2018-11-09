@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -14,7 +14,6 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
-import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -57,7 +56,6 @@ public class EditionService {
 
         Role adminRole = roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new AppException("Admin Role does not exist"));
         User admin = userRepository.findByRolesContains(adminRole).orElseThrow(() -> new AppException("Admin does not exist"));
-        System.out.println(admin.getEmail());
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
         Set<User> moderators = new HashSet<>();
@@ -138,10 +136,9 @@ public class EditionService {
         return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
     }
 
-    public ApiResponse changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {
+    void changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-
 
         if(!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
@@ -150,8 +147,5 @@ public class EditionService {
         edition.setEditionStatusType(editionStatusTypeRepository.findByEditionStatusName(editionStatusName));
 
         editionRepository.save(edition);
-
-        return new ApiResponse("Edition status changed");
     }
-
 }

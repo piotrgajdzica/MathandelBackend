@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ModeratorRequestStatusRepository extends JpaRepository<ModeratorRequestStatus, Long> {
     ModeratorRequestStatus findByName(ModeratorRequestStatusName name);
-
 }

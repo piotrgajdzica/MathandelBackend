@@ -1,7 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.model.client.UserTO;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -81,20 +81,4 @@ public class UserService {
         userRepository.save(user);
         return new ApiResponse("Password changed successfully");
     }
-
-    public static UserTO mapUser(User user) {
-        return new UserTO()
-                .setId(user.getId())
-                .setName(user.getName())
-                .setSurname(user.getSurname())
-                .setUsername(user.getUsername())
-                .setEmail(user.getEmail())
-                .setRoles(mapRoles(user.getRoles()))
-                .setAddress(user.getAddress())
-                .setCity(user.getCity())
-                .setPostalCode(user.getPostalCode())
-                .setCountry(user.getCountry());
-    }
-
-
 }

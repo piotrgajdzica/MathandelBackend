@@ -1,11 +1,11 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.model.client.ModeratorRequestsTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
-import mathandel.backend.service.RoleService;
+import mathandel.backend.service.ModeratorRequestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -13,47 +13,43 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 
-import static mathandel.backend.utils.UrlPaths.moderatorRequestsGetMyRequests;
-import static mathandel.backend.utils.UrlPaths.moderatorRequestsResolvePath;
+import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
-@RequestMapping("/api/moderatorRequests")
-public class RoleController {
+public class ModeratorRequestController {
 
-    private final RoleService roleService;
+    private final ModeratorRequestService moderatorRequestService;
 
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
+    public ModeratorRequestController(ModeratorRequestService moderatorRequestService) {
+        this.moderatorRequestService = moderatorRequestService;
     }
 
-    @PostMapping
+    @PostMapping(moderatorRequestsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ApiResponse requestModerator(@CurrentUser UserPrincipal currentUser,
                                  @Valid @RequestBody ModeratorRequestTO reason) {
-        return roleService.requestModerator(reason, currentUser.getId());
+        return moderatorRequestService.requestModerator(reason, currentUser.getId());
     }
 
-    @GetMapping
+    @GetMapping(moderatorRequestsPath)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
     Set<ModeratorRequestTO> getModeratorRequests() {
-        return roleService.getPendingModeratorRequests();
+        return moderatorRequestService.getPendingModeratorRequests();
     }
 
     @PutMapping(moderatorRequestsResolvePath)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
     ApiResponse resolveModeratorRequest(@RequestBody ModeratorRequestsTO moderatorRequestsTO) {
-        return roleService.resolveModeratorRequests(moderatorRequestsTO.getModeratorRequests());
+        return moderatorRequestService.resolveModeratorRequests(moderatorRequestsTO.getModeratorRequests());
     }
 
     @GetMapping(moderatorRequestsGetMyRequests)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     Set<ModeratorRequestTO> getMyRequest(@CurrentUser UserPrincipal currentUser) {
-        return roleService.getUserRequests(currentUser.getId());
+        return moderatorRequestService.getUserRequests(currentUser.getId());
     }
-
-
 }

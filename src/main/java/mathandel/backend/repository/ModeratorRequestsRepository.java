@@ -12,18 +12,8 @@ import java.util.Set;
 
 @Repository
 public interface ModeratorRequestsRepository extends JpaRepository<ModeratorRequest, Long> {
-
     Boolean existsByUser(User user);
-
-    //todo change to set
-
     Set<ModeratorRequest> findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName moderatorRequestStatusName);
-
     Optional<ModeratorRequest> findModeratorRequestsByUser_Id(Long id);
     Set<ModeratorRequest> findAllByUser_Id(Long userId);
-
-
-
-
-
 }

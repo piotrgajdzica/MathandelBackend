@@ -5,7 +5,6 @@ import java.util.Set;
 public class DefinedGroupContentTO {
 
     private Set<Long> productsIds;
-
     private Set<Long> groupIds;
 
     public Set<Long> getProductsIds() {

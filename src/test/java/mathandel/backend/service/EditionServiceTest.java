@@ -95,7 +95,6 @@ public class EditionServiceTest {
         // when
         AppException appException = assertThrows(AppException.class, () -> editionService.createEdition(editionTO, userId));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
-
     }
 
     @Test
@@ -174,7 +173,6 @@ public class EditionServiceTest {
         assertThat(edition.getEndDate()).isEqualTo(editionTO.getEndDate());
         assertThat(edition.getName()).isEqualTo(editionTO.getName());
         assertThat(edition.getDescription()).isEqualTo(editionTO.getDescription());
-
     }
 
     //todo shouldGetEditionList

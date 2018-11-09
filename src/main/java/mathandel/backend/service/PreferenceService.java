@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.PreferenceTO;
@@ -15,17 +15,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+//todo review and refactor
 @Service
 public class PreferenceService {
 
     private ProductRepository productRepository;
-
     private PreferenceRepository preferenceRepository;
-
     private EditionRepository editionRepository;
-
     private UserRepository userRepository;
-
     private DefinedGroupRepository definedGroupRepository;
 
     @Autowired
@@ -36,9 +33,6 @@ public class PreferenceService {
         this.userRepository = userRepository;
         this.definedGroupRepository = definedGroupRepository;
     }
-
-
-
 
     public ApiResponse addEditPreference(Long userId, PreferenceTO preferenceTO, Long editionId) {
 
@@ -75,7 +69,6 @@ public class PreferenceService {
 
     public Set<PreferenceTO> getUserPreferencesFromOneEdtion(Long userId, Long editionId) {
         return preferenceRepository.findAllByUser_IdAndEdition_Id(userId, editionId).stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
-
     }
 
     public Set<PreferenceTO> getPreferencesForProduct(Long userId, Long productId){
@@ -96,5 +89,4 @@ public class PreferenceService {
 
         return ServerToClientDataConverter.mapPreferences(wantPreferences);
     }
-
 }

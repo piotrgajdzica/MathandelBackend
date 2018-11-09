@@ -1,13 +1,12 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.request.SignInFacebookRequest;
-import mathandel.backend.client.request.SignInRequest;
-import mathandel.backend.client.request.SignUpFacebookRequest;
-import mathandel.backend.client.request.SignUpRequest;
-import mathandel.backend.client.response.ApiResponse;
-import mathandel.backend.client.response.FacebookJwtAuthenticationResponse;
-import mathandel.backend.client.response.FacebookResponse;
-import mathandel.backend.client.response.JwtAuthenticationResponse;
+import mathandel.backend.model.client.request.SignInFacebookRequest;
+import mathandel.backend.model.client.request.SignInRequest;
+import mathandel.backend.model.client.request.SignUpFacebookRequest;
+import mathandel.backend.model.client.request.SignUpRequest;
+import mathandel.backend.model.client.response.FacebookJwtAuthenticationResponse;
+import mathandel.backend.model.client.response.FacebookResponse;
+import mathandel.backend.model.client.response.JwtAuthenticationResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.server.Role;

@@ -1,4 +1,4 @@
-package mathandel.backend.client.request;
+package mathandel.backend.model.client.request;
 
 public class MakeUserEditionModeratorRequest {
 

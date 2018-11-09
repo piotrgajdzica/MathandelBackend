@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
@@ -27,6 +27,7 @@ import java.util.Objects;
 import static mathandel.backend.utils.ImageTypeMap.getExtension;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapImage;
 
+//todo review and refactor
 @Service
 public class ImageService {
 

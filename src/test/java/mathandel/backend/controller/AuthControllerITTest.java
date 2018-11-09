@@ -1,10 +1,9 @@
 package mathandel.backend.controller;
 
 import com.google.gson.Gson;
-import mathandel.backend.client.request.SignInRequest;
-import mathandel.backend.client.request.SignUpRequest;
-import mathandel.backend.client.response.JwtAuthenticationResponse;
-import mathandel.backend.component.DBDataInitializer;
+import mathandel.backend.model.client.request.SignInRequest;
+import mathandel.backend.model.client.request.SignUpRequest;
+import mathandel.backend.model.client.response.JwtAuthenticationResponse;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +21,6 @@ import static mathandel.backend.utils.UrlPaths.signUpPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -90,7 +88,7 @@ public class AuthControllerITTest {
                 .content(gson.toJson(signUpRequest)));
 
         //then
-        MvcResult mvcResult = mockMvc.perform(post(signUpPath)
+        mockMvc.perform(post(signUpPath)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(gson.toJson(signUpRequest.setEmail("diffrent@email.com"))))
                 .andExpect(status().isBadRequest())

@@ -1,8 +1,8 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.model.client.UserTO;
-import mathandel.backend.client.request.PasswordRequest;
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.request.PasswordRequest;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.UserService;

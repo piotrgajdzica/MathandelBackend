@@ -4,7 +4,6 @@ import mathandel.backend.model.server.ModeratorRequestStatusName;
 
 public class ModeratorRequestTO {
     private Long id;
-
     private Long userId;
     private String reason;
     private ModeratorRequestStatusName moderatorRequestStatus;

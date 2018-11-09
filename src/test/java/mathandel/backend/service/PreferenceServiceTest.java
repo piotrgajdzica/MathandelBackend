@@ -1,12 +1,13 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.model.client.EditionTO;
-import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.Preference;
+import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.User;
 import mathandel.backend.repository.*;
 import org.junit.After;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +16,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.when;
+
+//todo why is it ignored??
 @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PreferenceServiceTest {
+
     private final Long wantProductId = 1L;
     private final Long wantGroupProductId = 1L;
     private final Long haveProductId = 2L;
     private final Long userId = 1L;
-
 
     private EditionTO editionTO = new EditionTO()
             .setName("Mathandel 4000")

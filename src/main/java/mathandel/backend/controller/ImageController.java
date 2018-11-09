@@ -1,6 +1,6 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.ImageTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import static mathandel.backend.utils.UrlPaths.imagePath;
-import static mathandel.backend.utils.UrlPaths.productImagePath;
-import static mathandel.backend.utils.UrlPaths.productImagesPath;
+import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
 public class ImageController {
@@ -46,9 +44,10 @@ public class ImageController {
 
     @DeleteMapping(productImagePath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ApiResponse deleteImage(@CurrentUser UserPrincipal current,
-                                                 @PathVariable String imageName,
-                                                 @PathVariable Long productId) {
+    public @ResponseBody
+    ApiResponse deleteImage(@CurrentUser UserPrincipal current,
+                            @PathVariable String imageName,
+                            @PathVariable Long productId) {
         return imageService.deleteImage(current.getId(), productId, imageName);
     }
 }

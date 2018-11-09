@@ -1,4 +1,4 @@
-package mathandel.backend.client.request;
+package mathandel.backend.model.client.request;
 
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -15,7 +15,6 @@ public class SignUpRequestTest {
             .setEmail("email@email.com")
             .setPassword("Password");
     private Gson gson = new Gson();
-
 
     @Test
     public void shouldMarshalSignUpRequest() {

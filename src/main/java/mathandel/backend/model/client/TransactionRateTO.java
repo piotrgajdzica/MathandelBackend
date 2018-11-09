@@ -5,12 +5,12 @@ import mathandel.backend.model.server.enums.RateName;
 import java.util.Objects;
 
 public class TransactionRateTO {
+
     private Long id;
     private Long raterId;
     private Long resultId;
     private RateName rateName;
     private String comment;
-
 
     public String getComment() {
         return comment;

@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import com.google.gson.Gson;
 import mathandel.backend.model.client.EditionTO;
@@ -19,7 +19,6 @@ public class EditionTOTest {
             .setEndDate(LocalDate.of(2018, 10, 10))
             .setMaxParticipants(100);
     private Gson gson = new Gson();
-
 
     @Test
     public void shouldMarshalEditionTO() {

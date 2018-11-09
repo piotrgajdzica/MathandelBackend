@@ -1,6 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.ModeratorRequestTO;
@@ -29,10 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.when;
 
+//todo why is it ignored??
 @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RoleServiceTest {
+public class ModeratorRequestServiceTest {
 
     private Long requestId = 1L;
     private Long userId = 1L;
@@ -47,14 +48,13 @@ public class RoleServiceTest {
     UserRepository userRepository;
 
     @Autowired
-    RoleService roleService;
+    ModeratorRequestService moderatorRequestService;
 
     @Mock
     User user;
 
     @Mock
     ModeratorRequest moderatorRequest;
-
 
     @After
     public void tearDown() {
@@ -72,13 +72,11 @@ public class RoleServiceTest {
         when(moderatorRequestsRepository.existsByUser(user)).thenReturn(false);
 
         // when
-        ApiResponse apiResponse = roleService.requestModerator(moderatorRequestTO, userId);
+        ApiResponse apiResponse = moderatorRequestService.requestModerator(moderatorRequestTO, userId);
 
         // then
         assertEquals(apiResponse.getMessage(), "Request submitted");
-
     }
-
 
     @Test
     public void shouldThrowExceptionWhenRequestAlreadyExists() {
@@ -91,10 +89,8 @@ public class RoleServiceTest {
         when(moderatorRequestsRepository.existsByUser(user)).thenReturn(true);
 
         // when & then
-        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> roleService.requestModerator(moderatorRequestTO, userId));
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> moderatorRequestService.requestModerator(moderatorRequestTO, userId));
         assertEquals(badRequestException.getMessage(), "Request already submitted");
-
-
     }
 
     @Test
@@ -108,9 +104,8 @@ public class RoleServiceTest {
         when(moderatorRequestsRepository.existsByUser(user)).thenReturn(true);
 
         // when && then
-        AppException appException = assertThrows(AppException.class, () -> roleService.requestModerator(moderatorRequestTO, userId));
+        AppException appException = assertThrows(AppException.class, () -> moderatorRequestService.requestModerator(moderatorRequestTO, userId));
         assertEquals(appException.getMessage(), "User doesn't exist");
-
     }
 
     @Test
@@ -129,13 +124,11 @@ public class RoleServiceTest {
         when(moderatorRequest.getModeratorRequestStatus()).thenReturn(moderatorRequestStatus);
 
         // when
-        ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestTOs);
+        ApiResponse apiResponse = moderatorRequestService.resolveModeratorRequests(moderatorRequestTOs);
 
         // then
         assertEquals(apiResponse.getMessage(), "Requests resolved");
-
     }
-
 
     @Test
     public void shouldThrowAnExceptionWhenRequestNotInDb() {
@@ -151,11 +144,7 @@ public class RoleServiceTest {
         when(moderatorRequestsRepository.findById(requestId)).thenReturn(Optional.empty());
 
         // when & then
-        AppException appException = assertThrows(AppException.class, () -> roleService.resolveModeratorRequests(moderatorRequestTOs));
+        AppException appException = assertThrows(AppException.class, () -> moderatorRequestService.resolveModeratorRequests(moderatorRequestTOs));
         assertEquals(appException.getMessage(), "No entry in moderator_requests for user " + moderatorRequestTO.getUserId());
-
     }
-
-
-
 }

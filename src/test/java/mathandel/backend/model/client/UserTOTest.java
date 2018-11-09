@@ -1,4 +1,4 @@
-package mathandel.backend.client.model;
+package mathandel.backend.model.client;
 
 import com.google.gson.Gson;
 import mathandel.backend.model.client.RoleTO;
@@ -21,7 +21,6 @@ public class UserTOTest {
             .setEmail("useremail@email.com")
             .setRoles(Collections.singleton("ROLE_USER"));
     private Gson gson = new Gson();
-
 
     @Test
     public void shouldMarshalUserTO() {

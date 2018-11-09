@@ -2,5 +2,9 @@
   "name": "Jan",
   "surname": "Kowalski",
   "username": "JanKowal",
-  "email": "janKowal@gmail.com"
+  "email": "janKowal@gmail.com",
+  "address": "ul.Robotnicza 98",
+  "city": "Sanok",
+  "postalCode": "38-500",
+  "country": "Polska"
 }
