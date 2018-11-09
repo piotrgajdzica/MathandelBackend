@@ -1,0 +1,161 @@
+package mathandel.backend.service;
+
+import mathandel.backend.client.response.ApiResponse;
+import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
+import mathandel.backend.model.client.ModeratorRequestTO;
+import mathandel.backend.model.server.ModeratorRequest;
+import mathandel.backend.model.server.ModeratorRequestStatus;
+import mathandel.backend.model.server.ModeratorRequestStatusName;
+import mathandel.backend.model.server.User;
+import mathandel.backend.repository.ModeratorRequestsRepository;
+import mathandel.backend.repository.UserRepository;
+import org.junit.After;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.when;
+
+@Ignore
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class RoleServiceTest {
+
+    private Long requestId = 1L;
+    private Long userId = 1L;
+    private ModeratorRequestTO moderatorRequestTO;
+    private ModeratorRequestStatusName moderatorRequestStatusName = ModeratorRequestStatusName.PENDING;
+    private ModeratorRequestStatus moderatorRequestStatus = new ModeratorRequestStatus();
+
+    @MockBean
+    ModeratorRequestsRepository moderatorRequestsRepository;
+
+    @MockBean
+    UserRepository userRepository;
+
+    @Autowired
+    RoleService roleService;
+
+    @Mock
+    User user;
+
+    @Mock
+    ModeratorRequest moderatorRequest;
+
+
+    @After
+    public void tearDown() {
+        clearInvocations(moderatorRequestsRepository, user, userRepository, moderatorRequest);
+    }
+
+    @Test
+    public void shouldRequestModerator() {
+        //given
+        moderatorRequestTO = new ModeratorRequestTO()
+                .setModeratorRequestStatus(moderatorRequestStatusName)
+                .setReason("reason");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(moderatorRequestsRepository.existsByUser(user)).thenReturn(false);
+
+        // when
+        ApiResponse apiResponse = roleService.requestModerator(moderatorRequestTO, userId);
+
+        // then
+        assertEquals(apiResponse.getMessage(), "Request submitted");
+
+    }
+
+
+    @Test
+    public void shouldThrowExceptionWhenRequestAlreadyExists() {
+        //given
+        moderatorRequestTO = new ModeratorRequestTO()
+                .setModeratorRequestStatus(moderatorRequestStatusName)
+                .setReason("reason");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(moderatorRequestsRepository.existsByUser(user)).thenReturn(true);
+
+        // when & then
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> roleService.requestModerator(moderatorRequestTO, userId));
+        assertEquals(badRequestException.getMessage(), "Request already submitted");
+
+
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUserNotInDatabase() {
+        //given
+        moderatorRequestTO = new ModeratorRequestTO()
+                .setModeratorRequestStatus(moderatorRequestStatusName)
+                .setReason("reason");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        when(moderatorRequestsRepository.existsByUser(user)).thenReturn(true);
+
+        // when && then
+        AppException appException = assertThrows(AppException.class, () -> roleService.requestModerator(moderatorRequestTO, userId));
+        assertEquals(appException.getMessage(), "User doesn't exist");
+
+    }
+
+    @Test
+    public void shouldResolveModeratorRequests() {
+        // given
+        moderatorRequestTO = new ModeratorRequestTO()
+                .setId(requestId)
+                .setModeratorRequestStatus(moderatorRequestStatusName)
+                .setReason("reason")
+                .setUserId(userId);
+
+        Set<ModeratorRequestTO> moderatorRequestTOs = new HashSet<>();
+        moderatorRequestTOs.add(moderatorRequestTO);
+
+        when(moderatorRequestsRepository.findById(requestId)).thenReturn(Optional.of(moderatorRequest));
+        when(moderatorRequest.getModeratorRequestStatus()).thenReturn(moderatorRequestStatus);
+
+        // when
+        ApiResponse apiResponse = roleService.resolveModeratorRequests(moderatorRequestTOs);
+
+        // then
+        assertEquals(apiResponse.getMessage(), "Requests resolved");
+
+    }
+
+
+    @Test
+    public void shouldThrowAnExceptionWhenRequestNotInDb() {
+        // given
+        moderatorRequestTO = new ModeratorRequestTO()
+                .setId(requestId)
+                .setModeratorRequestStatus(moderatorRequestStatusName)
+                .setReason("reason")
+                .setUserId(userId);
+
+        Set<ModeratorRequestTO> moderatorRequestTOs = new HashSet<>();
+        moderatorRequestTOs.add(moderatorRequestTO);
+        when(moderatorRequestsRepository.findById(requestId)).thenReturn(Optional.empty());
+
+        // when & then
+        AppException appException = assertThrows(AppException.class, () -> roleService.resolveModeratorRequests(moderatorRequestTOs));
+        assertEquals(appException.getMessage(), "No entry in moderator_requests for user " + moderatorRequestTO.getUserId());
+
+    }
+
+
+
+}

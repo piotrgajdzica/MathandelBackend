@@ -1,14 +1,17 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.client.response.ApiResponse;
 import mathandel.backend.exception.BadRequestException;
+import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.server.Preference;
 import mathandel.backend.model.server.Product;
 import mathandel.backend.repository.*;
 import mathandel.backend.utils.ServerToClientDataConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,58 +20,81 @@ public class PreferenceService {
 
     private ProductRepository productRepository;
 
-    private PreferencesRepository preferencesRepository;
+    private PreferenceRepository preferenceRepository;
 
     private EditionRepository editionRepository;
 
-    private UserRepository userRepositry;
+    private UserRepository userRepository;
 
     private DefinedGroupRepository definedGroupRepository;
 
-    //todo constructor
+    @Autowired
+    public PreferenceService(ProductRepository productRepository, PreferenceRepository preferenceRepository, EditionRepository editionRepository, UserRepository userRepository, DefinedGroupRepository definedGroupRepository) {
+        this.productRepository = productRepository;
+        this.preferenceRepository = preferenceRepository;
+        this.editionRepository = editionRepository;
+        this.userRepository = userRepository;
+        this.definedGroupRepository = definedGroupRepository;
+    }
 
-    public ApiResponse addPreference(Long userId, Long haveProductId, Long wantProductId, Long editionId) {
 
-        Product haveProduct = productRepository.getOne(haveProductId);
+
+
+    public ApiResponse addEditPreference(Long userId, PreferenceTO preferenceTO, Long editionId) {
+
+        Product haveProduct = productRepository.findById(preferenceTO.getHaveProductId()).orElseThrow(() -> new ResourceNotFoundException("Product", "id", preferenceTO.getHaveProductId()));
 
         if (!haveProduct.getUser().getId().equals(userId)) {
             throw new BadRequestException("User is not an owner of the first product");
         }
 
-        if (preferencesRepository.getByWantProduct_IdAndHaveProduct_Id(wantProductId, haveProductId) != null) {
-            throw new BadRequestException("Preference already defined");
+        Preference preference;
+        if (preferenceRepository.findByHaveProduct_Id(preferenceTO.getHaveProductId()) == null) {
+            preference = new Preference()
+                    .setHaveProduct(haveProduct)
+                    .setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId)))
+                    .setEdition(editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId)));
+
+
+        } else {
+            preference = preferenceRepository.findByHaveProduct_Id(preferenceTO.getHaveProductId());
         }
 
-        Preference preference = new Preference()
-                .setHaveProduct(haveProduct)
-                .setWantProduct(productRepository.getOne(wantProductId))
-                .setUser(userRepositry.getOne(userId))
-                .setEdition(editionRepository.getOne(editionId));
-
-        preferencesRepository.save(preference);
-
-        return new ApiResponse( "Preference saved");
-
-    }
-
-    public ApiResponse addGroupPreference(Long userId, Long haveGroupId, Long wantProductId, Long editionId) {
-
-        if (preferencesRepository.getByWantProduct_IdAndDefinedGroup_Id(wantProductId, haveGroupId) != null) {
-            throw new BadRequestException("Preference already defined");
+        for (Long wantGroupId : preferenceTO.getWantedDefinedGroupsIds()) {
+            preference.getWantedDefinedGroups().add(definedGroupRepository.findById(wantGroupId).orElseThrow(() -> new ResourceNotFoundException("Group", "id", wantGroupId)));
         }
 
-        Preference preference = new Preference()
-                .setDefinedGroup(definedGroupRepository.getOne(haveGroupId))
-                .setWantProduct(productRepository.getOne(wantProductId))
-                .setUser(userRepositry.getOne(userId))
-                .setEdition(editionRepository.getOne(editionId));
+        for (Long wantProductId : preferenceTO.getWantedProductsIds()) {
+            preference.getWantedProducts().add(productRepository.findById(wantProductId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", wantProductId)));
+        }
 
-        preferencesRepository.save(preference);
+        preferenceRepository.save(preference);
 
-        return new ApiResponse( "Preference saved");
+        return new ApiResponse("Preference saved");
     }
 
     public Set<PreferenceTO> getUserPreferencesFromOneEdtion(Long userId, Long editionId) {
-        return preferencesRepository.findAllByUser_IdAndEdition_Id(userId, editionId).stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet()) ;
+        return preferenceRepository.findAllByUser_IdAndEdition_Id(userId, editionId).stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
+
     }
+
+    public Set<PreferenceTO> getPreferencesForProduct(Long userId, Long productId){
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+
+        if(!product.getUser().getId().equals(userId)){
+            throw new BadRequestException("User is not allowed to know other's user products preferences");
+        }
+
+        Preference havePreference =  preferenceRepository.findByHaveProduct_Id(productId);
+
+        Set<Product> products = new HashSet<Product>();
+        products.add(product);
+
+        Set<Preference> wantPreferences = preferenceRepository.findAllByWantedProductsContains(products);
+
+        wantPreferences.add(havePreference);
+
+        return ServerToClientDataConverter.mapPreferences(wantPreferences);
+    }
+
 }

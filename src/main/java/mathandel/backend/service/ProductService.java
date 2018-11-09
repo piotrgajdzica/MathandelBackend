@@ -95,7 +95,7 @@ public class ProductService {
             throw new BadRequestException("User is not in this edition");
         }
         if (!userId.equals(product.getUser().getId())) {
-            throw new BadRequestException("You have no access to this product");
+            throw new BadRequestException("You have no access to this role");
         }
         if (product.getEdition() != null) {
             throw new BadRequestException("Product already in edition");

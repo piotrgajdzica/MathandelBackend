@@ -3,13 +3,20 @@ package mathandel.backend.model.client;
 import mathandel.backend.model.server.ModeratorRequestStatusName;
 
 public class ModeratorRequestTO {
-    //todo id of request
-    //todo only ids
-    private UserTO user;
+    private Long id;
+
     private Long userId;
     private String reason;
-    //todo as enum
     private ModeratorRequestStatusName moderatorRequestStatus;
+
+    public Long getId() {
+        return id;
+    }
+
+    public ModeratorRequestTO setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public Long getUserId() {
         return userId;
@@ -17,15 +24,6 @@ public class ModeratorRequestTO {
 
     public ModeratorRequestTO setUserId(Long userId) {
         this.userId = userId;
-        return this;
-    }
-
-    public UserTO getUser() {
-        return user;
-    }
-
-    public ModeratorRequestTO setUser(UserTO user) {
-        this.user = user;
         return this;
     }
 

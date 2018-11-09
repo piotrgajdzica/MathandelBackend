@@ -25,6 +25,7 @@ repositories {
 
 
 dependencies {
+    compile("org.json:json:20141113")
     compile('com.google.code.gson:gson')
     compile('org.apache.commons:commons-lang3')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')

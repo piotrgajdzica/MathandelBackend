@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapRoles;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapUser;
 
 //todo it tests
 @Service

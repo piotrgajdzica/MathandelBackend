@@ -1,0 +1,146 @@
+{
+  "preferences": [
+    {
+      "single_preferences": [
+        28,
+        68,
+        102,
+        98,
+        63
+      ],
+      "groups": [
+        108,
+        110,
+        111,
+        123,
+        109,
+        112,
+        116,
+        107,
+        113,
+        120,
+        115,
+        117,
+        121,
+        125,
+        118
+      ],
+      "id": 90
+    },
+    {
+      "single_preferences": [
+        28,
+        27,
+        34,
+        93,
+        53,
+        57,
+        40
+      ],
+      "groups": [
+        108,
+        114,
+        111,
+        123,
+        109,
+        112,
+        116,
+        107,
+        113,
+        120,
+        115,
+        117,
+        121,
+        125,
+        118,
+        124
+      ],
+      "id": 85
+    },
+    {
+      "single_preferences": [
+        106
+      ],
+      "groups": [
+        113,
+        115,
+        107
+      ],
+      "id": 32
+    }
+  ],
+  "named_groups": [
+    {
+      "single_preferences": [
+        18,
+        39,
+        55
+      ],
+      "groups": [],
+      "id": 107
+    },
+    {
+      "single_preferences": [
+        59,
+        64,
+        23
+      ],
+      "groups": [],
+      "id": 113
+    },
+    {
+      "single_preferences": [
+        56,
+        106,
+        99
+      ],
+      "groups": [],
+      "id": 115
+    },
+    {
+      "single_preferences": [
+        28,
+        98,
+        29
+      ],
+      "groups": [],
+      "id": 118
+    },
+    {
+      "single_preferences": [
+        63,
+        85,
+        57
+      ],
+      "groups": [],
+      "id": 121
+    },
+    {
+      "single_preferences": [
+        93,
+        50,
+        100
+      ],
+      "groups": [],
+      "id": 123
+    },
+    {
+      "single_preferences": [
+        54,
+        90,
+        74
+      ],
+      "groups": [],
+      "id": 125
+    },
+    {
+      "single_preferences": [
+        68,
+        72,
+        51
+      ],
+      "groups": [],
+      "id": 126
+    }
+  ]
+}

@@ -18,16 +18,19 @@ public class DefinedGroup {
     @Size(max = 40)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Edition edition;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private Set<Product> products = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
+    private Set<DefinedGroup> definedGroups = new HashSet<>();
+
+    @OneToMany
     private Set<DefinedGroup> groups = new HashSet<>();
 
     public DefinedGroup() {

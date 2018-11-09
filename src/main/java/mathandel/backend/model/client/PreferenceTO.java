@@ -1,16 +1,18 @@
 package mathandel.backend.model.client;
 
+import java.util.Set;
+
 public class PreferenceTO {
-    //todo dodac ograniczenia typu @NotBlank @NotNull
+
     private Long id;
 
     private Long userId;
 
-    private ProductTO haveProductId;
+    private Long haveProductId;
 
-    private ProductTO wantProductId;
+    private Set<Long> wantedProductsIds;
 
-    private DefinedGroupTO definedGroupId;
+    private Set<Long> wantedDefinedGroupsIds;
 
     public Long getId() {
         return id;
@@ -30,30 +32,33 @@ public class PreferenceTO {
         return this;
     }
 
-    public ProductTO getHaveProductId() {
+    public Long getHaveProductId() {
         return haveProductId;
     }
 
-    public PreferenceTO setHaveProductId(ProductTO haveProductId) {
-        this.haveProductId = haveProductId;
+    public PreferenceTO setHaveProductId(Long haveProduct) {
+        this.haveProductId = haveProduct;
         return this;
     }
 
-    public ProductTO getWantProductId() {
-        return wantProductId;
+    public Set<Long> getWantedProductsIds() {
+        return wantedProductsIds;
     }
 
-    public PreferenceTO setWantProductId(ProductTO wantProductId) {
-        this.wantProductId = wantProductId;
+    public PreferenceTO setWantedProductsIds(Set<Long> wantedProductsIds) {
+        this.wantedProductsIds = wantedProductsIds;
         return this;
     }
 
-    public DefinedGroupTO getDefinedGroupId() {
-        return definedGroupId;
+    public Set<Long> getWantedDefinedGroupsIds() {
+        return wantedDefinedGroupsIds;
     }
 
-    public PreferenceTO setDefinedGroupId(DefinedGroupTO definedGroupId) {
-        this.definedGroupId = definedGroupId;
+    public PreferenceTO setWantedDefinedGroupsIds(Set<Long> wantedDefinedGroupsIds) {
+        this.wantedDefinedGroupsIds = wantedDefinedGroupsIds;
         return this;
     }
+
+
+
 }

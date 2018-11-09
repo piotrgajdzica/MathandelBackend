@@ -137,4 +137,21 @@ public class EditionService {
     private boolean isModerator(User requestedUser) {
         return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
     }
+
+    public ApiResponse changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+
+        edition.setEditionStatusType(editionStatusTypeRepository.findByEditionStatusName(editionStatusName));
+
+        editionRepository.save(edition);
+
+        return new ApiResponse("Edition status changed");
+    }
+
 }

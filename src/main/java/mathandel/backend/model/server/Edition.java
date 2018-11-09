@@ -22,19 +22,19 @@ public class Edition {
     private LocalDate endDate;
     private int maxParticipants;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "moderators",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> moderators = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "participants",
             joinColumns = @JoinColumn(name = "edition_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private EditionStatusType editionStatusType;
 
     public Edition() {

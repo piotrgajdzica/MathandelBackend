@@ -1,0 +1,54 @@
+{
+  "named_groups": [
+    {
+      "id": 1,
+      "single_preferences": [
+        1,
+        2
+      ],
+      "groups": []
+    },
+    {
+      "id": 2,
+      "single_preferences": [
+        3
+      ],
+      "groups": [
+        1
+      ]
+    }
+  ],
+  "preferences": [
+    {
+      "id": 1,
+      "single_preferences": [
+        2
+      ],
+      "groups": [
+        1
+      ]
+    },
+    {
+      "id": 2,
+      "single_preferences": [
+        3
+      ],
+      "groups": []
+    },
+    {
+      "id": 3,
+      "single_preferences": [
+        1,
+        4
+      ],
+      "groups": []
+    },
+    {
+      "id": 4,
+      "single_preferences": [],
+      "groups": [
+        2
+      ]
+    }
+  ]
+}

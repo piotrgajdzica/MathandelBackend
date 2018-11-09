@@ -15,7 +15,6 @@ import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
 
-//todo think about urls
 @Controller
 public class DefinedGroupController {
 
