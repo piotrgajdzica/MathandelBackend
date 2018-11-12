@@ -233,7 +233,7 @@ public class ProductServiceTest {
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
                 () -> productService.assignProductToEdition(userId, editionId, productId));
-        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this role");
+        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this product");
     }
 
     @Test
@@ -292,6 +292,8 @@ public class ProductServiceTest {
     @Test
     public void shouldGetProductsFromEdition() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(editionRepository.existsById(editionId)).thenReturn(true);
         when(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId)).thenReturn(Collections.singleton(product));
 
@@ -306,6 +308,7 @@ public class ProductServiceTest {
     @Test
     public void shouldFailOnGetProductsFromEditionWhenEditionDoesntExist() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.existsById(editionId)).thenReturn(false);
 
         //when then
@@ -319,6 +322,8 @@ public class ProductServiceTest {
     @Test
     public void shouldGetMyProductsFromEdition() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(editionRepository.existsById(editionId)).thenReturn(true);
         when(productRepository.findByEdition_IdAndUser_Id(editionId, userId)).thenReturn(Collections.singleton(product));
 
@@ -333,6 +338,7 @@ public class ProductServiceTest {
     @Test
     public void shouldThrowExceptionOnGetMyProductsFromEditionWhenEditionDoesntExist() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.existsById(editionId)).thenReturn(false);
 
         //when then

@@ -33,6 +33,7 @@ public class EditionController {
         this.resultService = resultService;
     }
 
+    // documented
     @PostMapping(editionsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
@@ -41,6 +42,7 @@ public class EditionController {
         return editionService.createEdition(editionTO, currentUser.getId());
     }
 
+    // documented
     @GetMapping(editionsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -48,6 +50,7 @@ public class EditionController {
         return editionService.getEditions(current.getId());
     }
 
+    // documented
     @PutMapping(editionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
@@ -57,6 +60,7 @@ public class EditionController {
         return editionService.editEdition(editionTO, editionId, currentUser.getId());
     }
 
+    // documented
     @PostMapping(editionParticipantsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -65,6 +69,7 @@ public class EditionController {
         return userService.joinEdition(currentUser.getId(), editionId);
     }
 
+    // documented
     @PostMapping(editionModeratorsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
@@ -73,32 +78,4 @@ public class EditionController {
                                          @Valid @RequestBody MakeUserEditionModeratorRequest makeUserEditionModeratorRequest) {
         return editionService.makeUserEditionModerator(currentUser.getId(), editionId, makeUserEditionModeratorRequest.getUsername());
     }
-
-    @PostMapping(editionPreferencesPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    ApiResponse addEditPreference(@CurrentUser UserPrincipal currentUser,
-                                  @RequestBody PreferenceTO preferenceTO,
-                                  @PathVariable Long editionId) {
-
-        return preferenceService.addEditPreference(currentUser.getId(), preferenceTO, editionId);
-    }
-
-    @GetMapping(editionPreferencesPath)
-    @PreAuthorize("hasRole('USER')")
-    public Set<PreferenceTO> getMyPreferencesFromOneEdition(@CurrentUser UserPrincipal currentUser,
-                                                            @PathVariable Long editionId) {
-        return preferenceService.getUserPreferencesFromOneEdtion(currentUser.getId(), editionId);
-    }
-
-
-    @GetMapping(editionResultsPath)
-    @PreAuthorize("hasRole('MODERATOR')")
-    public @ResponseBody
-    Set<Result> getEditionResults(@CurrentUser UserPrincipal currentUser,
-                                  @PathVariable Long editionId) {
-        return resultService.getEditionResults(currentUser.getId(), editionId);
-    }
-
-
 }

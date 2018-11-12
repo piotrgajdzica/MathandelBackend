@@ -2,6 +2,7 @@ package mathandel.backend.model.client;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 public class DefinedGroupTO {
 
@@ -9,7 +10,8 @@ public class DefinedGroupTO {
     @NotBlank
     @Size(min = 4, max = 40)
     private String name;
-    private int numberOfProducts;
+    private Set<Long> productsIds;
+    private Set<Long> groupIds;
 
     public Long getId() {
         return id;
@@ -29,12 +31,21 @@ public class DefinedGroupTO {
         return this;
     }
 
-    public int getNumberOfProducts() {
-        return numberOfProducts;
+    public Set<Long> getProductsIds() {
+        return productsIds;
     }
 
-    public DefinedGroupTO setNumberOfProducts(int numberOfProducts) {
-        this.numberOfProducts = numberOfProducts;
+    public DefinedGroupTO setProductsIds(Set<Long> productsIds) {
+        this.productsIds = productsIds;
+        return this;
+    }
+
+    public Set<Long> getGroupIds() {
+        return groupIds;
+    }
+
+    public DefinedGroupTO setGroupIds(Set<Long> groupIds) {
+        this.groupIds = groupIds;
         return this;
     }
 }

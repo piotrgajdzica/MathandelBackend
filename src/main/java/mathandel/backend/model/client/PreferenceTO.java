@@ -1,5 +1,6 @@
 package mathandel.backend.model.client;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class PreferenceTO {
@@ -7,7 +8,9 @@ public class PreferenceTO {
     private Long id;
     private Long userId;
     private Long haveProductId;
+    @NotNull
     private Set<Long> wantedProductsIds;
+    @NotNull
     private Set<Long> wantedDefinedGroupsIds;
 
     public Long getId() {

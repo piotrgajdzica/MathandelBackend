@@ -1,6 +1,5 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.DefinedGroupContentTO;
 import mathandel.backend.model.client.DefinedGroupTO;
 import mathandel.backend.security.CurrentUser;
@@ -24,25 +23,28 @@ public class DefinedGroupController {
         this.definedGroupService = definedGroupService;
     }
 
+    // documented
     @PostMapping(definedGroups)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse createDefinedGroup(@CurrentUser UserPrincipal currentUser,
+    DefinedGroupTO createDefinedGroup(@CurrentUser UserPrincipal currentUser,
                                    @PathVariable Long editionId,
                                    @Valid @RequestBody DefinedGroupTO definedGroupTO) {
         return definedGroupService.createDefinedGroup(currentUser.getId(), editionId, definedGroupTO);
     }
 
-    @PostMapping(definedGroup)
+    // documented
+    @PutMapping(definedGroup)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse editDefinedGroup(@CurrentUser UserPrincipal currentUser,
+    DefinedGroupTO editDefinedGroup(@CurrentUser UserPrincipal currentUser,
                                  @PathVariable Long editionId,
                                  @PathVariable Long groupId,
                                  @Valid @RequestBody DefinedGroupTO definedGroupTO) {
         return definedGroupService.editDefinedGroup(currentUser.getId(), editionId, groupId, definedGroupTO);
     }
 
+    // documented
     @GetMapping(definedGroups)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -51,22 +53,24 @@ public class DefinedGroupController {
         return definedGroupService.getDefinedGroupsFromEdition(currentUser.getId(), editionId);
     }
 
+    // documented
     @PostMapping(definedGroupContent)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse updateDefinedGroupContent(@CurrentUser UserPrincipal currentUser,
-                                         @PathVariable Long editionId,
-                                         @PathVariable Long groupId,
-                                         @Valid @RequestBody DefinedGroupContentTO definedGroupContentTO) {
-        return definedGroupService.updateDefinedGroupContent(currentUser.getId(), editionId, groupId, definedGroupContentTO);
+    DefinedGroupTO updateDefinedGroupContent(@CurrentUser UserPrincipal currentUser,
+                                          @PathVariable Long editionId,
+                                          @PathVariable Long groupId,
+                                          @Valid @RequestBody DefinedGroupContentTO definedGroupContentTO) {
+        return definedGroupService.updateDefinedGroup(currentUser.getId(), editionId, groupId, definedGroupContentTO);
     }
 
-    @GetMapping(definedGroupContent)
+    // documented
+    @GetMapping(definedGroup)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    DefinedGroupContentTO getNamedGroupContent(@CurrentUser UserPrincipal currentUser,
-                                         @PathVariable Long editionId,
-                                         @PathVariable Long groupId) {
-        return definedGroupService.getNamedGroupProducts(currentUser.getId(), editionId, groupId);
+    DefinedGroupTO getDefinedGroup(@CurrentUser UserPrincipal currentUser,
+                                   @PathVariable Long editionId,
+                                   @PathVariable Long groupId) {
+        return definedGroupService.getDefinedGroup(currentUser.getId(), editionId, groupId);
     }
 }

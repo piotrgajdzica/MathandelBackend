@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/editions/1/defined-groups
+GET http://localhost:8080/api/editions/1/defined-groups/2
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMDMxNDEwLCJleHAiOjE1NDI2MzYyMTB9.4qXn_fodPfhj_mw9WfXIbRnX6YQABeXXAlvYg8yWt8P7lZgAFveJpbIo0oybLOqpXkOGKgh3TvQKNrz8Zcn5eQ
 

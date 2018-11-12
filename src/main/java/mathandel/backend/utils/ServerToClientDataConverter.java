@@ -23,19 +23,16 @@ public class ServerToClientDataConverter {
     }
 
     public static PreferenceTO mapPreference(Preference preference) {
-
-        PreferenceTO preferenceTO = new PreferenceTO()
-                .setHaveProductId(preference.getHaveProduct().getId())
+        return new PreferenceTO()
                 .setId(preference.getId())
-                .setUserId(preference.getUser().getId());
-
-        preferenceTO.getWantedProductsIds().addAll(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toSet()));
-        preferenceTO.getWantedDefinedGroupsIds().addAll(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
-        return preferenceTO;
+                .setUserId(preference.getUser().getId())
+                .setHaveProductId(preference.getHaveProduct().getId())
+                .setWantedProductsIds(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toSet()))
+                .setWantedDefinedGroupsIds(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
     }
 
-    private static Collection<DefinedGroupTO> mapDefinedGroups(Set<DefinedGroup> wantedDefinedGroups) {
-        return wantedDefinedGroups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
+    public static Set<PreferenceTO> mapPreferences(Set<Preference> preferences) {
+        return preferences.stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
     }
 
     public static String mapRole(Role role){
@@ -64,17 +61,12 @@ public class ServerToClientDataConverter {
         return new DefinedGroupTO()
                 .setId(definedGroup.getId())
                 .setName(definedGroup.getName())
-                .setNumberOfProducts(definedGroup.getProducts().size());
+                .setProductsIds(definedGroup.getProducts().stream().map(Product::getId).collect(Collectors.toSet()))
+                .setGroupIds(definedGroup.getGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
     }
 
-    public static DefinedGroupContentTO mapGroupContent(Set<Product> products, Set<DefinedGroup> groups) {
-
-        Set<Long> productIds = products.stream().map(Product::getId).collect(Collectors.toSet());
-        Set<Long> groupIds = groups.stream().map(DefinedGroup::getId).collect(Collectors.toSet());
-
-        return new DefinedGroupContentTO()
-                .setProductsIds(productIds)
-                .setGroupIds(groupIds);
+    public static Set<DefinedGroupTO> mapDefinedGroups(Set<DefinedGroup> groups) {
+        return groups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
     }
 
     public static List<EditionTO> mapEditions(List<Edition> all, Long userId) {
@@ -141,9 +133,5 @@ public class ServerToClientDataConverter {
 
     public static Set<ResultTO> mapResults(Set<Result> results){
         return results.stream().map(ServerToClientDataConverter::mapResult).collect(Collectors.toSet());
-    }
-
-    public static Set<PreferenceTO> mapPreferences(Set<Preference> preferences) {
-        return preferences.stream().map(ServerToClientDataConverter::mapPreference).collect(Collectors.toSet());
     }
 }

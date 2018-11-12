@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/editions/2/defined-groups
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQwNDk1Njk2LCJleHAiOjE1NDExMDA0OTZ9.wjURykwIyWTpifKf3BK6fe7tP61TkprA_lrwUxM0hCpxl3ogHpJ5Okcw5ywXovHAPKyhDn6Sc8D4ZIhUUVDs4g
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMDMxNDEwLCJleHAiOjE1NDI2MzYyMTB9.4qXn_fodPfhj_mw9WfXIbRnX6YQABeXXAlvYg8yWt8P7lZgAFveJpbIo0oybLOqpXkOGKgh3TvQKNrz8Zcn5eQ
 
 < createDefinedGroup.json
 

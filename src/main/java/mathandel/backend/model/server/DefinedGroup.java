@@ -28,9 +28,6 @@ public class DefinedGroup {
     private Set<Product> products = new HashSet<>();
 
     @OneToMany
-    private Set<DefinedGroup> definedGroups = new HashSet<>();
-
-    @OneToMany
     private Set<DefinedGroup> groups = new HashSet<>();
 
     public DefinedGroup() {

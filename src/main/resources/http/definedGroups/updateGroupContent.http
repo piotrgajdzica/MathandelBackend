@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/editions/1/defined-groups/4/content
+Content-Type: Application/Json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMDMxMjcxLCJleHAiOjE1NDI2MzYwNzF9.1ToDbN2-Fmvn_YJHhYCOYPzx828hvSsncpWtMvL5LH8_NNMgUdqNI5euUjPDLj0XWyubepTxK-qSJEQ9yXGnZg
+
+< updateGroupContent.json
+
+###

@@ -1,6 +1,7 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.model.client.ResultTO;
+import mathandel.backend.model.server.Result;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ResultService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Set;
 
+import static mathandel.backend.utils.UrlPaths.editionResultsPath;
 import static mathandel.backend.utils.UrlPaths.resultsProductsToReceiveByUserPath;
 import static mathandel.backend.utils.UrlPaths.resultsProductsToSendByUserPath;
 
@@ -36,5 +38,13 @@ public class ResultController {
     public @ResponseBody
     Set<ResultTO> getEditionProductsToReceiveForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
         return resultService.getEditionProductsToReceiveForUser(currentUser.getId(), editionId);
+    }
+
+    @GetMapping(editionResultsPath)
+    @PreAuthorize("hasRole('MODERATOR')")
+    public @ResponseBody
+    Set<Result> getEditionResults(@CurrentUser UserPrincipal currentUser,
+                                  @PathVariable Long editionId) {
+        return resultService.getEditionResults(currentUser.getId(), editionId);
     }
 }

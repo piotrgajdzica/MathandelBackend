@@ -94,7 +94,7 @@ public class ProductService {
             throw new BadRequestException("User is not in this edition");
         }
         if (!userId.equals(product.getUser().getId())) {
-            throw new BadRequestException("You have no access to this role");
+            throw new BadRequestException("You have no access to this product");
         }
         if (product.getEdition() != null) {
             throw new BadRequestException("Product already in edition");
@@ -112,18 +112,24 @@ public class ProductService {
     }
 
     public Set<ProductTO> getProductsFromEdition(Long userId, Long editionId) {
-        if (editionRepository.existsById(editionId)) {
-            return mapProducts(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
-        } else {
-            throw new ResourceNotFoundException("Edition", "id", editionId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if(!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User not in this edition");
         }
+
+        return mapProducts(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
     }
 
     public Set<ProductTO> getMyProductsFromEdition(Long userId, Long editionId) {
-        if (editionRepository.existsById(editionId)) {
-            return mapProducts(productRepository.findByEdition_IdAndUser_Id(editionId, userId));
-        } else {
-            throw new ResourceNotFoundException("Edition", "id", editionId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if(!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User not in this edition");
         }
+
+        return mapProducts(productRepository.findByEdition_IdAndUser_Id(editionId, userId));
     }
 }

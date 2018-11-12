@@ -26,6 +26,7 @@ public class ProductController {
         this.preferenceService = preferenceService;
     }
 
+    // documented
     @PostMapping(editionProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -35,6 +36,7 @@ public class ProductController {
         return productService.createProduct(user.getId(), editionId, productTO);
     }
 
+    // documented
     @PutMapping(productPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -45,6 +47,7 @@ public class ProductController {
 
     }
 
+    // documented
     @GetMapping(productPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -52,6 +55,7 @@ public class ProductController {
         return productService.getProduct(productId);
     }
 
+    // documented
     @PutMapping(editionProductPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -61,6 +65,7 @@ public class ProductController {
         return productService.assignProductToEdition(currentUser.getId(), editionId, productId);
     }
 
+    // documented
     @GetMapping(editionProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -69,6 +74,7 @@ public class ProductController {
         return productService.getProductsFromEdition(currentUser.getId(), editionId);
     }
 
+    // documented
     @GetMapping(editionMyProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -77,17 +83,11 @@ public class ProductController {
         return productService.getMyProductsFromEdition(currentUser.getId(), editionId);
     }
 
+    // documented
     @GetMapping(notAssignedProductsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     Set<ProductTO> getNotAssignedProducts(@CurrentUser UserPrincipal current) {
         return productService.getNotAssignedProducts(current.getId());
-    }
-
-    @GetMapping(preferencesForProductPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    Set<PreferenceTO> getPreferencesForProduct(@CurrentUser UserPrincipal current, @PathVariable Long productId) {
-        return preferenceService.getPreferencesForProduct(current.getId(), productId);
     }
 }

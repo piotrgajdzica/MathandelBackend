@@ -24,6 +24,8 @@ public class UrlPaths {
     public static final String editionMyProductsPath = editionProductsPath + "/my";
     // /api/editions/{editionId}/moderators
     public static final String editionModeratorsPath = editionPath + "/moderators";
+    // /api/editions/{editionId}/products/{productId}/preferences
+    public static final String editionProductPreferencePath = editionProductPath + "/preferences";
     // /api/editions/{editionId}/preferences
     public static final String editionPreferencesPath = editionPath + "/preferences";
     // /api/editions/{editionId}/results
@@ -49,7 +51,7 @@ public class UrlPaths {
     // /api/products/not-assigned
     public static final String notAssignedProductsPath = productsPath + "/not-assigned";
     // /api/products/{productId}/preferences
-    public static final String preferencesForProductPath = productsPath + "/{productId}/preferences";
+    public static final String preferenceForProductPath = productsPath + "/{productId}/preference";
 
     // /api/users
     public static final String usersPath = "/api/users";

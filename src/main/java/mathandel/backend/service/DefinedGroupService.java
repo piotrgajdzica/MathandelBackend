@@ -1,17 +1,15 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.DefinedGroupContentTO;
-import mathandel.backend.model.client.DefinedGroupTO;
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.server.enums.EditionStatusName;
-import mathandel.backend.utils.ServerToClientDataConverter;
+import mathandel.backend.model.client.DefinedGroupContentTO;
+import mathandel.backend.model.client.DefinedGroupTO;
 import mathandel.backend.model.server.DefinedGroup;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.Product;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.DefinedGroupRepository;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
@@ -20,9 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static mathandel.backend.utils.ServerToClientDataConverter.mapGroupContent;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapDefinedGroup;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapDefinedGroups;
 
 
 @Service
@@ -40,7 +38,7 @@ public class DefinedGroupService {
         this.productRepository = productRepository;
     }
 
-    public ApiResponse createDefinedGroup(Long userId, Long editionId, DefinedGroupTO definedGroupTO) {
+    public DefinedGroupTO createDefinedGroup(Long userId, Long editionId, DefinedGroupTO definedGroupTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         String groupName = definedGroupTO.getName();
@@ -49,10 +47,10 @@ public class DefinedGroupService {
             throw new BadRequestException("Edition " + edition.getName() + " is not opened");
         }
         if(definedGroupRepository.existsByNameAndUser_IdAndEdition_Id(groupName, userId, editionId)) {
-            throw new BadRequestException("You already have a definedGroup named \"" + groupName + "\" in edition " + edition.getName());
+            throw new BadRequestException("You already have a definedGroup named '" + groupName + "' in edition " + edition.getName());
         }
         if(!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("You are not in this edition");
+            throw new BadRequestException("User not in this edition");
         }
 
         DefinedGroup definedGroup = new DefinedGroup()
@@ -60,11 +58,10 @@ public class DefinedGroupService {
                 .setUser(user)
                 .setEdition(edition);
 
-        definedGroupRepository.save(definedGroup);
-        return new ApiResponse("DefinedGroup created successfully");
+        return mapDefinedGroup(definedGroupRepository.save(definedGroup));
     }
 
-    public ApiResponse editDefinedGroup(Long userId, Long editionId, Long groupId, DefinedGroupTO definedGroupTO) {
+    public DefinedGroupTO editDefinedGroup(Long userId, Long editionId, Long groupId, DefinedGroupTO definedGroupTO) {
         DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
 
         if(!definedGroup.getEdition().getId().equals(editionId)) {
@@ -75,9 +72,7 @@ public class DefinedGroupService {
         }
 
         definedGroup.setName(definedGroupTO.getName());
-        definedGroupRepository.save(definedGroup);
-
-        return new ApiResponse("Successfully edited group");
+        return mapDefinedGroup(definedGroupRepository.save(definedGroup));
     }
 
     public Set<DefinedGroupTO> getDefinedGroupsFromEdition(Long userId, Long editionId) {
@@ -85,15 +80,14 @@ public class DefinedGroupService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
         if(!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("You are not in this edition");
+            throw new BadRequestException("User is not in this edition");
         }
 
         Set<DefinedGroup> definedGroups = definedGroupRepository.findByUser_IdAndEdition_Id(userId, editionId);
-
-        return definedGroups.stream().map(ServerToClientDataConverter::mapDefinedGroup).collect(Collectors.toSet());
+        return mapDefinedGroups(definedGroups);
     }
 
-    public ApiResponse updateDefinedGroupContent(Long userId, Long editionId, Long groupId, DefinedGroupContentTO definedGroupContentTO) {
+    public DefinedGroupTO updateDefinedGroup(Long userId, Long editionId, Long groupId, DefinedGroupContentTO definedGroupContentTO) {
         DefinedGroup group = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
 
         if(!group.getEdition().getId().equals(editionId)) {
@@ -133,20 +127,15 @@ public class DefinedGroupService {
         group.setProducts(products);
         group.setGroups(groups);
 
-        definedGroupRepository.save(group);
-        return new ApiResponse("Group successfully updated");
-
+        return mapDefinedGroup(definedGroupRepository.save(group));
     }
 
-    public DefinedGroupContentTO getNamedGroupProducts(Long userId, Long editionID, Long groupId) {
+    public DefinedGroupTO getDefinedGroup(Long userId, Long editionID, Long groupId) {
         DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
-        Set<Product> products = definedGroup.getProducts();
-        Set<DefinedGroup> groups = definedGroup.getGroups();
 
         if(!definedGroup.getUser().getId().equals(userId)) {
             throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
         }
-
-        return mapGroupContent(products, groups);
+        return mapDefinedGroup(definedGroup);
     }
 }

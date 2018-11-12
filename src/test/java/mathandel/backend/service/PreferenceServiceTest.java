@@ -92,7 +92,7 @@ public class PreferenceServiceTest {
 //        when(productRepository.findById(wantProductId)).thenReturn(Optional.of(wantProduct));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.addEditPreference(userId, haveProductId, wantProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantProductsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -113,7 +113,7 @@ public class PreferenceServiceTest {
 //        when(productRepository.findById(wantProductId)).thenReturn(Optional.of(wantProduct));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.addEditPreference(userId, haveProductId, wantProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantProductsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -134,7 +134,7 @@ public class PreferenceServiceTest {
 //        when(definedGroupRepository.findById(wantGroupProductId)).thenReturn(Optional.of(wantDefinedGroup));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.addEditPreference(userId, haveProductId, wantGroupProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantGroupProductsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -156,14 +156,14 @@ public class PreferenceServiceTest {
 //        when(definedGroupRepository.findById(wantGroupProductId)).thenReturn(Optional.of(wantDefinedGroup));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.addEditPreference(userId, haveProductId, wantGroupProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantGroupProductsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
 //
 //    }
 
-    // getUserPreferencesFromOneEdtion nie ma testu bo to jest zwykle wywolanie metody z repository
+    // getUserPreferencesFromOneEdition nie ma testu bo to jest zwykle wywolanie metody z repository
 
 
 }

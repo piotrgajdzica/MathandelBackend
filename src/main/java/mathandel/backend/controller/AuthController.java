@@ -26,24 +26,28 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // documented
     @PostMapping(signInPath)
     public @ResponseBody
     JwtAuthenticationResponse signIn(@Valid @RequestBody SignInRequest signInRequest) {
         return authService.signIn(signInRequest);
     }
 
+    // documented
     @PostMapping(signUpPath)
     public @ResponseBody
     JwtAuthenticationResponse signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
     }
 
+    // documented
     @PostMapping("/api/facebookSignIn")
     public @ResponseBody
     FacebookResponse facebookSignIn(@Valid @RequestBody SignInFacebookRequest signInFacebookRequest) {
         return authService.facebookSignIn(signInFacebookRequest);
     }
 
+    // documented
     @PostMapping("/api/facebookSignUp")
     public @ResponseBody
     FacebookResponse facebookSignUp(@Valid @RequestBody SignUpFacebookRequest signUpFacebookRequest) {
