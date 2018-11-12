@@ -16,7 +16,6 @@ import java.util.Set;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapPreference;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapPreferences;
 
-//todo review and refactor
 @Service
 public class PreferenceService {
 

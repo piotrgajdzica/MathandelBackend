@@ -21,6 +21,7 @@ public class PreferenceController {
         this.preferenceService = preferenceService;
     }
 
+    // documented
     @PostMapping(editionProductPreferencePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -31,6 +32,7 @@ public class PreferenceController {
         return preferenceService.updatePreference(currentUser.getId(), preferenceTO, editionId, productId);
     }
 
+    // documented
     @GetMapping(editionPreferencesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -39,6 +41,7 @@ public class PreferenceController {
         return preferenceService.getUserPreferencesFromOneEdition(currentUser.getId(), editionId);
     }
 
+    // documented
     @GetMapping(preferenceForProductPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody

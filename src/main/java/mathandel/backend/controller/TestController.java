@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 
 // todo to be removed, now used for testing hitting endpoints with rest template
 @Controller
-public class TestControler {
+public class TestController {
 
     private static String WORK_DIR;
     private static String REQUEST_TO_DESERIALIZE_PATH;
