@@ -23,6 +23,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    // documented
     @PostMapping(productImagesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -32,6 +33,7 @@ public class ImageController {
         return imageService.addImage(current.getId(), productId, multipartFile);
     }
 
+    // documented
     @GetMapping(imagePath)
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
 
@@ -41,6 +43,7 @@ public class ImageController {
                 .body(imageService.getImage(imageName));
     }
 
+    // documented
     @DeleteMapping(productImagePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
