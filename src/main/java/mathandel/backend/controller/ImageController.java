@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.ImageTO;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;
@@ -31,7 +31,6 @@ public class ImageController {
                      @RequestParam("image") MultipartFile multipartFile) {
         return imageService.addImage(current.getId(), productId, multipartFile);
     }
-
 
     @GetMapping(imagePath)
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {

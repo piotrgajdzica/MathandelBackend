@@ -10,6 +10,7 @@ import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Role;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -38,6 +40,10 @@ public class UserServiceTest {
     private final String email = "email@emial.com";
     private final String username = "username";
     private final String newPassword = "newPassword";
+    private final String address = "address";
+    private final String city = "city";
+    private final String country = "country";
+    private final String postalCode = "postalCode";
 
     private Edition edition = new Edition()
             .setId(editionId)
@@ -50,13 +56,20 @@ public class UserServiceTest {
             .setSurname(surname)
             .setUsername(username)
             .setEmail(email)
-            .setRoles(Collections.singleton(new Role()));
+            .setRoles(Collections.singleton(new Role().setName(RoleName.ROLE_USER)))
+            .setCity(city)
+            .setCountry(country)
+            .setPostalCode(postalCode);
 
     private UserTO userTO = new UserTO()
             .setEmail(email)
             .setName(name)
             .setSurname(surname)
-            .setUsername(username);
+            .setUsername(username)
+            .setAddress(address)
+            .setCity(city)
+            .setCountry(country)
+            .setPostalCode(postalCode);
 
     @MockBean
     UserRepository userRepository;
@@ -127,17 +140,26 @@ public class UserServiceTest {
         when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(false);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(any())).thenReturn(user);
 
         //when
-        ApiResponse apiResponse = userService.editMyData(userId, userTO);
+        UserTO userTo = userService.editMyData(userId, userTO);
 
         //then
-        assertThat(apiResponse.getMessage()).isEqualTo("Successfully edited user");
+        assertThat(userTo.getUsername()).isEqualTo(userTO.getUsername());
+        assertThat(userTo.getName()).isEqualTo(userTO.getName());
+        assertThat(userTo.getSurname()).isEqualTo(userTO.getSurname());
+        assertThat(userTo.getEmail()).isEqualTo(userTO.getEmail());
+        assertThat(userTo.getAddress()).isEqualTo(userTO.getAddress());
+        assertThat(userTo.getCity()).isEqualTo(userTO.getCity());
+        assertThat(userTo.getCountry()).isEqualTo(userTO.getCountry());
+        assertThat(userTo.getPostalCode()).isEqualTo(userTO.getPostalCode());
     }
 
     @Test
     public void shouldFailEditMyDataUsernameIsTaken() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user.setUsername("anotherUsername")));
         when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(true);
 
         //when then
@@ -149,6 +171,7 @@ public class UserServiceTest {
     @Test
     public void shouldFailEditMyDataEmailIsTaken() {
         //given
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user.setEmail("email@email.email")));
         when(userRepository.existsByUsername(userTO.getUsername())).thenReturn(false);
         when(userRepository.existsByEmail(userTO.getEmail())).thenReturn(true);
 
