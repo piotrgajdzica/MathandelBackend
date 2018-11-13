@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
@@ -21,29 +23,37 @@ public class UserController {
         this.userService = userService;
     }
 
+    // documented
     @GetMapping(userPath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody UserTO getUserData(@PathVariable Long userId) {
+    public @ResponseBody
+    UserTO getUserData(@PathVariable Long userId) {
         return userService.getUserData(userId);
     }
 
+    // documented
     @GetMapping(userMePath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody UserTO getMyData(@CurrentUser UserPrincipal currentUser) {
+    public @ResponseBody
+    UserTO getMyData(@CurrentUser UserPrincipal currentUser) {
         return userService.getUserData(currentUser.getId());
     }
 
+    // documented
     @PutMapping(userMePath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ApiResponse editMyData(@CurrentUser UserPrincipal userPrincipal,
-                                                @RequestBody UserTO userTO){
+    public @ResponseBody
+    UserTO editMyData(@CurrentUser UserPrincipal userPrincipal,
+                      @RequestBody @Valid UserTO userTO) {
         return userService.editMyData(userPrincipal.getId(), userTO);
     }
 
+    // documented
     @PutMapping(userMePasswordPath)
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody ApiResponse changePassword(@CurrentUser UserPrincipal userPrincipal,
-                                                    @RequestBody PasswordRequest passwordRequest){
+    public @ResponseBody
+    ApiResponse changePassword(@CurrentUser UserPrincipal userPrincipal,
+                               @RequestBody @Valid PasswordRequest passwordRequest) {
         return userService.changePassword(userPrincipal.getId(), passwordRequest.getNewPassword());
     }
 }
