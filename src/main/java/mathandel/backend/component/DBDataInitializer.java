@@ -1,11 +1,9 @@
 package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
-import mathandel.backend.model.server.EditionStatusType;
-import mathandel.backend.model.server.Rate;
-import mathandel.backend.model.server.Role;
-import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
+import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 import mathandel.backend.model.server.enums.RateName;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.*;
@@ -32,9 +30,10 @@ public class DBDataInitializer implements ApplicationRunner {
     private final TransactionRateRepository transactionRateRepository;
     private final PreferenceRepository preferenceRepository;
     private  FullDBPopulator fullDBPopulator;
+    private final ModeratorRequestStatusRepository moderatorRequestStatusRepository;
 
 
-    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository) {
+    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository, ModeratorRequestStatusRepository moderatorRequestStatusRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -46,6 +45,7 @@ public class DBDataInitializer implements ApplicationRunner {
         this.resultRepository = resultRepository;
         this.transactionRateRepository = transactionRateRepository;
         this.preferenceRepository = preferenceRepository;
+        this.moderatorRequestStatusRepository = moderatorRequestStatusRepository;
         this.fullDBPopulator = new FullDBPopulator(roleRepository,userRepository,editionStatusTypeRepository,rateRepository,editionRepository,definedGroupRepository,productRepository,resultRepository,transactionRateRepository, this.preferenceRepository);
     }
 
@@ -55,6 +55,7 @@ public class DBDataInitializer implements ApplicationRunner {
         insertEditionStatusesToDB();
         insertAdminToDB();
         insertRatesToDB();
+        insertModeratorRequestStatusesToDB();
 //        fullDBPopulator.populate();
     }
 
@@ -108,8 +109,12 @@ public class DBDataInitializer implements ApplicationRunner {
         user.setRoles(roles);
 
         userRepository.save(user);
+    }
 
-        // todo zaladowac requesty
+    private void insertModeratorRequestStatusesToDB() {
+        for (ModeratorRequestStatusName moderatorRequestStatusName: ModeratorRequestStatusName.values()) {
+            moderatorRequestStatusRepository.save(new ModeratorRequestStatus().setName(moderatorRequestStatusName));
+        }
     }
 }
 

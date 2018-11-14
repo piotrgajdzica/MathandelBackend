@@ -6,7 +6,7 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.ModeratorRequestTO;
 import mathandel.backend.model.server.ModeratorRequest;
 import mathandel.backend.model.server.ModeratorRequestStatus;
-import mathandel.backend.model.server.ModeratorRequestStatusName;
+import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 import mathandel.backend.model.server.User;
 import mathandel.backend.repository.ModeratorRequestsRepository;
 import mathandel.backend.repository.UserRepository;

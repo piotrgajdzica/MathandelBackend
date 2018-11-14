@@ -5,14 +5,14 @@ import java.util.Set;
 
 public class ModeratorRequestsTO {
 
-    private Set<ModeratorRequestTO> moderatorRequestTO = new HashSet<>();
+    private Set<ModeratorRequestTO> moderatorRequests = new HashSet<>();
 
     public Set<ModeratorRequestTO> getModeratorRequests() {
-        return moderatorRequestTO;
+        return moderatorRequests;
     }
 
     public ModeratorRequestsTO setModeratorRequestsTO(Set<ModeratorRequestTO> moderatorRequestsTO) {
-        this.moderatorRequestTO = moderatorRequestsTO;
+        this.moderatorRequests = moderatorRequestsTO;
         return this;
     }
 

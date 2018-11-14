@@ -1,8 +1,8 @@
-GET http://localhost:8080//api/moderatorRequests/resolve
+PUT http://localhost:8080/api/moderator-requests/resolve
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTMzNjcwMjU5LCJleHAiOjE1MzQyNzUwNTl9.QIw6zwypaCz1HgNSp78YI-dAYrP6YF7a9YRHa8dezk9pwL91K012ImJE-wX-aPzdGdT1Ta6nEM8Emm4a3eE6eg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyMjMzMzMzLCJleHAiOjE1NDI4MzgxMzN9.pr53dI8cYqC5KLIvGfAcSqPGTQCHq3jza-hJB2tRMAQFmOjG6v8VA4uZ8pHPZKINSQ79o38H_WBvKqmSgl4F1w
 
-< resolveModeratorRequest.json
+< resolveModeratorRequests.json
 
 ###
    #
