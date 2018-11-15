@@ -1,4 +1,4 @@
-package mathandel.backend.model.server;
+package mathandel.backend.model.server.enums;
 
 public enum ModeratorRequestStatusName {
     PENDING,

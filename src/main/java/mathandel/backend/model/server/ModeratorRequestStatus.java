@@ -1,5 +1,6 @@
 package mathandel.backend.model.server;
 
+import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;

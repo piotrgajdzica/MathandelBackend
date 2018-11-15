@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.ImageTO;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;
@@ -23,6 +23,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    // documented
     @PostMapping(productImagesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -32,7 +33,7 @@ public class ImageController {
         return imageService.addImage(current.getId(), productId, multipartFile);
     }
 
-
+    // documented
     @GetMapping(imagePath)
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
 
@@ -42,6 +43,7 @@ public class ImageController {
                 .body(imageService.getImage(imageName));
     }
 
+    // documented
     @DeleteMapping(productImagePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody

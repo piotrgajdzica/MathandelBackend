@@ -1,8 +1,8 @@
-[
-  {
-    "userId": 1
-  },
-  {
-    "userId": 2
-  }
-]
+{
+  "moderatorRequests": [
+    {
+      "id": 1,
+      "moderatorRequestStatus": "ACCEPTED"
+    }
+  ]
+}

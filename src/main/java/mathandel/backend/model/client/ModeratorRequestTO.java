@@ -1,6 +1,6 @@
 package mathandel.backend.model.client;
 
-import mathandel.backend.model.server.ModeratorRequestStatusName;
+import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 
 public class ModeratorRequestTO {
     private Long id;

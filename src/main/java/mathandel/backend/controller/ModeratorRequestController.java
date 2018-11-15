@@ -24,14 +24,16 @@ public class ModeratorRequestController {
         this.moderatorRequestService = moderatorRequestService;
     }
 
+    // documented
     @PostMapping(moderatorRequestsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse requestModerator(@CurrentUser UserPrincipal currentUser,
+    ModeratorRequestTO requestModerator(@CurrentUser UserPrincipal currentUser,
                                  @Valid @RequestBody ModeratorRequestTO reason) {
         return moderatorRequestService.requestModerator(reason, currentUser.getId());
     }
 
+    // documented
     @GetMapping(moderatorRequestsPath)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
@@ -39,17 +41,19 @@ public class ModeratorRequestController {
         return moderatorRequestService.getPendingModeratorRequests();
     }
 
+    // documented
     @PutMapping(moderatorRequestsResolvePath)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
-    ApiResponse resolveModeratorRequest(@RequestBody ModeratorRequestsTO moderatorRequestsTO) {
+    ApiResponse resolveModeratorRequests(@RequestBody ModeratorRequestsTO moderatorRequestsTO) {
         return moderatorRequestService.resolveModeratorRequests(moderatorRequestsTO.getModeratorRequests());
     }
 
+    // documented
     @GetMapping(moderatorRequestsGetMyRequests)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ModeratorRequestTO> getMyRequest(@CurrentUser UserPrincipal currentUser) {
+    ModeratorRequestTO getMyRequest(@CurrentUser UserPrincipal currentUser) {
         return moderatorRequestService.getUserRequests(currentUser.getId());
     }
 }

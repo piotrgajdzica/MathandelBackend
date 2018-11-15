@@ -67,9 +67,9 @@ public class UrlPaths {
 
     // /api/moderatorRequests
     public static final String moderatorRequestsPath = "/api/moderator-requests";
-    // /api/moderatorRequests
+    // /api/moderator-requests/resolve
     public static final String moderatorRequestsResolvePath = moderatorRequestsPath + "/resolve";
-    // /api/moderatorRequests
+    // /api/moderator-requests/my
     public static final String moderatorRequestsGetMyRequests = moderatorRequestsPath + "/my";
 
     // /api/rates/
