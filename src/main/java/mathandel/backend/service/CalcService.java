@@ -7,6 +7,7 @@ import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class CalcService {
     private EditionRepository editionRepository;
     private final EditionService editionService;
     private final RestTemplate restTemplate;
-    private static final String CALC_SERVICE_URL = "http://localhost:5000";
+
+    @Value("${calc-service-url}")
+    private static String CALC_SERVICE_URL;
 
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
         this.preferenceRepository = preferenceRepository;
@@ -40,6 +43,7 @@ public class CalcService {
 
     // todo test this
     public ApiResponse closeEdition(Long userId, Long editionId) {
+
         editionService.changeEditionStatus(userId, editionId, EditionStatusName.CLOSED);
 
         HttpHeaders headers = new HttpHeaders();
