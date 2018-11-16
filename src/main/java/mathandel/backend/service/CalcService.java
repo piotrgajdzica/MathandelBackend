@@ -30,8 +30,8 @@ public class CalcService {
     private final EditionService editionService;
     private final RestTemplate restTemplate;
 
-    @Value("${mathtrade.solver}")
-    private String CALC_SERVICE_URL;
+    @Value("${calc-service-url}")
+    private static String CALC_SERVICE_URL;
 
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
         this.preferenceRepository = preferenceRepository;
@@ -45,6 +45,7 @@ public class CalcService {
 
     // todo test this
     public ApiResponse closeEdition(Long userId, Long editionId) {
+
         editionService.changeEditionStatus(userId, editionId, EditionStatusName.CLOSED);
 
         HttpHeaders headers = new HttpHeaders();
