@@ -30,7 +30,7 @@ public class UrlPaths {
     public static final String editionPreferencesPath = editionPath + "/preferences";
     // /api/editions/{editionId}/results
     public static final String editionResultsPath = editionPath + "/results";
-    // /api/editions/{editionId}/finish
+    // /api/editions/{editionId}/close
     public static final String closeEditionPath = editionPath + "/close";
 
     // /api/editions/{editionId}/defined-groups

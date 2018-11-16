@@ -132,8 +132,8 @@ public class EditionService {
         return new ApiResponse("User " + username + " become moderator of edition " + edition.getName());
     }
 
-    private boolean isModerator(User requestedUser) {
-        return requestedUser.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
+    private boolean isModerator(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
     }
 
     void changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {

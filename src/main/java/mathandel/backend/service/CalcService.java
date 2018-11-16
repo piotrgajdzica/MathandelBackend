@@ -1,12 +1,15 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
+import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,9 @@ public class CalcService {
     private EditionRepository editionRepository;
     private final EditionService editionService;
     private final RestTemplate restTemplate;
-    private static final String CALC_SERVICE_URL = "http://localhost:5000";
+
+    @Value("${mathtrade.solver}")
+    private String CALC_SERVICE_URL;
 
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
         this.preferenceRepository = preferenceRepository;

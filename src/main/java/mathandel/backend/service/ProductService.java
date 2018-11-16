@@ -82,7 +82,7 @@ public class ProductService {
         return mapProduct(product);
     }
 
-    public ApiResponse assignProductToEdition(Long userId, Long editionId, Long productId) {
+    public ProductTO assignProductToEdition(Long userId, Long editionId, Long productId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
@@ -101,8 +101,7 @@ public class ProductService {
         }
 
         product.setEdition(edition);
-        productRepository.save(product);
-        return new ApiResponse("Product successfully assigned to edition");
+        return mapProduct(productRepository.save(product));
 
     }
 

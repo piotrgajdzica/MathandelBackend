@@ -59,7 +59,7 @@ public class ProductController {
     @PutMapping(editionProductPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse assignProductToEdition(@CurrentUser UserPrincipal currentUser,
+    ProductTO assignProductToEdition(@CurrentUser UserPrincipal currentUser,
                                        @PathVariable Long editionId,
                                        @PathVariable Long productId) {
         return productService.assignProductToEdition(currentUser.getId(), editionId, productId);
