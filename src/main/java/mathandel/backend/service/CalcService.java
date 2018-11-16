@@ -30,7 +30,7 @@ public class CalcService {
     private final EditionService editionService;
     private final RestTemplate restTemplate;
 
-    @Value("${calc-service-url}")
+    @Value("${calc.service.url}")
     private static String CALC_SERVICE_URL;
 
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
