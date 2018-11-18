@@ -1,7 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.model.client.request.SignUpRequest;
-import mathandel.backend.component.DBDataInitializer;
+import mathandel.backend.component.SystemInitializer;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.server.Role;
@@ -52,7 +52,7 @@ public class AuthServiceTest {
     AuthService authService;
 
     @MockBean
-    DBDataInitializer DBDataInitializer;
+    SystemInitializer SystemInitializer;
 
     @Test
     public void shouldNotFindUserRole() {

@@ -15,6 +15,7 @@ import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -61,9 +62,12 @@ public class EditionService {
         Set<User> moderators = new HashSet<>();
         Set<User> participants = new HashSet<>();
         moderators.add(user);
-        moderators.add(admin);
         participants.add(user);
-        participants.add(admin);
+
+        if (!user.getId().equals(admin.getId())) {
+            moderators.add(admin);
+            participants.add(admin);
+        }
 
         EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
         Edition edition = new Edition()

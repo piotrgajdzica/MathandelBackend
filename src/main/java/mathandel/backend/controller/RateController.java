@@ -1,7 +1,7 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
-import mathandel.backend.model.client.TransactionRateTO;
+import mathandel.backend.model.client.RateTO;
+import mathandel.backend.model.client.RateTypeTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.RateService;
@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-import static mathandel.backend.utils.UrlPaths.ratesPath;
-import static mathandel.backend.utils.UrlPaths.userRatesPath;
+import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
 public class RateController {
@@ -23,17 +22,29 @@ public class RateController {
         this.rateService = rateService;
     }
 
-    @PostMapping(ratesPath)
+    // documented
+    @PostMapping(ratePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse rateResult(@CurrentUser UserPrincipal currentUser, @RequestBody TransactionRateTO transactionRateTO) {
-        return rateService.rateResult(currentUser.getId(), transactionRateTO);
+    RateTO rateResult(@CurrentUser UserPrincipal currentUser,
+                      @PathVariable Long resultId,
+                      @RequestBody RateTO rateTO) {
+        return rateService.rateResult(currentUser.getId(), resultId, rateTO);
     }
 
+    // documented
     @GetMapping(userRatesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<TransactionRateTO> getUserRates(@PathVariable Long userId) {
+    Set<RateTO> getUserRates(@PathVariable Long userId) {
         return rateService.getUserRates(userId);
+    }
+
+    // documented
+    @GetMapping(rateTypesPath)
+    @PreAuthorize("hasRole('USER')")
+    public @ResponseBody
+    Set<RateTypeTO> getRateTypes() {
+        return rateService.getRateTypes();
     }
 }

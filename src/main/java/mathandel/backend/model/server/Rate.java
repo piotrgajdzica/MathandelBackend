@@ -1,9 +1,7 @@
 package mathandel.backend.model.server;
 
-import mathandel.backend.model.server.enums.RateName;
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "rates")
@@ -13,12 +11,17 @@ public class Rate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 60)
-    private RateName name;
+    @ManyToOne
+    private User rater;
 
-    public Rate() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RateType rateType;
+
+    @OneToOne
+    private Result result;
+
+    @Size(min = 4, max = 160)
+    private String comment;
 
     public Long getId() {
         return id;
@@ -29,12 +32,39 @@ public class Rate {
         return this;
     }
 
-    public RateName getName() {
-        return name;
+    public User getRater() {
+        return rater;
     }
 
-    public Rate setName(RateName name) {
-        this.name = name;
+    public Rate setRater(User rater) {
+        this.rater = rater;
+        return this;
+    }
+
+    public RateType getRateType() {
+        return rateType;
+    }
+
+    public Rate setRateType(RateType rateType) {
+        this.rateType = rateType;
+        return this;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public Rate setComment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public Rate setResult(Result result) {
+        this.result = result;
         return this;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Set;
@@ -52,7 +53,7 @@ public class CalcService {
         headers.add("Content-Type", "application/json");
         String body = getMappedDataForEdition(editionId);
         HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
-        String result = restTemplate.postForObject(CALC_SERVICE_URL + "/solve/", httpEntity, String.class);
+        String result = restTemplate.postForObject( "http://localhost:5000/solve/", httpEntity, String.class);
 
         saveResultsFromJsonData(editionId, result);
         editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);

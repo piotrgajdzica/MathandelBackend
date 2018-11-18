@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -27,6 +28,7 @@ public class EditionTO {
     private int numberOfParticipants;
     private boolean isModerator;
     private boolean isParticipant;
+    private EditionStatusName editionStatusName;
 
     public Long getId() {
         return Id;
@@ -97,6 +99,15 @@ public class EditionTO {
 
     public EditionTO setParticipant(boolean participant) {
         isParticipant = participant;
+        return this;
+    }
+
+    public EditionStatusName getEditionStatusName() {
+        return editionStatusName;
+    }
+
+    public EditionTO setEditionStatusName(EditionStatusName editionStatusName) {
+        this.editionStatusName = editionStatusName;
         return this;
     }
 

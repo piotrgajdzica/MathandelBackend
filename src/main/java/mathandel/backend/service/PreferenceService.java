@@ -8,6 +8,7 @@ import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
