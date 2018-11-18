@@ -4,7 +4,6 @@ import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.EditionStatusTypeRepository;
-import mathandel.backend.service.EditionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,7 +23,7 @@ public class CloseEditionScheduler {
     private final EditionStatusTypeRepository editionStatusTypeRepository;
     private static final Logger log = LoggerFactory.getLogger(CloseEditionScheduler.class);
 
-    public CloseEditionScheduler(EditionRepository editionRepository, EditionStatusTypeRepository editionStatusTypeRepository, EditionService editionService) {
+    public CloseEditionScheduler(EditionRepository editionRepository, EditionStatusTypeRepository editionStatusTypeRepository) {
         this.editionRepository = editionRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
     }
