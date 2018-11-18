@@ -26,6 +26,7 @@ public class ResultController {
         this.resultService = resultService;
     }
 
+    // documented
     @GetMapping(resultsProductsToSendByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -33,6 +34,7 @@ public class ResultController {
         return resultService.getEditionProductsToSendForUser(currentUser.getId(), editionId);
     }
 
+    // documented
     @GetMapping(resultsProductsToReceiveByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
@@ -40,10 +42,11 @@ public class ResultController {
         return resultService.getEditionProductsToReceiveForUser(currentUser.getId(), editionId);
     }
 
+    // documented
     @GetMapping(editionResultsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    Set<Result> getEditionResults(@CurrentUser UserPrincipal currentUser,
+    Set<ResultTO> getEditionResults(@CurrentUser UserPrincipal currentUser,
                                   @PathVariable Long editionId) {
         return resultService.getEditionResults(currentUser.getId(), editionId);
     }

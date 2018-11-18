@@ -1,0 +1,5 @@
+GET http://localhost:8080/api/rate-types
+Content-Type: Application/Json
+Authorization: ayJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyNTU5NzIxLCJleHAiOjE1NDMxNjQ1MjF9.IOOPdSPYUVQAck7qz09oaqUwF7Ko8VSEM6GETLhJcpXf5Rw-YQtHo0vGBYPqoLJXzrKcfpAoP8X47VNST9vfpw
+
+###

@@ -11,7 +11,7 @@ import java.util.Set;
 public class Preference {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -30,7 +30,6 @@ public class Preference {
     @ManyToOne
     private Edition edition;
 
-
     public Set<DefinedGroup> getWantedDefinedGroups() {
         return wantedDefinedGroups;
     }
@@ -48,7 +47,6 @@ public class Preference {
         this.wantedDefinedGroups = wantedDefinedGroups;
         return this;
     }
-
 
     public Long getId() {
         return id;
@@ -77,7 +75,6 @@ public class Preference {
         return this;
     }
 
-
     public Edition getEdition() {
         return edition;
     }
@@ -86,7 +83,5 @@ public class Preference {
         this.edition = edition;
         return this;
     }
-
-
 }
 

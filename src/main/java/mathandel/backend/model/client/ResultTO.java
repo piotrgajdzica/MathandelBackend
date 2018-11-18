@@ -4,8 +4,11 @@ public class ResultTO {
 
     private Long id;
     private Long senderId;
+    private String senderUsername;
     private Long receiverId;
+    private String receiverUsername;
     private Long editionId;
+    private Long productId;
 
     public Long getId() {
         return id;
@@ -25,6 +28,15 @@ public class ResultTO {
         return this;
     }
 
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public ResultTO setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+        return this;
+    }
+
     public Long getReceiverId() {
         return receiverId;
     }
@@ -34,12 +46,30 @@ public class ResultTO {
         return this;
     }
 
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    public ResultTO setReceiverUsername(String receiverUsername) {
+        this.receiverUsername = receiverUsername;
+        return this;
+    }
+
     public Long getEditionId() {
         return editionId;
     }
 
     public ResultTO setEditionId(Long editionId) {
         this.editionId = editionId;
+        return this;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public ResultTO setProductId(Long productId) {
+        this.productId = productId;
         return this;
     }
 }

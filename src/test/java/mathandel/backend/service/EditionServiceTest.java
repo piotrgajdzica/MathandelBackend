@@ -55,7 +55,8 @@ public class EditionServiceTest {
     private Edition edition = new Edition()
             .setName("Mathandel 4000")
             .setEndDate(LocalDate.now().plusMonths(2))
-            .setDescription("Hello Darkness my old friend");
+            .setDescription("Hello Darkness my old friend")
+            .setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.OPENED));
 
     @MockBean
     UserRepository userRepository;

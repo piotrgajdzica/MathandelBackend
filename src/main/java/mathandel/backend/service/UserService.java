@@ -12,6 +12,7 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapUser;
 

@@ -30,7 +30,7 @@ public class UrlPaths {
     public static final String editionPreferencesPath = editionPath + "/preferences";
     // /api/editions/{editionId}/results
     public static final String editionResultsPath = editionPath + "/results";
-    // /api/editions/{editionId}/finish
+    // /api/editions/{editionId}/close
     public static final String closeEditionPath = editionPath + "/close";
 
     // /api/editions/{editionId}/defined-groups
@@ -72,10 +72,13 @@ public class UrlPaths {
     // /api/moderator-requests/my
     public static final String moderatorRequestsGetMyRequests = moderatorRequestsPath + "/my";
 
-    // /api/rates/
-    public static final String ratesPath = "/api/rates/";
-    // /api/rates/{userId}
-    public static final String userRatesPath = ratesPath + "/{userId}";
+    // /api/results/{resultId}/rate
+    public static final String ratePath = "/api/results/{resultId}/rate";
+    // /api/users/{userId}/rates
+    public static final String userRatesPath = userPath + "/rates";
+    // /api/rate-types
+    public static final String rateTypesPath = "/api/rate-types";
+
     // /api/editions/{editionId}/results-send
     public static final String resultsProductsToSendByUserPath = editionPath + "/results-send";
     // /api/editions/{editionId}/results-receive

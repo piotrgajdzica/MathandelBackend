@@ -1,5 +1,6 @@
 POST http://localhost:8080/api/editions/1/close
 Content-Type: Application/Json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyMzA4MjM1LCJleHAiOjE1NDI5MTMwMzV9.xV-0zyhmtp8YBxUPf2FrmDEF_69Bjq05MsekZBwlk3AJMZrLhqmMBAtW90yWXPdhvaEFHMkyRJQ04kXyFqtV0w
 
 
 

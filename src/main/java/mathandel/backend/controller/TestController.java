@@ -1,6 +1,5 @@
 package mathandel.backend.controller;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +20,6 @@ public class TestController {
     @PostMapping("/api/solve")
     public @ResponseBody
     String solve(@RequestBody String data) throws IOException {
-        System.out.println(data);
         WORK_DIR = System.getProperty("user.dir");
         REQUEST_TO_DESERIALIZE_PATH = "/src/main/resources/exampleCalsServiceResponseData.json";
         return new String(Files.readAllBytes(Paths.get(WORK_DIR + REQUEST_TO_DESERIALIZE_PATH)), StandardCharsets.UTF_8);

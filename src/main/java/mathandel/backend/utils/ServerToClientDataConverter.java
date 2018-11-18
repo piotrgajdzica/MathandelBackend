@@ -3,7 +3,6 @@ package mathandel.backend.utils;
 import mathandel.backend.model.client.*;
 import mathandel.backend.model.server.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,7 +81,8 @@ public class ServerToClientDataConverter {
                 .setNumberOfParticipants(edition.getParticipants().size())
                 .setMaxParticipants(edition.getMaxParticipants())
                 .setModerator(edition.getModerators().stream().anyMatch(participant -> participant.getId().equals(userId)))
-                .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)));
+                .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)))
+                .setEditionStatusName(edition.getEditionStatusType().getEditionStatusName());
     }
 
     private static Set<ImageTO> mapImages(Set<Image> images) {
@@ -109,29 +109,41 @@ public class ServerToClientDataConverter {
                 .setCountry(user.getCountry());
     }
 
-    public static Set<TransactionRateTO> mapRates(Set<TransactionRate> transactionRates) {
-        return transactionRates.stream().map(transactionRate -> mapRate(transactionRate)).collect(Collectors.toSet());
+    public static Set<RateTO> mapRates(Set<Rate> rates) {
+        return rates.stream().map(ServerToClientDataConverter::mapRate).collect(Collectors.toSet());
     }
 
-    private static TransactionRateTO mapRate(TransactionRate transactionRate) {
-        return new TransactionRateTO()
-                .setId(transactionRate.getId())
-                .setComment(transactionRate.getComment())
-                .setRateName(transactionRate.getRate().getName())
-                .setResultId(transactionRate.getResult().getId())
-                .setRaterId(transactionRate.getRater().getId());
+    public static RateTO mapRate(Rate rate) {
+        return new RateTO()
+                .setId(rate.getId())
+                .setComment(rate.getComment())
+                .setRateTypeName(rate.getRateType().getName())
+                .setResultId(rate.getResult().getId())
+                .setRaterId(rate.getRater().getId());
     }
 
     private static ResultTO mapResult(Result result){
         return new ResultTO()
                 .setId(result.getId())
                 .setReceiverId(result.getReceiver().getId())
-                .setSenderId(result.getReceiver().getId())
-                .setEditionId(result.getEdition().getId());
-
+                .setReceiverUsername(result.getReceiver().getUsername())
+                .setSenderId(result.getSender().getId())
+                .setSenderUsername(result.getSender().getUsername())
+                .setEditionId(result.getEdition().getId())
+                .setProductId(result.getProductToSend().getId());
     }
 
     public static Set<ResultTO> mapResults(Set<Result> results){
         return results.stream().map(ServerToClientDataConverter::mapResult).collect(Collectors.toSet());
+    }
+
+    public static RateTypeTO mapRateType(RateType rateType) {
+        return new RateTypeTO()
+                .setId(rateType.getId())
+                .setRateTypeName(rateType.getName());
+    }
+
+    public static Set<RateTypeTO> mapRateTypes(Set<RateType> rateTypes) {
+        return rateTypes.stream().map(ServerToClientDataConverter::mapRateType).collect(Collectors.toSet());
     }
 }

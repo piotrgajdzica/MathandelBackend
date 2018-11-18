@@ -1,22 +1,26 @@
 package mathandel.backend.model.client;
 
-import mathandel.backend.model.server.enums.RateName;
+import mathandel.backend.model.server.enums.RateTypeName;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class TransactionRateTO {
+public class RateTO {
 
     private Long id;
     private Long raterId;
     private Long resultId;
-    private RateName rateName;
+    @NotNull
+    private RateTypeName rateTypeName;
+    @NotBlank
     private String comment;
 
     public String getComment() {
         return comment;
     }
 
-    public TransactionRateTO setComment(String comment) {
+    public RateTO setComment(String comment) {
         this.comment = comment;
         return this;
     }
@@ -25,7 +29,7 @@ public class TransactionRateTO {
         return id;
     }
 
-    public TransactionRateTO setId(Long id) {
+    public RateTO setId(Long id) {
         this.id = id;
         return this;
     }
@@ -34,7 +38,7 @@ public class TransactionRateTO {
         return raterId;
     }
 
-    public TransactionRateTO setRaterId(Long raterId) {
+    public RateTO setRaterId(Long raterId) {
         this.raterId = raterId;
         return this;
     }
@@ -43,28 +47,28 @@ public class TransactionRateTO {
         return resultId;
     }
 
-    public TransactionRateTO setResultId(Long resultId) {
+    public RateTO setResultId(Long resultId) {
         this.resultId = resultId;
         return this;
     }
 
-    public RateName getRateName() {
-        return rateName;
+    public RateTypeName getRateTypeName() {
+        return rateTypeName;
     }
 
-    public TransactionRateTO setRateName(RateName rateName) {
-        this.rateName = rateName;
+    public RateTO setRateTypeName(RateTypeName rateTypeName) {
+        this.rateTypeName = rateTypeName;
         return this;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TransactionRateTO)) return false;
-        TransactionRateTO transactionRateTO = (TransactionRateTO) o;
-        return Objects.equals(id, transactionRateTO.id) &&
-                Objects.equals(raterId, transactionRateTO.raterId) &&
-                Objects.equals(resultId, transactionRateTO.resultId);
+        if (!(o instanceof RateTO)) return false;
+        RateTO rateTO = (RateTO) o;
+        return Objects.equals(id, rateTO.id) &&
+                Objects.equals(raterId, rateTO.raterId) &&
+                Objects.equals(resultId, rateTO.resultId);
     }
 
     @Override

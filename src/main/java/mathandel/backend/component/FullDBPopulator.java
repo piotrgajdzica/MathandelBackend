@@ -32,7 +32,7 @@ public class FullDBPopulator {
     private List<Preference> preferences = new LinkedList<>();
     private Random random;
 
-    public FullDBPopulator(RoleRepository roleRepository, UserRepository userRepository, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository) {
+    public FullDBPopulator(RoleRepository roleRepository, UserRepository userRepository, EditionStatusTypeRepository editionStatusTypeRepository, RateTypeRepository rateTypeRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, RateRepository rateRepository, PreferenceRepository preferenceRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;

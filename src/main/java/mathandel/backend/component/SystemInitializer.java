@@ -4,7 +4,7 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
-import mathandel.backend.model.server.enums.RateName;
+import mathandel.backend.model.server.enums.RateTypeName;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.*;
 import org.springframework.boot.ApplicationArguments;
@@ -16,37 +16,39 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class DBDataInitializer implements ApplicationRunner {
+public class SystemInitializer implements ApplicationRunner {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
-    private final RateRepository rateRepository;
+    private final RateTypeRepository rateTypeRepository;
     private final EditionRepository editionRepository;
     private final DefinedGroupRepository definedGroupRepository;
     private final ProductRepository productRepository;
     private final ResultRepository resultRepository;
-    private final TransactionRateRepository transactionRateRepository;
+    private final RateRepository rateRepository;
     private final PreferenceRepository preferenceRepository;
     private  FullDBPopulator fullDBPopulator;
     private final ModeratorRequestStatusRepository moderatorRequestStatusRepository;
+    private final TestPopulator testPopulator;
 
 
-    public DBDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateRepository rateRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, TransactionRateRepository transactionRateRepository, PreferenceRepository preferenceRepository, ModeratorRequestStatusRepository moderatorRequestStatusRepository) {
+    public SystemInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateTypeRepository rateTypeRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, RateRepository rateRepository, PreferenceRepository preferenceRepository, ModeratorRequestStatusRepository moderatorRequestStatusRepository, TestPopulator testPopulator) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
-        this.rateRepository = rateRepository;
+        this.rateTypeRepository = rateTypeRepository;
         this.editionRepository = editionRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.productRepository = productRepository;
         this.resultRepository = resultRepository;
-        this.transactionRateRepository = transactionRateRepository;
+        this.rateRepository = rateRepository;
         this.preferenceRepository = preferenceRepository;
         this.moderatorRequestStatusRepository = moderatorRequestStatusRepository;
-        this.fullDBPopulator = new FullDBPopulator(roleRepository,userRepository,editionStatusTypeRepository,rateRepository,editionRepository,definedGroupRepository,productRepository,resultRepository,transactionRateRepository, this.preferenceRepository);
+        this.testPopulator = testPopulator;
+        this.fullDBPopulator = new FullDBPopulator(roleRepository,userRepository,editionStatusTypeRepository, rateTypeRepository,editionRepository,definedGroupRepository,productRepository,resultRepository, rateRepository, this.preferenceRepository);
     }
 
     @Override
@@ -56,7 +58,8 @@ public class DBDataInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertRatesToDB();
         insertModeratorRequestStatusesToDB();
-        fullDBPopulator.populate();
+//        testPopulator.populate(); -> if you want to use this go to TestPopulator class
+//        fullDBPopulator.populate();
     }
 
     private void insertRolesToDB() {
@@ -76,10 +79,10 @@ public class DBDataInitializer implements ApplicationRunner {
     }
 
     private void insertRatesToDB() {
-        for (RateName rateName : RateName.values()) {
-            Rate rate = new Rate();
-            rate.setName(rateName);
-            rateRepository.save(rate);
+        for (RateTypeName rateTypeName : RateTypeName.values()) {
+            RateType rateType = new RateType();
+            rateType.setName(rateTypeName);
+            rateTypeRepository.save(rateType);
         }
     }
 

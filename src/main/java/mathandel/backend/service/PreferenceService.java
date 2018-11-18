@@ -8,6 +8,7 @@ import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -41,6 +42,9 @@ public class PreferenceService {
         Product haveProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
+        if(!haveProduct.getEdition().getId().equals(editionId)){
+            throw new BadRequestException("Product not in this edition");
+        }
         if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
             throw new BadRequestException("Edition is not opened");
         }

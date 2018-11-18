@@ -1,55 +1,68 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.client.TransactionRateTO;
+import mathandel.backend.model.client.RateTO;
+import mathandel.backend.model.client.RateTypeTO;
 import mathandel.backend.model.server.Rate;
+import mathandel.backend.model.server.RateType;
 import mathandel.backend.model.server.Result;
-import mathandel.backend.model.server.TransactionRate;
+import mathandel.backend.model.server.User;
+import mathandel.backend.repository.RateRepository;
+import mathandel.backend.repository.RateTypeRepository;
 import mathandel.backend.repository.ResultRepository;
-import mathandel.backend.repository.TransactionRateRepository;
 import mathandel.backend.repository.UserRepository;
-import mathandel.backend.utils.ServerToClientDataConverter;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
+
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRate;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRateTypes;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapRates;
 
 @Service
 public class RateService {
 
-    private ResultRepository resultRepository;
-    private UserRepository userRepository;
-    private TransactionRateRepository transactionRateRepository;
+    private final ResultRepository resultRepository;
+    private final UserRepository userRepository;
+    private final RateRepository rateRepository;
+    private final RateTypeRepository rateTypeRepository;
 
-    public RateService(ResultRepository resultRepository, UserRepository userRepository, TransactionRateRepository transactionRateRepository) {
+    public RateService(ResultRepository resultRepository, UserRepository userRepository, RateRepository rateRepository, RateTypeRepository rateTypeRepository) {
         this.resultRepository = resultRepository;
         this.userRepository = userRepository;
-        this.transactionRateRepository = transactionRateRepository;
+        this.rateRepository = rateRepository;
+        this.rateTypeRepository = rateTypeRepository;
     }
 
-    public ApiResponse rateResult(Long userId, TransactionRateTO transactionRateTO) {
+    public RateTO rateResult(Long userId, Long resultId, RateTO rateTO) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Result result = resultRepository.findById(resultId).orElseThrow(() -> new ResourceNotFoundException("Result", "id", resultId));
+        RateType rateType = rateTypeRepository.findByName(rateTO.getRateTypeName()).orElseThrow(() -> new AppException("Rate type not in data base"));
 
-        Result result = resultRepository
-                .findById(transactionRateTO.getResultId()).orElseThrow(() -> new ResourceNotFoundException("Result","id" ,transactionRateTO.getResultId()));
-
-        if (!userId.equals(result.getReceiver().getId())) {
-            throw new BadRequestException("User is not receiver of role");
+        if (!user.getId().equals(result.getReceiver().getId())) {
+            throw new BadRequestException("User is not receiver of this result");
         }
 
-        TransactionRate transactionRate = new TransactionRate()
-                .setRater(userRepository.findById(userId).orElseThrow(() -> new AppException("User not in db")))
-                .setRate(new Rate().setName(transactionRateTO.getRateName()))
-                .setComment(transactionRateTO.getComment())
+        Rate rate = rateRepository.findByResult(result).orElseGet(Rate::new)
+                .setRater(user)
+                .setRateType(rateType)
+                .setComment(rateTO.getComment())
                 .setResult(result);
 
-        transactionRateRepository.save(transactionRate);
-
-        return new ApiResponse("Result rated succesfully");
+        return mapRate(rateRepository.save(rate));
     }
 
-    public Set<TransactionRateTO> getUserRates(Long id) {
-        return ServerToClientDataConverter.mapRates(transactionRateRepository.findAllByResult_Sender_Id(id)) ;
+    public Set<RateTO> getUserRates(Long senderId) {
+        if(!userRepository.existsById(senderId)) {
+            throw new ResourceNotFoundException("User", "id", senderId);
+        }
+        return mapRates(rateRepository.findAllByResult_Sender_Id(senderId));
+    }
+
+    public Set<RateTypeTO> getRateTypes() {
+        return mapRateTypes(new HashSet<>(rateTypeRepository.findAll()));
     }
 }

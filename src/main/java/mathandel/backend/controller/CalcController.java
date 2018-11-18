@@ -21,6 +21,7 @@ public class CalcController {
         this.calcService = calcService;
     }
 
+    // documented
     @PostMapping(closeEditionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody

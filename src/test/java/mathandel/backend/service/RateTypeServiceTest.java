@@ -2,13 +2,13 @@ package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.client.TransactionRateTO;
+import mathandel.backend.model.client.RateTO;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
-import mathandel.backend.model.server.enums.RateName;
+import mathandel.backend.model.server.enums.RateTypeName;
 import mathandel.backend.repository.ResultRepository;
-import mathandel.backend.repository.TransactionRateRepository;
+import mathandel.backend.repository.RateRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.After;
 import org.junit.Ignore;
@@ -31,13 +31,13 @@ import static org.mockito.Mockito.when;
 @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RateServiceTest {
+public class RateTypeServiceTest {
 
-    private TransactionRateTO transactionRateTO = new TransactionRateTO();
+    private RateTO rateTO = new RateTO();
     private final Long resultId = 1L;
     private final Long receiverId = 1L;
     private final Long notReceiverId = 2L;
-    private RateName rateName = RateName.NAME1;
+    private RateTypeName rateTypeName = RateTypeName.NAME1;
 
     @Mock
     Result result;
@@ -49,7 +49,7 @@ public class RateServiceTest {
     UserRepository userRepository;
 
     @MockBean
-    TransactionRateRepository transactionRateRepository;
+    RateRepository rateRepository;
 
     @MockBean
     ResultRepository resultRepository;
@@ -59,25 +59,26 @@ public class RateServiceTest {
 
     @After
     public void tearDown() {
-        clearInvocations(result, receiver, userRepository, transactionRateRepository, resultRepository);
+        clearInvocations(result, receiver, userRepository, rateRepository, resultRepository);
     }
 
-    @Test
-    public void shouldRateResult() {
-        //given
-        initializeTransactionRateTO();
-
-        when(resultRepository.findById(resultId)).thenReturn(Optional.of(result));
-        when(result.getReceiver()).thenReturn(receiver);
-        when(receiver.getId()).thenReturn(receiverId);
-        when(userRepository.findById(receiverId)).thenReturn(Optional.of(receiver));
-
-        //when
-        ApiResponse apiResponse = rateService.rateResult(receiverId, transactionRateTO);
-
-        //then
-        assertEquals(apiResponse.getMessage(), "Result rated succesfully");
-    }
+    //todo
+//    @Test
+//    public void shouldRateResult() {
+//        //given
+//        initializeTransactionRateTO();
+//
+//        when(resultRepository.findById(resultId)).thenReturn(Optional.of(result));
+//        when(result.getReceiver()).thenReturn(receiver);
+//        when(receiver.getId()).thenReturn(receiverId);
+//        when(userRepository.findById(receiverId)).thenReturn(Optional.of(receiver));
+//
+//        //when
+//        ApiResponse apiResponse = rateService.rateResult(receiverId, resultId, rateTO);
+//
+//        //then
+//        assertEquals(apiResponse.getMessage(), "Result rated successfully");
+//    }
 
     @Test
     public void shouldThrowExceptionWhenUserIsNotReceiverOfProductThatHeWantsToRate() {
@@ -91,7 +92,7 @@ public class RateServiceTest {
 
 
         //when & then
-        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> rateService.rateResult(notReceiverId, transactionRateTO));
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> rateService.rateResult(notReceiverId, resultId, rateTO));
 
         assertEquals(badRequestException.getMessage(), "User is not receiver of role");
     }
@@ -107,7 +108,7 @@ public class RateServiceTest {
         when(userRepository.findById(receiverId)).thenReturn(Optional.empty());
 
         //when & then
-        AppException appException = assertThrows(AppException.class, () -> rateService.rateResult(receiverId, transactionRateTO));
+        AppException appException = assertThrows(AppException.class, () -> rateService.rateResult(receiverId, resultId, rateTO));
 
         assertEquals(appException.getMessage(), "User not in db");
     }
@@ -120,15 +121,15 @@ public class RateServiceTest {
         when(resultRepository.findById(resultId)).thenReturn(Optional.empty());
 
         //when & then
-        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> rateService.rateResult(receiverId, transactionRateTO));
+        BadRequestException badRequestException = assertThrows(BadRequestException.class, () -> rateService.rateResult(receiverId, resultId, rateTO));
 
         assertEquals(badRequestException.getMessage(), "Result doesn't exist");
     }
 
     private void initializeTransactionRateTO() {
-        transactionRateTO
+        rateTO
                 .setResultId(resultId)
-                .setRateName(rateName)
+                .setRateTypeName(rateTypeName)
                 .setComment("comment");
     }
 }
