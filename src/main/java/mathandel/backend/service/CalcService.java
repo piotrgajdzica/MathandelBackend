@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class CalcService {
     private final RestTemplate restTemplate;
 
     @Value("${calc-service-url}")
-    private static String CALC_SERVICE_URL;
+    private String CALC_SERVICE_URL;
 
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
         this.preferenceRepository = preferenceRepository;
@@ -54,6 +55,7 @@ public class CalcService {
 
         saveResultsFromJsonData(editionId, result);
         editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);
+        nullEditionIdsOfAllProductsThatWerentChosen(editionId);
 
         return new ApiResponse("Edition closed, you can now check for results");
     }
@@ -113,5 +115,21 @@ public class CalcService {
                 .put("id", preference.getHaveProduct().getId())
                 .put("single_preferences", new JSONArray(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toList())))
                 .put("groups", new JSONArray(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toList())));
+    }
+
+    private void nullEditionIdsOfAllProductsThatWerentChosen(Long editionId) {
+        Set<Long> resultProductsIds = resultRepository.findAllByEdition_Id(editionId).stream().map(r -> r.getProductToSend().getId()).collect(Collectors.toSet());
+        Set<Product> editionProducts = productRepository.findAllByEdition_Id(editionId);
+        Set<Product> notAssignedProducts = new HashSet<>();
+
+        for (Product p : editionProducts) {
+
+            if (!resultProductsIds.contains(p.getId())) {
+                p.setEdition(null);
+                notAssignedProducts.add(p);
+            }
+        }
+
+        productRepository.saveAll(notAssignedProducts);
     }
 }

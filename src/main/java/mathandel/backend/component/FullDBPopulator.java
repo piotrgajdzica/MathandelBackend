@@ -73,6 +73,10 @@ public class FullDBPopulator {
             User user = new User()
                     .setEmail(randMail())
                     .setName(randName(i))
+                    .setAddress(randName(i))
+                    .setCity(randName(i))
+                    .setCountry(randName(i))
+                    .setPostalCode(randName(i))
                     .setPassword(randPasswd(i))
                     .setSurname(randSurname(i))
                     .setUsername(randUsername(i))
@@ -85,7 +89,7 @@ public class FullDBPopulator {
         for (int i = 0; i < editionNumb; i++) {
             Edition edition = new Edition()
                     .setEditionStatusType(createEditionStatusType())
-                    .setEndDate(LocalDate.of(2020, 10, 10))
+                    .setEndDate(LocalDate.now())
                     .setMaxParticipants(random.nextInt(10) + 10)
                     .setDescription(" Edition " + i)
                     .setModerators(new HashSet<>())
@@ -272,7 +276,6 @@ public class FullDBPopulator {
 
     private Edition getRandEdition() {
         int i = random.nextInt(editionNumb);
-        System.out.println(i);
         return editions.get(i);
     }
 

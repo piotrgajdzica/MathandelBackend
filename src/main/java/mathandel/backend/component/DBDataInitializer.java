@@ -56,7 +56,7 @@ public class DBDataInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertRatesToDB();
         insertModeratorRequestStatusesToDB();
-//        fullDBPopulator.populate();
+        fullDBPopulator.populate();
     }
 
     private void insertRolesToDB() {
