@@ -16,7 +16,6 @@ public class ServerToClientDataConverter {
                 .setId(moderatorRequest.getId());
     }
 
-    // todo implement equals and hashcode everywhere
     public static Set<ModeratorRequestTO> mapModeratorRequests(Set<ModeratorRequest> moderatorRequests){
         return moderatorRequests.stream().map(ServerToClientDataConverter::mapModeratorRequest).collect(Collectors.toSet());
     }
@@ -130,7 +129,8 @@ public class ServerToClientDataConverter {
                 .setSenderId(result.getSender().getId())
                 .setSenderUsername(result.getSender().getUsername())
                 .setEditionId(result.getEdition().getId())
-                .setProductId(result.getProductToSend().getId());
+                .setProductId(result.getProductToSend().getId())
+                .setRated(result.getRate() != null);
     }
 
     public static Set<ResultTO> mapResults(Set<Result> results){

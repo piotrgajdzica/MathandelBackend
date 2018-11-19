@@ -1,8 +1,5 @@
 package mathandel.backend.model.server;
 
-
-import org.hibernate.annotations.NaturalId;
-
 import javax.persistence.*;
 
 @Entity
@@ -24,6 +21,9 @@ public class Result {
 
     @ManyToOne
     private Edition edition;
+
+    @OneToOne
+    private Rate rate;
 
     public Edition getEdition() {
         return edition;
@@ -70,5 +70,12 @@ public class Result {
         return this;
     }
 
+    public Rate getRate() {
+        return rate;
+    }
 
+    public Result setRate(Rate rate) {
+        this.rate = rate;
+        return this;
+    }
 }

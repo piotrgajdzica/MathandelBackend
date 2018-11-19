@@ -23,32 +23,24 @@ public class SystemInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
     private final RateTypeRepository rateTypeRepository;
-    private final EditionRepository editionRepository;
-    private final DefinedGroupRepository definedGroupRepository;
-    private final ProductRepository productRepository;
-    private final ResultRepository resultRepository;
-    private final RateRepository rateRepository;
-    private final PreferenceRepository preferenceRepository;
-    private  FullDBPopulator fullDBPopulator;
+    private final FullDBPopulator fullDBPopulator;
     private final ModeratorRequestStatusRepository moderatorRequestStatusRepository;
-    private final TestPopulator testPopulator;
 
 
-    public SystemInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, EditionStatusTypeRepository editionStatusTypeRepository, RateTypeRepository rateTypeRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, RateRepository rateRepository, PreferenceRepository preferenceRepository, ModeratorRequestStatusRepository moderatorRequestStatusRepository, TestPopulator testPopulator) {
+    public SystemInitializer(RoleRepository roleRepository,
+                             UserRepository userRepository,
+                             PasswordEncoder passwordEncoder,
+                             EditionStatusTypeRepository editionStatusTypeRepository,
+                             RateTypeRepository rateTypeRepository,
+                             ModeratorRequestStatusRepository moderatorRequestStatusRepository,
+                             FullDBPopulator fullDBPopulator) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
         this.rateTypeRepository = rateTypeRepository;
-        this.editionRepository = editionRepository;
-        this.definedGroupRepository = definedGroupRepository;
-        this.productRepository = productRepository;
-        this.resultRepository = resultRepository;
-        this.rateRepository = rateRepository;
-        this.preferenceRepository = preferenceRepository;
         this.moderatorRequestStatusRepository = moderatorRequestStatusRepository;
-        this.testPopulator = testPopulator;
-        this.fullDBPopulator = new FullDBPopulator(roleRepository,userRepository,editionStatusTypeRepository, rateTypeRepository,editionRepository,definedGroupRepository,productRepository,resultRepository, rateRepository, this.preferenceRepository);
+        this.fullDBPopulator = fullDBPopulator;
     }
 
     @Override
@@ -115,7 +107,7 @@ public class SystemInitializer implements ApplicationRunner {
     }
 
     private void insertModeratorRequestStatusesToDB() {
-        for (ModeratorRequestStatusName moderatorRequestStatusName: ModeratorRequestStatusName.values()) {
+        for (ModeratorRequestStatusName moderatorRequestStatusName : ModeratorRequestStatusName.values()) {
             moderatorRequestStatusRepository.save(new ModeratorRequestStatus().setName(moderatorRequestStatusName));
         }
     }

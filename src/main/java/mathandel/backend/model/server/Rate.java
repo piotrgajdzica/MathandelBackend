@@ -1,7 +1,6 @@
 package mathandel.backend.model.server;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "rates")
@@ -20,7 +19,6 @@ public class Rate {
     @OneToOne
     private Result result;
 
-    @Size(min = 4, max = 160)
     private String comment;
 
     public Long getId() {

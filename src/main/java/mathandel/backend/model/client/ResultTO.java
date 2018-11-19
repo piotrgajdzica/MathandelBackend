@@ -9,6 +9,7 @@ public class ResultTO {
     private String receiverUsername;
     private Long editionId;
     private Long productId;
+    private Boolean isRated;
 
     public Long getId() {
         return id;
@@ -70,6 +71,15 @@ public class ResultTO {
 
     public ResultTO setProductId(Long productId) {
         this.productId = productId;
+        return this;
+    }
+
+    public Boolean getRated() {
+        return isRated;
+    }
+
+    public ResultTO setRated(Boolean rated) {
+        isRated = rated;
         return this;
     }
 }

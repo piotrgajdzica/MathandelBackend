@@ -52,6 +52,8 @@ public class RateService {
                 .setComment(rateTO.getComment())
                 .setResult(result);
 
+        result.setRate(rate);
+
         return mapRate(rateRepository.save(rate));
     }
 

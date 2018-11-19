@@ -4,7 +4,6 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.ProductTO;
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Product;
@@ -14,7 +13,6 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ProductRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -115,7 +113,7 @@ public class ProductService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(!edition.getParticipants().contains(user)) {
+        if (!edition.getParticipants().contains(user)) {
             throw new BadRequestException("User not in this edition");
         }
 
@@ -126,7 +124,7 @@ public class ProductService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(!edition.getParticipants().contains(user)) {
+        if (!edition.getParticipants().contains(user)) {
             throw new BadRequestException("User not in this edition");
         }
 

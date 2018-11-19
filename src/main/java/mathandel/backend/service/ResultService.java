@@ -1,11 +1,15 @@
 package mathandel.backend.service;
 
-import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.client.ResultTO;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.model.server.*;
-import mathandel.backend.repository.*;
+import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.ResultTO;
+import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.User;
+import mathandel.backend.repository.EditionRepository;
+import mathandel.backend.repository.RateRepository;
+import mathandel.backend.repository.ResultRepository;
+import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -16,14 +20,16 @@ import static mathandel.backend.utils.ServerToClientDataConverter.mapResults;
 @Service
 public class ResultService {
 
-    private ResultRepository resultRepository;
-    private UserRepository userRepository;
-    private EditionRepository editionRepository;
+    private final ResultRepository resultRepository;
+    private final UserRepository userRepository;
+    private final EditionRepository editionRepository;
+    private final RateRepository rateRepository;
 
-    public ResultService(UserRepository userRepository, ResultRepository resultRepository, RateRepository rateRepository, ProductRepository productRepository, EditionRepository editionRepository) {
+    public ResultService(UserRepository userRepository, ResultRepository resultRepository, EditionRepository editionRepository, RateRepository rateRepository) {
         this.userRepository = userRepository;
         this.resultRepository = resultRepository;
         this.editionRepository = editionRepository;
+        this.rateRepository = rateRepository;
     }
 
     public Set<ResultTO> getEditionProductsToSendForUser(Long userId, Long editionId) {
