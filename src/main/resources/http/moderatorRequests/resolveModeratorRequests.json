@@ -1,8 +1,4 @@
 {
-  "moderatorRequests": [
-    {
-      "id": 1,
-      "moderatorRequestStatus": "ACCEPTED"
-    }
-  ]
+  "acceptedRequestsIds": [1],
+  "rejectedRequestsIds": []
 }

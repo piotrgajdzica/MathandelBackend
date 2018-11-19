@@ -1,6 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.ResolvedRequestsTO;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
@@ -61,24 +62,30 @@ public class ModeratorRequestService {
         return mapModeratorRequests(moderatorRequestsRepository.findAllByModeratorRequestStatus_Name(ModeratorRequestStatusName.PENDING));
     }
 
-    public ApiResponse resolveModeratorRequests(Set<ModeratorRequestTO> resolvedRequests) {
+    public ApiResponse resolveModeratorRequests(ResolvedRequestsTO resolvedRequests) {
         ModeratorRequestStatus accepted = moderatorRequestStatusRepository.findByName(ACCEPTED).orElseThrow(() -> new AppException("Cannot find moderator request status"));
         ModeratorRequestStatus rejected = moderatorRequestStatusRepository.findByName(REJECTED).orElseThrow(() -> new AppException("Cannot find moderator request status"));
 
-        for(ModeratorRequestTO resolvedRequest : resolvedRequests) {
-            ModeratorRequest moderatorRequest = moderatorRequestsRepository.findById(resolvedRequest.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("ModeratorRequest", "id", resolvedRequest.getId()));
-            if(resolvedRequest.getModeratorRequestStatus().equals(ACCEPTED)) {
-                User user = userRepository.findById(moderatorRequest.getUser().getId()).orElseThrow(() -> new AppException("User does not exist"));
-                Role role = roleRepository.findByName(RoleName.ROLE_MODERATOR).orElseThrow(() -> new AppException("Moderator Role not set"));
-                moderatorRequest.setModeratorRequestStatus(accepted);
-                user.getRoles().add(role);
-            }
-            if(resolvedRequest.getModeratorRequestStatus().equals(REJECTED)) {
-                moderatorRequest.setModeratorRequestStatus(rejected);
-            }
+        resolvedRequests.getAcceptedRequestsIds().forEach(acceptedRequestId -> {
+            ModeratorRequest moderatorRequest = moderatorRequestsRepository.findById(acceptedRequestId)
+                    .orElseThrow(() -> new ResourceNotFoundException("ModeratorRequest", "id", acceptedRequestId));
+
+            User user = userRepository.findById(moderatorRequest.getUser().getId()).orElseThrow(() -> new AppException("User does not exist"));
+            Role role = roleRepository.findByName(RoleName.ROLE_MODERATOR).orElseThrow(() -> new AppException("Moderator Role not set"));
+            moderatorRequest.setModeratorRequestStatus(accepted);
+            user.getRoles().add(role);
+
             moderatorRequestsRepository.save(moderatorRequest);
-        }
+        });
+
+        resolvedRequests.getRejectedRequestsIds().forEach(rejectedRequestId -> {
+            ModeratorRequest moderatorRequest = moderatorRequestsRepository.findById(rejectedRequestId)
+                    .orElseThrow(() -> new ResourceNotFoundException("ModeratorRequest", "id", rejectedRequestId));
+
+            moderatorRequest.setModeratorRequestStatus(rejected);
+            moderatorRequestsRepository.save(moderatorRequest);
+        });
+
         return new ApiResponse("Requests resolved");
     }
 

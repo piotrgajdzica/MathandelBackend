@@ -113,7 +113,7 @@ public class ServerToClientDataConverter {
     }
 
     public static RateTO mapRate(Rate rate) {
-        return new RateTO()
+        return rate == null ? null : new RateTO()
                 .setId(rate.getId())
                 .setComment(rate.getComment())
                 .setRateTypeName(rate.getRateType().getName())
@@ -124,17 +124,46 @@ public class ServerToClientDataConverter {
     private static ResultTO mapResult(Result result){
         return new ResultTO()
                 .setId(result.getId())
-                .setReceiverId(result.getReceiver().getId())
-                .setReceiverUsername(result.getReceiver().getUsername())
-                .setSenderId(result.getSender().getId())
-                .setSenderUsername(result.getSender().getUsername())
-                .setEditionId(result.getEdition().getId())
-                .setProductId(result.getProductToSend().getId())
-                .setRated(result.getRate() != null);
+                .setReceiver(mapUser(result.getReceiver()))
+                .setSender(mapUser(result.getSender()))
+                .setProduct(mapProduct(result.getProductToSend()))
+                .setRate(mapRate(result.getRate()));
     }
 
     public static Set<ResultTO> mapResults(Set<Result> results){
         return results.stream().map(ServerToClientDataConverter::mapResult).collect(Collectors.toSet());
+    }
+
+    public static ResultTO mapResultToSend (Result result) {
+        return new ResultTO()
+                .setId(result.getId())
+                .setReceiver(mapUser(result.getReceiver()))
+                .setProduct(mapProduct(result.getProductToSend()))
+                .setRate(mapRate(result.getRate()));
+    }
+
+    public static Set<ResultTO> mapResultsToSend(Set<Result> results) {
+        return results.stream().map(ServerToClientDataConverter::mapResultToSend).collect(Collectors.toSet());
+    }
+
+    public static UserTO mapSender(User user) {
+        return new UserTO()
+                .setName(user.getName())
+                .setSurname(user.getSurname())
+                .setEmail(user.getEmail())
+                .setUsername(user.getUsername());
+    }
+
+    public static ResultTO mapResultToReceive (Result result) {
+        return new ResultTO()
+                .setId(result.getId())
+                .setSender(mapSender(result.getSender()))
+                .setProduct(mapProduct(result.getProductToSend()))
+                .setRate(mapRate(result.getRate()));
+    }
+
+    public static Set<ResultTO> mapResultsToReceive(Set<Result> results) {
+        return results.stream().map(ServerToClientDataConverter::mapResultToReceive).collect(Collectors.toSet());
     }
 
     public static RateTypeTO mapRateType(RateType rateType) {

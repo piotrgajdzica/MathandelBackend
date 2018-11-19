@@ -1,8 +1,8 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.ModeratorRequestTO;
-import mathandel.backend.model.client.ModeratorRequestsTO;
+import mathandel.backend.model.client.ResolvedRequestsTO;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ModeratorRequestService;
@@ -29,7 +29,7 @@ public class ModeratorRequestController {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ModeratorRequestTO requestModerator(@CurrentUser UserPrincipal currentUser,
-                                 @Valid @RequestBody ModeratorRequestTO reason) {
+                                        @Valid @RequestBody ModeratorRequestTO reason) {
         return moderatorRequestService.requestModerator(reason, currentUser.getId());
     }
 
@@ -45,8 +45,8 @@ public class ModeratorRequestController {
     @PutMapping(moderatorRequestsResolvePath)
     @PreAuthorize("hasRole('ADMIN')")
     public @ResponseBody
-    ApiResponse resolveModeratorRequests(@RequestBody ModeratorRequestsTO moderatorRequestsTO) {
-        return moderatorRequestService.resolveModeratorRequests(moderatorRequestsTO.getModeratorRequests());
+    ApiResponse resolveModeratorRequests(@RequestBody ResolvedRequestsTO resolvedRequestsTO) {
+        return moderatorRequestService.resolveModeratorRequests(resolvedRequestsTO);
     }
 
     // documented

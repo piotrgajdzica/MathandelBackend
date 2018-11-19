@@ -16,6 +16,8 @@ import java.util.Set;
 
 import static mathandel.backend.model.server.enums.EditionStatusName.FINISHED;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapResults;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapResultsToReceive;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapResultsToSend;
 
 @Service
 public class ResultService {
@@ -23,13 +25,11 @@ public class ResultService {
     private final ResultRepository resultRepository;
     private final UserRepository userRepository;
     private final EditionRepository editionRepository;
-    private final RateRepository rateRepository;
 
     public ResultService(UserRepository userRepository, ResultRepository resultRepository, EditionRepository editionRepository, RateRepository rateRepository) {
         this.userRepository = userRepository;
         this.resultRepository = resultRepository;
         this.editionRepository = editionRepository;
-        this.rateRepository = rateRepository;
     }
 
     public Set<ResultTO> getEditionProductsToSendForUser(Long userId, Long editionId) {
@@ -43,7 +43,7 @@ public class ResultService {
             throw new BadRequestException("Edition is not finished yet");
         }
 
-        return mapResults(resultRepository.findAllBySender_IdAndEdition_Id(userId, editionId)) ;
+        return mapResultsToSend(resultRepository.findAllBySender_IdAndEdition_Id(userId, editionId)) ;
     }
 
     public Set<ResultTO> getEditionProductsToReceiveForUser(Long userId, Long editionId) {
@@ -56,7 +56,7 @@ public class ResultService {
         if(!edition.getEditionStatusType().getEditionStatusName().equals(FINISHED)) {
             throw new BadRequestException("Edition is not finished yet");
         }
-        return mapResults(resultRepository.findAllByReceiver_IdAndEdition_Id(userId, editionId)) ;
+        return mapResultsToReceive(resultRepository.findAllByReceiver_IdAndEdition_Id(userId, editionId)) ;
     }
 
     public Set<ResultTO> getEditionResults(Long userId, Long editionId) {

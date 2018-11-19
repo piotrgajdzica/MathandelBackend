@@ -3,13 +3,10 @@ package mathandel.backend.model.client;
 public class ResultTO {
 
     private Long id;
-    private Long senderId;
-    private String senderUsername;
-    private Long receiverId;
-    private String receiverUsername;
-    private Long editionId;
-    private Long productId;
-    private Boolean isRated;
+    private UserTO sender;
+    private UserTO receiver;
+    private ProductTO product;
+    private RateTO rate;
 
     public Long getId() {
         return id;
@@ -20,66 +17,39 @@ public class ResultTO {
         return this;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public UserTO getSender() {
+        return sender;
     }
 
-    public ResultTO setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public ResultTO setSender(UserTO sender) {
+        this.sender = sender;
         return this;
     }
 
-    public String getSenderUsername() {
-        return senderUsername;
+    public UserTO getReceiver() {
+        return receiver;
     }
 
-    public ResultTO setSenderUsername(String senderUsername) {
-        this.senderUsername = senderUsername;
+    public ResultTO setReceiver(UserTO receiver) {
+        this.receiver = receiver;
         return this;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
+    public ProductTO getProduct() {
+        return product;
     }
 
-    public ResultTO setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
+    public ResultTO setProduct(ProductTO product) {
+        this.product = product;
         return this;
     }
 
-    public String getReceiverUsername() {
-        return receiverUsername;
+    public RateTO getRate() {
+        return rate;
     }
 
-    public ResultTO setReceiverUsername(String receiverUsername) {
-        this.receiverUsername = receiverUsername;
-        return this;
-    }
-
-    public Long getEditionId() {
-        return editionId;
-    }
-
-    public ResultTO setEditionId(Long editionId) {
-        this.editionId = editionId;
-        return this;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public ResultTO setProductId(Long productId) {
-        this.productId = productId;
-        return this;
-    }
-
-    public Boolean getRated() {
-        return isRated;
-    }
-
-    public ResultTO setRated(Boolean rated) {
-        isRated = rated;
+    public ResultTO setRate(RateTO rate) {
+        this.rate = rate;
         return this;
     }
 }

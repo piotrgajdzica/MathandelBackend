@@ -25,6 +25,7 @@ public class SystemInitializer implements ApplicationRunner {
     private final RateTypeRepository rateTypeRepository;
     private final FullDBPopulator fullDBPopulator;
     private final ModeratorRequestStatusRepository moderatorRequestStatusRepository;
+    private final TestPopulator testPopulator;
 
 
     public SystemInitializer(RoleRepository roleRepository,
@@ -33,7 +34,7 @@ public class SystemInitializer implements ApplicationRunner {
                              EditionStatusTypeRepository editionStatusTypeRepository,
                              RateTypeRepository rateTypeRepository,
                              ModeratorRequestStatusRepository moderatorRequestStatusRepository,
-                             FullDBPopulator fullDBPopulator) {
+                             FullDBPopulator fullDBPopulator, TestPopulator testPopulator) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -41,6 +42,7 @@ public class SystemInitializer implements ApplicationRunner {
         this.rateTypeRepository = rateTypeRepository;
         this.moderatorRequestStatusRepository = moderatorRequestStatusRepository;
         this.fullDBPopulator = fullDBPopulator;
+        this.testPopulator = testPopulator;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class SystemInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertRatesToDB();
         insertModeratorRequestStatusesToDB();
-//        testPopulator.populate(); -> if you want to use this go to TestPopulator class
+//        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();
     }
 
