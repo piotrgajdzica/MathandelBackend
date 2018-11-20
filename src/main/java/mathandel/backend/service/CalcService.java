@@ -1,9 +1,6 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
-import mathandel.backend.exception.BadRequestException;
-import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
@@ -55,13 +51,20 @@ public class CalcService {
         headers.add("Content-Type", "application/json");
         String body = getMappedDataForEdition(editionId);
         HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
-        String result = restTemplate.postForObject(CALC_SERVICE_URL + "/solve/", httpEntity, String.class);
 
-        saveResultsFromJsonData(editionId, result);
-        editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);
-        nullEditionIdsOfAllProductsThatWerentChosen(editionId);
+        try {
+            String result = restTemplate.postForObject(CALC_SERVICE_URL + "/solve/", httpEntity, String.class);
 
-        return new ApiResponse("Edition closed, you can now check for results");
+            saveResultsFromJsonData(editionId, result);
+
+            editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);
+            nullEditionIdsOfAllProductsThatWerentChosen(editionId);
+
+            return new ApiResponse("Edition closed, you can now check for results");
+        } catch (Exception e) {
+            throw new AppException("Server had a problem with calculating result for your edition. Try again later.");
+        }
+
     }
 
     private void saveResultsFromJsonData(Long editionId, String jsonString) {

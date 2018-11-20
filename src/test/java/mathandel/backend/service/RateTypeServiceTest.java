@@ -37,7 +37,7 @@ public class RateTypeServiceTest {
     private final Long resultId = 1L;
     private final Long receiverId = 1L;
     private final Long notReceiverId = 2L;
-    private RateTypeName rateTypeName = RateTypeName.NAME1;
+    private RateTypeName rateTypeName = RateTypeName.POSITIVE;
 
     @Mock
     Result result;
