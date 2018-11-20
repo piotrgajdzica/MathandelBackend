@@ -1,6 +1,7 @@
 package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
@@ -45,6 +46,8 @@ public class CalcService {
     // todo test this
     public ApiResponse closeEdition(Long userId, Long editionId) {
 
+        Edition initialEdition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        EditionStatusName initialEditionStatus = initialEdition.getEditionStatusType().getEditionStatusName();
         editionService.changeEditionStatus(userId, editionId, EditionStatusName.CLOSED);
 
         HttpHeaders headers = new HttpHeaders();
@@ -62,6 +65,7 @@ public class CalcService {
 
             return new ApiResponse("Edition closed, you can now check for results");
         } catch (Exception e) {
+            editionService.changeEditionStatus(userId,editionId, initialEditionStatus);
             throw new AppException("Server had a problem with calculating result for your edition. Try again later.");
         }
 
