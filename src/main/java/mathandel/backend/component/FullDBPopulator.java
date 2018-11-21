@@ -18,27 +18,27 @@ public class FullDBPopulator {
     private final EditionStatusTypeRepository editionStatusTypeRepository;
     private final EditionRepository editionRepository;
     private final DefinedGroupRepository definedGroupRepository;
-    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
     private final PreferenceRepository preferenceRepository;
 
     private int editionNumb = 5;
     private int usersNumb = 10;
-    private int productNumb = 30;
+    private int itemNumb = 30;
     private int definedGroupsNumb = 20;
     private List<Edition> editions = new LinkedList<>();
     private List<User> users = new LinkedList<>();
-    private List<Product> products = new LinkedList<>();
+    private List<Item> items = new LinkedList<>();
     private List<DefinedGroup> definedGroups = new LinkedList<>();
     private List<Preference> preferences = new LinkedList<>();
     private Random random;
 
-    public FullDBPopulator(RoleRepository roleRepository, UserRepository userRepository, EditionStatusTypeRepository editionStatusTypeRepository, RateTypeRepository rateTypeRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository, ResultRepository resultRepository, RateRepository rateRepository, PreferenceRepository preferenceRepository) {
+    public FullDBPopulator(RoleRepository roleRepository, UserRepository userRepository, EditionStatusTypeRepository editionStatusTypeRepository, RateTypeRepository rateTypeRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ItemRepository itemRepository, ResultRepository resultRepository, RateRepository rateRepository, PreferenceRepository preferenceRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
         this.editionRepository = editionRepository;
         this.definedGroupRepository = definedGroupRepository;
-        this.productRepository = productRepository;
+        this.itemRepository = itemRepository;
         this.preferenceRepository = preferenceRepository;
         random = new Random();
     }
@@ -47,7 +47,7 @@ public class FullDBPopulator {
         createUsers();
         createEditions();
         assignRandomlyUsersToEditions();
-        createProducts();
+        createItems();
         createDefinedGroups();
         createPreferences();
 
@@ -59,7 +59,7 @@ public class FullDBPopulator {
         Thread.yield();
         editionRepository.saveAll(editions);
         Thread.yield();
-        productRepository.saveAll(products);
+        itemRepository.saveAll(items);
         Thread.yield();
         definedGroupRepository.saveAll(definedGroups);
         Thread.yield();
@@ -125,8 +125,8 @@ public class FullDBPopulator {
         }
     }
 
-    private void createProducts() {
-        for (int i = 0; i < productNumb; i++) {
+    private void createItems() {
+        for (int i = 0; i < itemNumb; i++) {
             Edition edition = getRandEdition();
 
             while (edition.getParticipants().isEmpty()) {
@@ -134,17 +134,17 @@ public class FullDBPopulator {
             }
 
             User user = edition.getParticipants().iterator().next();
-            Product product = new Product()
+            Item item = new Item()
                     .setName(randName(i))
                     .setDescription(randName(i))
                     .setEdition(edition)
                     .setUser(user);
-            products.add(product);
+            items.add(item);
         }
     }
 
     private void createDefinedGroups() {
-        int curProductsNumb = productNumb;
+        int curItemsNumb = itemNumb;
         for (int i = 0; i < definedGroupsNumb; i++) {
             Edition edition = getRandEdition();
 
@@ -157,29 +157,29 @@ public class FullDBPopulator {
                 continue;
             }
 
-            int copy = curProductsNumb;
+            int copy = curItemsNumb;
 
             DefinedGroup definedGroup = new DefinedGroup()
                     .setEdition(edition)
                     .setName(randName(i))
-                    .setProducts(new HashSet<>())
+                    .setItems(new HashSet<>())
                     .setGroups(new HashSet<>())
                     .setUser(user);
 
-            for (int j = curProductsNumb; j < copy + 3; j++) {
-                Product product = new Product()
+            for (int j = curItemsNumb; j < copy + 3; j++) {
+                Item item = new Item()
                         .setName(randName(j))
                         .setDescription(randName(j))
                         .setEdition(edition)
                         .setUser(user);
-                products.add(product);
-                definedGroup.getProducts().add(product);
-                curProductsNumb++;
+                items.add(item);
+                definedGroup.getItems().add(item);
+                curItemsNumb++;
             }
-            curProductsNumb = copy;
+            curItemsNumb = copy;
             definedGroups.add(definedGroup);
         }
-        productNumb += (definedGroupsNumb * 3);
+        itemNumb += (definedGroupsNumb * 3);
 
         for (int j = 0; j < definedGroups.size() - 1; j++) {
             if (definedGroupBelongToTheSameEdition(definedGroups.get(j), definedGroups.get(j + 1))
@@ -205,37 +205,37 @@ public class FullDBPopulator {
 
     private void createPreferences() {
         for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < products.size() - 1; j++) {
-                if (areNeightbourProductsInTheSameEdition(products.get(j), products.get(j + 1))
-                        && !productsBelongsToTheSameUser(products.get(j), products.get(j + 1))
+            for (int j = 0; j < items.size() - 1; j++) {
+                if (areNeightbourItemsInTheSameEdition(items.get(j), items.get(j + 1))
+                        && !itemsBelongsToTheSameUser(items.get(j), items.get(j + 1))
                         && random.nextInt(2) == 1) {
-                    preferences.add(createPreference(products.get(j), products.get(j + 1)));
+                    preferences.add(createPreference(items.get(j), items.get(j + 1)));
                 }
             }
-            Collections.shuffle(products);
+            Collections.shuffle(items);
         }
 
 
-        for (int i = 0; i < products.size() - 1; i++) {
+        for (int i = 0; i < items.size() - 1; i++) {
             for (int j = 0; j < definedGroups.size() - 1; j++) {
-                if (definedGroupAndProductBelongToTheSameEdition(products.get(i), definedGroups.get(j))
-                        && !definedGroupsAndProductBelongToTheSameUser(products.get(i), definedGroups.get(j))
+                if (definedGroupAndItemBelongToTheSameEdition(items.get(i), definedGroups.get(j))
+                        && !definedGroupsAndItemBelongToTheSameUser(items.get(i), definedGroups.get(j))
                         && random.nextInt(2) == 1) {
 
-                    if (preferencesOfProduct.containsKey(products.get(i).getName())) {
-                        preferencesOfProduct.get(products.get(i).getName()).getWantedDefinedGroups().add(definedGroups.get(j));
+                    if (preferencesOfItem.containsKey(items.get(i).getName())) {
+                        preferencesOfItem.get(items.get(i).getName()).getWantedDefinedGroups().add(definedGroups.get(j));
                     }
                 }
             }
         }
     }
 
-    private boolean definedGroupsAndProductBelongToTheSameUser(Product product, DefinedGroup definedGroup) {
-        return product.getUser().getEmail().equals(definedGroup.getUser().getEmail());
+    private boolean definedGroupsAndItemBelongToTheSameUser(Item item, DefinedGroup definedGroup) {
+        return item.getUser().getEmail().equals(definedGroup.getUser().getEmail());
     }
 
-    private boolean definedGroupAndProductBelongToTheSameEdition(Product product, DefinedGroup definedGroup) {
-        return product.getEdition().getName().equals(definedGroup.getEdition().getName());
+    private boolean definedGroupAndItemBelongToTheSameEdition(Item item, DefinedGroup definedGroup) {
+        return item.getEdition().getName().equals(definedGroup.getEdition().getName());
     }
 
     private boolean definedGroupsBelongToTheSameUser(DefinedGroup definedGroup, DefinedGroup definedGroup1) {
@@ -246,31 +246,31 @@ public class FullDBPopulator {
         return definedGroup.getEdition().getName().equals(definedGroup1.getEdition().getName());
     }
 
-    private boolean productsBelongsToTheSameUser(Product product, Product product1) {
-        return product.getUser().getEmail().equals(product1.getUser().getEmail());
+    private boolean itemsBelongsToTheSameUser(Item item, Item item1) {
+        return item.getUser().getEmail().equals(item1.getUser().getEmail());
     }
 
-    private Map<String, Preference> preferencesOfProduct = new HashMap<>();
+    private Map<String, Preference> preferencesOfItem = new HashMap<>();
 
-    private Preference createPreference(Product product, Product product1) {
+    private Preference createPreference(Item item, Item item1) {
 
-        Preference preference = preferencesOfProduct.get(product.getName());
+        Preference preference = preferencesOfItem.get(item.getName());
         if (preference == null) {
             preference = new Preference()
-                    .setUser(product.getUser())
-                    .setEdition(product.getEdition())
-                    .setHaveProduct(product)
-                    .setWantedProducts(new HashSet<>())
+                    .setUser(item.getUser())
+                    .setEdition(item.getEdition())
+                    .setHaveItem(item)
+                    .setWantedItems(new HashSet<>())
                     .setWantedDefinedGroups(new HashSet<>())
-                    .setEdition(product.getEdition());
-            preferencesOfProduct.put(product.getName(), preference);
+                    .setEdition(item.getEdition());
+            preferencesOfItem.put(item.getName(), preference);
         }
-        preference.getWantedProducts().add(product1);
+        preference.getWantedItems().add(item1);
 
         return preference;
     }
 
-    private boolean areNeightbourProductsInTheSameEdition(Product a, Product b) {
+    private boolean areNeightbourItemsInTheSameEdition(Item a, Item b) {
         return a.getEdition().getName().equals(b.getEdition().getName());
     }
 

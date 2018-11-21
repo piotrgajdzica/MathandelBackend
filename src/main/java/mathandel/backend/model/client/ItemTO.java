@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
-public class ProductTO {
+public class ItemTO {
 
     private Long id;
     @NotBlank
@@ -23,7 +23,7 @@ public class ProductTO {
         return id;
     }
 
-    public ProductTO setId(Long id) {
+    public ItemTO setId(Long id) {
         this.id = id;
         return this;
     }
@@ -32,7 +32,7 @@ public class ProductTO {
         return name;
     }
 
-    public ProductTO setName(String name) {
+    public ItemTO setName(String name) {
         this.name = name;
         return this;
     }
@@ -41,7 +41,7 @@ public class ProductTO {
         return description;
     }
 
-    public ProductTO setDescription(String description) {
+    public ItemTO setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -50,7 +50,7 @@ public class ProductTO {
         return userId;
     }
 
-    public ProductTO setUserId(Long userId) {
+    public ItemTO setUserId(Long userId) {
         this.userId = userId;
         return this;
     }
@@ -59,7 +59,7 @@ public class ProductTO {
         return images;
     }
 
-    public ProductTO setImages(Set<ImageTO> images) {
+    public ItemTO setImages(Set<ImageTO> images) {
         this.images = images;
         return this;
     }
@@ -68,7 +68,7 @@ public class ProductTO {
         return editionId;
     }
 
-    public ProductTO setEditionId(Long editionId) {
+    public ItemTO setEditionId(Long editionId) {
         this.editionId = editionId;
         return this;
     }
@@ -79,15 +79,15 @@ public class ProductTO {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProductTO product = (ProductTO) o;
+        ItemTO item = (ItemTO) o;
 
         return new EqualsBuilder()
-                .append(id, product.id)
-                .append(name, product.name)
-                .append(description, product.description)
-                .append(userId, product.userId)
-                .append(editionId, product.editionId)
-                .append(images, product.images)
+                .append(id, item.id)
+                .append(name, item.name)
+                .append(description, item.description)
+                .append(userId, item.userId)
+                .append(editionId, item.editionId)
+                .append(images, item.images)
                 .isEquals();
     }
 

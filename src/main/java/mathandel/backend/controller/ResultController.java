@@ -1,7 +1,6 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.model.client.ResultTO;
-import mathandel.backend.model.server.Result;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ResultService;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.editionResultsPath;
-import static mathandel.backend.utils.UrlPaths.resultsProductsToReceiveByUserPath;
-import static mathandel.backend.utils.UrlPaths.resultsProductsToSendByUserPath;
+import static mathandel.backend.utils.UrlPaths.resultsItemsToReceiveByUserPath;
+import static mathandel.backend.utils.UrlPaths.resultsItemsToSendByUserPath;
 
 @Controller
 public class ResultController {
@@ -27,19 +26,19 @@ public class ResultController {
     }
 
     // documented
-    @GetMapping(resultsProductsToSendByUserPath)
+    @GetMapping(resultsItemsToSendByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ResultTO> getEditionProductsToSendForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
-        return resultService.getEditionProductsToSendForUser(currentUser.getId(), editionId);
+    Set<ResultTO> getEditionItemsToSendForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
+        return resultService.getEditionItemsToSendForUser(currentUser.getId(), editionId);
     }
 
     // documented
-    @GetMapping(resultsProductsToReceiveByUserPath)
+    @GetMapping(resultsItemsToReceiveByUserPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    Set<ResultTO> getEditionProductsToReceiveForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
-        return resultService.getEditionProductsToReceiveForUser(currentUser.getId(), editionId);
+    Set<ResultTO> getEditionItemsToReceiveForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
+        return resultService.getEditionItemsToReceiveForUser(currentUser.getId(), editionId);
     }
 
     // documented

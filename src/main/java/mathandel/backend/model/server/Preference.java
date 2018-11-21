@@ -19,10 +19,10 @@ public class Preference {
 
     @NaturalId
     @OneToOne
-    private Product haveProduct;
+    private Item haveItem;
 
     @ManyToMany
-    private Set<Product> wantedProducts = new HashSet<>();
+    private Set<Item> wantedItems = new HashSet<>();
 
     @ManyToMany
     private Set<DefinedGroup> wantedDefinedGroups = new HashSet<>();
@@ -34,12 +34,12 @@ public class Preference {
         return wantedDefinedGroups;
     }
 
-    public Set<Product> getWantedProducts() {
-        return wantedProducts;
+    public Set<Item> getWantedItems() {
+        return wantedItems;
     }
 
-    public Preference setWantedProducts(Set<Product> wantedProducts) {
-        this.wantedProducts = wantedProducts;
+    public Preference setWantedItems(Set<Item> wantedItems) {
+        this.wantedItems = wantedItems;
         return this;
     }
 
@@ -66,12 +66,12 @@ public class Preference {
         return this;
     }
 
-    public Product getHaveProduct() {
-        return haveProduct;
+    public Item getHaveItem() {
+        return haveItem;
     }
 
-    public Preference setHaveProduct(Product haveProduct) {
-        this.haveProduct = haveProduct;
+    public Preference setHaveItem(Item haveItem) {
+        this.haveItem = haveItem;
         return this;
     }
 

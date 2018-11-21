@@ -81,7 +81,7 @@ public class RateTypeServiceTest {
 //    }
 
     @Test
-    public void shouldThrowExceptionWhenUserIsNotReceiverOfProductThatHeWantsToRate() {
+    public void shouldThrowExceptionWhenUserIsNotReceiverOfItemThatHeWantsToRate() {
         //given
         initializeTransactionRateTO();
 

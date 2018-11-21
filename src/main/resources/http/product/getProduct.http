@@ -1,5 +1,0 @@
-GET http://localhost:8080/api/products/2
-Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMTQ2Mjc1LCJleHAiOjE1NDI3NTEwNzV9.AyJVNrqKrSgAa5PzdlAMubIIzsXluKK5-vtgCSzBh9qLEejXpLICO7V-s-ndWh7OsZb36i2KuaOzgLh8wx_qBw
-
-###

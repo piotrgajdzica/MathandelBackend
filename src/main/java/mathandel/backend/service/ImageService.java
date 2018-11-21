@@ -6,10 +6,10 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.ImageTO;
 import mathandel.backend.model.server.Image;
-import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.Item;
 import mathandel.backend.model.server.User;
 import mathandel.backend.repository.ImageRepository;
-import mathandel.backend.repository.ProductRepository;
+import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,31 +34,31 @@ public class ImageService {
     @Value("${maximum-file-size}")
     private long maxSize;
 
-    @Value("${maximum-images-per-product}")
-    private int maxImagesPerProduct;
+    @Value("${maximum-images-per-item}")
+    private int maxImagesPerItem;
 
-    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
 
-    public ImageService(ProductRepository productRepository, UserRepository userRepository, ImageRepository imageRepository) {
-        this.productRepository = productRepository;
+    public ImageService(ItemRepository itemRepository, UserRepository userRepository, ImageRepository imageRepository) {
+        this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
     }
 
-    public ImageTO addImage(Long userId, Long productId, MultipartFile file) {
+    public ImageTO addImage(Long userId, Long itemId, MultipartFile file) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
         String basePath = new File("").getAbsolutePath();
         String extension = getExtension(file.getContentType());
-        String name = generateName(userId, productId) + "." + extension;
+        String name = generateName(userId, itemId) + "." + extension;
 
-        if (!product.getUser().equals(user)) {
-            throw new BadRequestException("You are not the owner of this product");
+        if (!item.getUser().equals(user)) {
+            throw new BadRequestException("You are not the owner of this item");
         }
-        if (product.getImages().size() == maxImagesPerProduct) {
-            throw new BadRequestException("Product already has 3 images");
+        if (item.getImages().size() == maxImagesPerItem) {
+            throw new BadRequestException("Item already has 3 images");
         }
         if (file.getSize() > maxSize) {
             throw new BadRequestException("File cannot exceed 5mb");
@@ -82,16 +82,16 @@ public class ImageService {
         Image image = new Image()
                 .setName(name);
 
-        product.getImages().add(image);
+        item.getImages().add(image);
 
         Image uploadedImage = imageRepository.save(image);
         return mapImage(uploadedImage);
     }
 
-    private String generateName(Long userId, Long productId) {
+    private String generateName(Long userId, Long itemId) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
         String dateString = format.format(new Date());
-        return userId.toString() + "_" + productId + "_" + dateString;
+        return userId.toString() + "_" + itemId + "_" + dateString;
     }
 
     public byte[] getImage(String imageName) {
@@ -103,19 +103,19 @@ public class ImageService {
         }
     }
 
-    public ApiResponse deleteImage(Long userId, Long productId, String imageName) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+    public ApiResponse deleteImage(Long userId, Long itemId, String imageName) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
         Image image = imageRepository.findByName(imageName).orElseThrow(() -> new ResourceNotFoundException("Image", "name", imageName));
         String basePath = new File("").getAbsolutePath();
 
-        if(!product.getUser().getId().equals(userId)) {
-            throw new BadRequestException("You are not the owner of this product");
+        if(!item.getUser().getId().equals(userId)) {
+            throw new BadRequestException("You are not the owner of this item");
         }
-        if(!product.getImages().contains(image)) {
-            throw new BadRequestException("This image does not belong to your this product");
+        if(!item.getImages().contains(image)) {
+            throw new BadRequestException("This image does not belong to your this item");
         }
 
-        product.getImages().remove(image);
+        item.getImages().remove(image);
         imageRepository.delete(image);
         File file = new File(basePath + "\\src\\main\\resources\\images\\" + imageName);
         if(!file.delete()) {

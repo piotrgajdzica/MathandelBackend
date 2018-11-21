@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "items")
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +25,14 @@ public class Product {
     @OneToMany
     private Set<Image> images = new HashSet<>();
 
-    public Product() {
+    public Item() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public Product setId(Long id) {
+    public Item setId(Long id) {
         this.id = id;
         return this;
     }
@@ -41,7 +41,7 @@ public class Product {
         return name;
     }
 
-    public Product setName(String name) {
+    public Item setName(String name) {
         this.name = name;
         return this;
     }
@@ -50,7 +50,7 @@ public class Product {
         return description;
     }
 
-    public Product setDescription(String description) {
+    public Item setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -59,7 +59,7 @@ public class Product {
         return user;
     }
 
-    public Product setUser(User user) {
+    public Item setUser(User user) {
         this.user = user;
         return this;
     }
@@ -68,7 +68,7 @@ public class Product {
         return edition;
     }
 
-    public Product setEdition(Edition edition) {
+    public Item setEdition(Edition edition) {
         this.edition = edition;
         return this;
     }
@@ -77,7 +77,7 @@ public class Product {
         return images;
     }
 
-    public Product setImages(Set<Image> images) {
+    public Item setImages(Set<Image> images) {
         this.images = images;
         return this;
     }

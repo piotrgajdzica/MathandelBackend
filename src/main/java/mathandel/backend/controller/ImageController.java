@@ -24,13 +24,13 @@ public class ImageController {
     }
 
     // documented
-    @PostMapping(productImagesPath)
+    @PostMapping(itemImagesPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ImageTO addImage(@CurrentUser UserPrincipal current,
-                     @PathVariable Long productId,
+                     @PathVariable Long itemId,
                      @RequestParam("image") MultipartFile multipartFile) {
-        return imageService.addImage(current.getId(), productId, multipartFile);
+        return imageService.addImage(current.getId(), itemId, multipartFile);
     }
 
     // documented
@@ -44,12 +44,12 @@ public class ImageController {
     }
 
     // documented
-    @DeleteMapping(productImagePath)
+    @DeleteMapping(itemImagePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ApiResponse deleteImage(@CurrentUser UserPrincipal current,
                             @PathVariable String imageName,
-                            @PathVariable Long productId) {
-        return imageService.deleteImage(current.getId(), productId, imageName);
+                            @PathVariable Long itemId) {
+        return imageService.deleteImage(current.getId(), itemId, imageName);
     }
 }

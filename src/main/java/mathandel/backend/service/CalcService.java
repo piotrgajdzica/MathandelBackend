@@ -25,7 +25,7 @@ public class CalcService {
     private PreferenceRepository preferenceRepository;
     private DefinedGroupRepository definedGroupRepository;
     private ResultRepository resultRepository;
-    private ProductRepository productRepository;
+    private ItemRepository itemRepository;
     private EditionRepository editionRepository;
     private final EditionService editionService;
     private final RestTemplate restTemplate;
@@ -33,11 +33,11 @@ public class CalcService {
     @Value("${calc.service.url}")
     private String CALC_SERVICE_URL;
 
-    public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ProductRepository productRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
+    public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ItemRepository itemRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
         this.preferenceRepository = preferenceRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.resultRepository = resultRepository;
-        this.productRepository = productRepository;
+        this.itemRepository = itemRepository;
         this.editionRepository = editionRepository;
         this.editionService = editionService;
         this.restTemplate = restTemplate;
@@ -61,7 +61,7 @@ public class CalcService {
             saveResultsFromJsonData(editionId, result);
 
             editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);
-            nullEditionIdsOfAllProductsThatWerentChosen(editionId);
+            nullEditionIdsOfAllItemsThatWerentChosen(editionId);
 
             return new ApiResponse("Edition closed, you can now check for results");
         } catch (Exception e) {
@@ -82,20 +82,20 @@ public class CalcService {
     }
 
     private Result getResult(Long editionId, JSONObject node) {
-        Long receiversProductId = node.getLong("receiver");
-        Long productToSentId = node.getLong("sender");
+        Long receiversItemId = node.getLong("receiver");
+        Long itemToSentId = node.getLong("sender");
 
-        Product productToSent = productRepository.findById(productToSentId).orElseThrow(() -> new AppException("Product not found, probably the calculation data have been corrupted"));
-        Product receiversProduct = productRepository.findById(receiversProductId).orElseThrow(() -> new AppException("Product not found,probably the calculation data have been corrupted"));
+        Item itemToSent = itemRepository.findById(itemToSentId).orElseThrow(() -> new AppException("Item not found, probably the calculation data have been corrupted"));
+        Item receiversItem = itemRepository.findById(receiversItemId).orElseThrow(() -> new AppException("Item not found,probably the calculation data have been corrupted"));
 
-        User receiver = receiversProduct.getUser();
-        User sender = productToSent.getUser();
+        User receiver = receiversItem.getUser();
+        User sender = itemToSent.getUser();
 
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new AppException("Edition not found"));
 
         return new Result()
                 .setEdition(edition)
-                .setProductToSend(productToSent)
+                .setItemToSend(itemToSent)
                 .setReceiver(receiver)
                 .setSender(sender);
     }
@@ -116,31 +116,31 @@ public class CalcService {
     private JSONObject mapGroup(DefinedGroup definedGroup) {
         return new JSONObject()
                 .put("id", definedGroup.getId())
-                .put("single_preferences", new JSONArray(definedGroup.getProducts().stream().map(Product::getId).collect(Collectors.toList())))
+                .put("single_preferences", new JSONArray(definedGroup.getItems().stream().map(Item::getId).collect(Collectors.toList())))
                 .put("groups", new JSONArray(definedGroup.getGroups().stream().map(DefinedGroup::getId).collect(Collectors.toList())));
     }
 
 
     private JSONObject mapPreference(Preference preference) {
         return new JSONObject()
-                .put("id", preference.getHaveProduct().getId())
-                .put("single_preferences", new JSONArray(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toList())))
+                .put("id", preference.getHaveItem().getId())
+                .put("single_preferences", new JSONArray(preference.getWantedItems().stream().map(Item::getId).collect(Collectors.toList())))
                 .put("groups", new JSONArray(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toList())));
     }
 
-    private void nullEditionIdsOfAllProductsThatWerentChosen(Long editionId) {
-        Set<Long> resultProductsIds = resultRepository.findAllByEdition_Id(editionId).stream().map(r -> r.getProductToSend().getId()).collect(Collectors.toSet());
-        Set<Product> editionProducts = productRepository.findAllByEdition_Id(editionId);
-        Set<Product> notAssignedProducts = new HashSet<>();
+    private void nullEditionIdsOfAllItemsThatWerentChosen(Long editionId) {
+        Set<Long> resultItemsIds = resultRepository.findAllByEdition_Id(editionId).stream().map(r -> r.getItemToSend().getId()).collect(Collectors.toSet());
+        Set<Item> editionItems = itemRepository.findAllByEdition_Id(editionId);
+        Set<Item> notAssignedItems = new HashSet<>();
 
-        for (Product p : editionProducts) {
+        for (Item p : editionItems) {
 
-            if (!resultProductsIds.contains(p.getId())) {
+            if (!resultItemsIds.contains(p.getId())) {
                 p.setEdition(null);
-                notAssignedProducts.add(p);
+                notAssignedItems.add(p);
             }
         }
 
-        productRepository.saveAll(notAssignedProducts);
+        itemRepository.saveAll(notAssignedItems);
     }
 }

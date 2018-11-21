@@ -3,8 +3,6 @@ package mathandel.backend.controller;
 import mathandel.backend.model.client.request.MakeUserEditionModeratorRequest;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.client.EditionTO;
-import mathandel.backend.model.client.PreferenceTO;
-import mathandel.backend.model.server.Result;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.*;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
 
@@ -26,7 +23,7 @@ public class EditionController {
     private final PreferenceService preferenceService;
     private final ResultService resultService;
 
-    public EditionController(EditionService editionService, UserService userService, ProductService productService, PreferenceService preferenceService, ResultService resultService) {
+    public EditionController(EditionService editionService, UserService userService, ItemService itemService, PreferenceService preferenceService, ResultService resultService) {
         this.editionService = editionService;
         this.userService = userService;
         this.preferenceService = preferenceService;

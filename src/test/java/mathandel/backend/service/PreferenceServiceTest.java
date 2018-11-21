@@ -2,8 +2,8 @@ package mathandel.backend.service;
 
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.server.Edition;
+import mathandel.backend.model.server.Item;
 import mathandel.backend.model.server.Preference;
-import mathandel.backend.model.server.Product;
 import mathandel.backend.model.server.User;
 import mathandel.backend.repository.*;
 import org.junit.After;
@@ -25,9 +25,9 @@ import static org.mockito.Mockito.clearInvocations;
 @SpringBootTest
 public class PreferenceServiceTest {
 
-    private final Long wantProductId = 1L;
-    private final Long wantGroupProductId = 1L;
-    private final Long haveProductId = 2L;
+    private final Long wantItemId = 1L;
+    private final Long wantGroupItemId = 1L;
+    private final Long haveItemId = 2L;
     private final Long userId = 1L;
 
     private EditionTO editionTO = new EditionTO()
@@ -62,37 +62,37 @@ public class PreferenceServiceTest {
     private User user;
 
     @Mock
-    private Product haveProduct;
+    private Item haveItem;
     @Mock
-    private Product wantProduct;
+    private Item wantItem;
 
 
     @After
     public void tearDown() {
-        clearInvocations(haveProduct, wantProduct, user, userRepository, editionStatusTypeRepository, editionRepository, preferenceRepository, definedGroupRepository);
+        clearInvocations(haveItem, wantItem, user, userRepository, editionStatusTypeRepository, editionRepository, preferenceRepository, definedGroupRepository);
     }
     // todo to refactor :'(
 
 
 //    @MockBean
-//    ProductRepository productRepository;
+//    ItemRepository itemRepository;
 //    private DefinedGroup wantDefinedGroup = new DefinedGroup();
 //
 //    @Test
 //    public void shouldAddNewPreference() {
 //        // given
-//        when(productRepository.findById(haveProductId)).thenReturn(Optional.of(haveProduct));
-//        when(haveProduct.getUser()).thenReturn(user);
+//        when(itemRepository.findById(haveItemId)).thenReturn(Optional.of(haveItem));
+//        when(haveItem.getUser()).thenReturn(user);
 //        when(user.getId()).thenReturn(userId);
-//        when(preferenceRepository.findByHaveProduct_Id(haveProductId)).thenReturn(null);
+//        when(preferenceRepository.findByHaveItem_Id(haveItemId)).thenReturn(null);
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
-//        Set<Long> wantProductsIds = new HashSet<>();
-//        wantProductsIds.add(wantProductId);
-//        when(productRepository.findById(wantProductId)).thenReturn(Optional.of(wantProduct));
+//        Set<Long> wantItemsIds = new HashSet<>();
+//        wantItemsIds.add(wantItemId);
+//        when(itemRepository.findById(wantItemId)).thenReturn(Optional.of(wantItem));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveItemId, wantItemsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -102,18 +102,18 @@ public class PreferenceServiceTest {
 //    @Test
 //    public void shouldAddToExistingPreference() {
 //        // given
-//        when(productRepository.findById(haveProductId)).thenReturn(Optional.of(haveProduct));
-//        when(haveProduct.getUser()).thenReturn(user);
+//        when(itemRepository.findById(haveItemId)).thenReturn(Optional.of(haveItem));
+//        when(haveItem.getUser()).thenReturn(user);
 //        when(user.getId()).thenReturn(userId);
-//        when(preferenceRepository.findByHaveProduct_Id(haveProductId)).thenReturn(preference);
+//        when(preferenceRepository.findByHaveItem_Id(haveItemId)).thenReturn(preference);
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
-//        Set<Long> wantProductsIds = new HashSet<>();
-//        wantProductsIds.add(wantProductId);
-//        when(productRepository.findById(wantProductId)).thenReturn(Optional.of(wantProduct));
+//        Set<Long> wantItemsIds = new HashSet<>();
+//        wantItemsIds.add(wantItemId);
+//        when(itemRepository.findById(wantItemId)).thenReturn(Optional.of(wantItem));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveItemId, wantItemsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -123,18 +123,18 @@ public class PreferenceServiceTest {
 //    @Test
 //    public void shouldAddNewGroupPreference() {
 //        // given
-//        when(productRepository.findById(haveProductId)).thenReturn(Optional.of(haveProduct));
-//        when(haveProduct.getUser()).thenReturn(user);
+//        when(itemRepository.findById(haveItemId)).thenReturn(Optional.of(haveItem));
+//        when(haveItem.getUser()).thenReturn(user);
 //        when(user.getId()).thenReturn(userId);
-//        when(preferenceRepository.findByHaveProduct_Id(haveProductId)).thenReturn(null);
+//        when(preferenceRepository.findByHaveItem_Id(haveItemId)).thenReturn(null);
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
-//        Set<Long> wantGroupProductsIds = new HashSet<>();
-//        wantGroupProductsIds.add(wantGroupProductId);
-//        when(definedGroupRepository.findById(wantGroupProductId)).thenReturn(Optional.of(wantDefinedGroup));
+//        Set<Long> wantGroupItemsIds = new HashSet<>();
+//        wantGroupItemsIds.add(wantGroupItemId);
+//        when(definedGroupRepository.findById(wantGroupItemId)).thenReturn(Optional.of(wantDefinedGroup));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantGroupProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveItemId, wantGroupItemsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");
@@ -145,18 +145,18 @@ public class PreferenceServiceTest {
 //    @Test
 //    public void shouldAddToExistingGroupPreference() {
 //        // given
-//        when(productRepository.findById(haveProductId)).thenReturn(Optional.of(haveProduct));
-//        when(haveProduct.getUser()).thenReturn(user);
+//        when(itemRepository.findById(haveItemId)).thenReturn(Optional.of(haveItem));
+//        when(haveItem.getUser()).thenReturn(user);
 //        when(user.getId()).thenReturn(userId);
-//        when(preferenceRepository.findByHaveProduct_Id(haveProductId)).thenReturn(preference);
+//        when(preferenceRepository.findByHaveItem_Id(haveItemId)).thenReturn(preference);
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
-//        Set<Long> wantGroupProductsIds = new HashSet<>();
-//        wantGroupProductsIds.add(wantGroupProductId);
-//        when(definedGroupRepository.findById(wantGroupProductId)).thenReturn(Optional.of(wantDefinedGroup));
+//        Set<Long> wantGroupItemsIds = new HashSet<>();
+//        wantGroupItemsIds.add(wantGroupItemId);
+//        when(definedGroupRepository.findById(wantGroupItemId)).thenReturn(Optional.of(wantDefinedGroup));
 //
 //        // when
-//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveProductId, wantGroupProductsIds, editionId);
+//        ApiResponse apiResponse = preferenceService.updatePreference(userId, haveItemId, wantGroupItemsIds, editionId);
 //
 //        // then
 //        assertEquals(apiResponse.getMessage(), "Preference saved");

@@ -5,10 +5,8 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.server.*;
-import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -20,53 +18,48 @@ import static mathandel.backend.utils.ServerToClientDataConverter.mapPreferences
 @Service
 public class PreferenceService {
 
-    private ProductRepository productRepository;
+    private ItemRepository itemRepository;
     private PreferenceRepository preferenceRepository;
     private EditionRepository editionRepository;
     private UserRepository userRepository;
     private DefinedGroupRepository definedGroupRepository;
 
-    public PreferenceService(ProductRepository productRepository, PreferenceRepository preferenceRepository, EditionRepository editionRepository, UserRepository userRepository, DefinedGroupRepository definedGroupRepository) {
-        this.productRepository = productRepository;
+    public PreferenceService(ItemRepository itemRepository, PreferenceRepository preferenceRepository, EditionRepository editionRepository, UserRepository userRepository, DefinedGroupRepository definedGroupRepository) {
+        this.itemRepository = itemRepository;
         this.preferenceRepository = preferenceRepository;
         this.editionRepository = editionRepository;
         this.userRepository = userRepository;
         this.definedGroupRepository = definedGroupRepository;
     }
 
-    public PreferenceTO updatePreference(Long userId, PreferenceTO preferenceTO, Long editionId, Long productId) {
+    public PreferenceTO updatePreference(Long userId, PreferenceTO preferenceTO, Long editionId, Long itemId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException("User doesn't exist."));
         Edition edition = editionRepository.findById(editionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-        Product haveProduct = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        Item haveItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
 
-        if(!haveProduct.getEdition().getId().equals(editionId)){
-            throw new BadRequestException("Product not in this edition");
+        if(!haveItem.getEdition().getId().equals(editionId)){
+            throw new BadRequestException("Item not in this edition");
         }
-        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
-            throw new BadRequestException("Edition is not opened");
-        }
-        if (!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("User is not in this edition");
-        }
-        if (!haveProduct.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User is not an owner of this product");
+        ItemService.validateEditionAndUser(user, edition);
+        if (!haveItem.getUser().getId().equals(userId)) {
+            throw new BadRequestException("User is not an owner of this item");
         }
 
-        Optional<Preference> optionalPreference = preferenceRepository.findByHaveProduct_Id(productId);
+        Optional<Preference> optionalPreference = preferenceRepository.findByHaveItem_Id(itemId);
         Preference preference = optionalPreference.orElseGet(() -> new Preference()
-                .setHaveProduct(haveProduct)
+                .setHaveItem(haveItem)
                 .setUser(user)
                 .setEdition(edition));
 
-        Set<Product> products = new HashSet<>(productRepository.findAllById(preferenceTO.getWantedProductsIds()));
+        Set<Item> items = new HashSet<>(itemRepository.findAllById(preferenceTO.getWantedItemsIds()));
         Set<DefinedGroup> groups = new HashSet<>(definedGroupRepository.findAllById(preferenceTO.getWantedDefinedGroupsIds()));
 
-        for (Product product : products) {
-            if (product.getUser().getId().equals(userId)) {
-                throw new BadRequestException("User is the owner of product " + product.getId());
+        for (Item item : items) {
+            if (item.getUser().getId().equals(userId)) {
+                throw new BadRequestException("User is the owner of item " + item.getId());
             }
         }
 
@@ -76,7 +69,7 @@ public class PreferenceService {
             }
         }
 
-        preference.setWantedProducts(products);
+        preference.setWantedItems(items);
         preference.setWantedDefinedGroups(groups);
 
         return mapPreference(preferenceRepository.save(preference));
@@ -88,26 +81,21 @@ public class PreferenceService {
         Edition edition = editionRepository.findById(editionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
-            throw new BadRequestException("Edition is not opened");
-        }
-        if (!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("User is not in this edition");
-        }
+        ItemService.validateEditionAndUser(user, edition);
 
         return mapPreferences(preferenceRepository.findAllByUser_IdAndEdition_Id(userId, editionId));
     }
 
-    public PreferenceTO getPreferenceForProduct(Long userId, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+    public PreferenceTO getPreferenceForItem(Long userId, Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
 
-        if (!product.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User is not allowed to know other's user products preferences");
+        if (!item.getUser().getId().equals(userId)) {
+            throw new BadRequestException("User is not allowed to know other's user items preferences");
         }
 
-        Preference preference = preferenceRepository.findByHaveProduct_Id(productId).orElseThrow(
-                () -> new ResourceNotFoundException("Preference", "productId", productId));
+        Preference preference = preferenceRepository.findByHaveItem_Id(itemId).orElseThrow(
+                () -> new ResourceNotFoundException("Preference", "itemId", itemId));
 
         return mapPreference(preference);
     }

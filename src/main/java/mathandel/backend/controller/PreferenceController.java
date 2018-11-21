@@ -22,14 +22,14 @@ public class PreferenceController {
     }
 
     // documented
-    @PostMapping(editionProductPreferencePath)
+    @PostMapping(editionItemPreferencePath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     PreferenceTO updatePreference(@CurrentUser UserPrincipal currentUser,
                                   @RequestBody PreferenceTO preferenceTO,
                                   @PathVariable Long editionId,
-                                  @PathVariable Long productId) {
-        return preferenceService.updatePreference(currentUser.getId(), preferenceTO, editionId, productId);
+                                  @PathVariable Long itemId) {
+        return preferenceService.updatePreference(currentUser.getId(), preferenceTO, editionId, itemId);
     }
 
     // documented
@@ -42,10 +42,10 @@ public class PreferenceController {
     }
 
     // documented
-    @GetMapping(preferenceForProductPath)
+    @GetMapping(preferenceForItemPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    PreferenceTO getPreferenceForProduct(@CurrentUser UserPrincipal current, @PathVariable Long productId) {
-        return preferenceService.getPreferenceForProduct(current.getId(), productId);
+    PreferenceTO getPreferenceForItem(@CurrentUser UserPrincipal current, @PathVariable Long itemId) {
+        return preferenceService.getPreferenceForItem(current.getId(), itemId);
     }
 }

@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/products/not-assigned
+GET http://localhost:8080/api/items/not-assigned
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMDI1ODYxLCJleHAiOjE1NDI2MzA2NjF9.W4_l_myqmRCbLB2EWrbl-b8pF8F3j14qOAPI6jPCRmQFEv5M6FtEwCQ_ryMaak8TqPA7JSPzu_C3ewfEeNWv9g
 

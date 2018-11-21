@@ -10,7 +10,7 @@ public class DefinedGroupTO {
     @NotBlank
     @Size(min = 4, max = 40)
     private String name;
-    private Set<Long> productsIds;
+    private Set<Long> itemsIds;
     private Set<Long> groupIds;
 
     public Long getId() {
@@ -31,12 +31,12 @@ public class DefinedGroupTO {
         return this;
     }
 
-    public Set<Long> getProductsIds() {
-        return productsIds;
+    public Set<Long> getItemsIds() {
+        return itemsIds;
     }
 
-    public DefinedGroupTO setProductsIds(Set<Long> productsIds) {
-        this.productsIds = productsIds;
+    public DefinedGroupTO setItemsIds(Set<Long> itemsIds) {
+        this.itemsIds = itemsIds;
         return this;
     }
 

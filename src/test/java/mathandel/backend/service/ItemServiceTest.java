@@ -1,17 +1,16 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
-import mathandel.backend.model.client.ProductTO;
+import mathandel.backend.model.client.ItemTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
-import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.Item;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
-import mathandel.backend.repository.ProductRepository;
+import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,33 +34,33 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class ProductServiceTest {
+public class ItemServiceTest {
 
     private final Long userId = 1L;
-    private final Long productId = 1L;
+    private final Long itemId = 1L;
     private final Long editionId = 1L;
-    private final String productName = "Name";
-    private final String productDescription = "Description";
+    private final String itemName = "Name";
+    private final String itemDescription = "Description";
 
     private User user = new User()
             .setId(userId);
 
-    private ProductTO productTOrequest = new ProductTO()
-            .setName(productName)
-            .setDescription(productDescription);
+    private ItemTO itemTOrequest = new ItemTO()
+            .setName(itemName)
+            .setDescription(itemDescription);
 
-    private ProductTO productTO = new ProductTO()
+    private ItemTO itemTO = new ItemTO()
             .setUserId(userId)
-            .setName(productName)
-            .setDescription(productDescription)
-            .setId(productId)
+            .setName(itemName)
+            .setDescription(itemDescription)
+            .setId(itemId)
             .setImages(new HashSet<>());
 
-    private Product product = new Product()
-            .setName(productName)
-            .setDescription(productDescription)
+    private Item item = new Item()
+            .setName(itemName)
+            .setDescription(itemDescription)
             .setUser(user)
-            .setId(productId);
+            .setId(itemId);
 
     private Edition edition = new Edition()
             .setId(editionId)
@@ -72,93 +71,93 @@ public class ProductServiceTest {
     UserRepository userRepository;
 
     @MockBean
-    ProductRepository productRepository;
+    ItemRepository itemRepository;
 
     @MockBean
     EditionRepository editionRepository;
 
     @Autowired
-    ProductService productService;
+    ItemService itemService;
 
     @Test
-    public void shouldCreateProduct() {
+    public void shouldCreateItem() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.save(any())).thenReturn(product);
+        when(itemRepository.save(any())).thenReturn(item);
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 
         //when
-        ProductTO actual = productService.createProduct(userId, editionId, productTOrequest);
+        ItemTO actual = itemService.createItem(userId, editionId, itemTOrequest);
 
         //then
-        assertThat(actual).isEqualTo(productTO);
+        assertThat(actual).isEqualTo(itemTO);
     }
 
 
     @Test
-    public void shouldFailOnCreateProductUserDoesntExist() {
+    public void shouldFailOnCreateItemUserDoesntExist() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //when then
         AppException appException = assertThrows(AppException.class,
-                () -> productService.createProduct(userId, editionId, productTOrequest));
+                () -> itemService.createItem(userId, editionId, itemTOrequest));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist");
     }
 
     @Test
-    public void shouldEditProduct() {
+    public void shouldEditItem() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        when(productRepository.save(any())).thenReturn(product);
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
 
         //when
-        ProductTO product = productService.editProduct(userId, productTOrequest, productId);
+        ItemTO item = itemService.editItem(userId, itemTOrequest, itemId);
 
         //then
-        assertThat(product.getName()).isEqualTo(productTO.getName());
-        assertThat(product.getDescription()).isEqualTo(productTO.getDescription());
-        assertThat(product.getUserId()).isEqualTo(productTO.getUserId());
+        assertThat(item.getName()).isEqualTo(itemTO.getName());
+        assertThat(item.getDescription()).isEqualTo(itemTO.getDescription());
+        assertThat(item.getUserId()).isEqualTo(itemTO.getUserId());
     }
 
     @Test
-    public void shouldFailOnEditProductEditionIsClosed() {
+    public void shouldFailOnEditItemEditionIsClosed() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        product.setEdition(new Edition().setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED)));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        item.setEdition(new Edition().setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED)));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
-                () -> productService.editProduct(userId, productTOrequest, productId));
-        assertThat(badRequestException.getMessage()).isEqualTo("Product's edition is not opened");
+                () -> itemService.editItem(userId, itemTOrequest, itemId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Item's edition is not opened");
     }
 
     @Test
-    public void shouldFailOnEditProductUserHaveNoAccessToProduct() {
+    public void shouldFailOnEditItemUserHaveNoAccessToItem() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        product.setUser(new User().setId(2L));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        item.setUser(new User().setId(2L));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
-                () -> productService.editProduct(userId, productTOrequest, productId));
+                () -> itemService.editItem(userId, itemTOrequest, itemId));
         assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this resource");
     }
 
     @Test
-    public void shouldFailOnEditProductDoesntExist() {
+    public void shouldFailOnEditItemDoesntExist() {
         //given
-        ResourceNotFoundException expected = new ResourceNotFoundException("Product", "id", productId);
+        ResourceNotFoundException expected = new ResourceNotFoundException("Item", "id", itemId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+        when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
 
         //when then
         ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
-                () -> productService.editProduct(userId, productTOrequest, productId));
+                () -> itemService.editItem(userId, itemTOrequest, itemId));
         assertThat(resourceNotFoundException).isEqualTo(expected);
     }
 
@@ -168,183 +167,183 @@ public class ProductServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         //when
-        AppException appException = assertThrows(AppException.class, () -> productService.editProduct(userId, productTOrequest, productId));
+        AppException appException = assertThrows(AppException.class, () -> itemService.editItem(userId, itemTOrequest, itemId));
         assertThat(appException.getMessage()).isEqualTo("User doesn't exist.");
     }
 
     @Test
-    public void shouldGetProduct() {
+    public void shouldGetItem() {
         //given
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
 
         //when
-        ProductTO actual = productService.getProduct(productId);
+        ItemTO actual = itemService.getItem(itemId);
 
         //then
-        assertThat(actual).isEqualTo(productTO);
+        assertThat(actual).isEqualTo(itemTO);
     }
 
     @Test
-    public void shouldThrowResourceNotFoundExceptionOnGetProduct() {
+    public void shouldThrowResourceNotFoundExceptionOnGetItem() {
         //given
-        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+        when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
 
         //when then
-        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> productService.getProduct(productId));
-        assertThat(resourceNotFoundException.getResourceName()).isEqualTo("Product");
+        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> itemService.getItem(itemId));
+        assertThat(resourceNotFoundException.getResourceName()).isEqualTo("Item");
         assertThat(resourceNotFoundException.getFieldName()).isEqualTo("id");
-        assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(productId);
+        assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(itemId);
     }
 
     //todo fix
 //    @Test
-//    public void shouldAssignProductToEdition() {
+//    public void shouldAssignItemToEdition() {
 //        //given
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-//        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+//        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
 //        when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 //
 //        //when
-//        ApiResponse apiResponse = productService.assignProductToEdition(userId, editionId, productId);
+//        ApiResponse apiResponse = itemService.assignItemToEdition(userId, editionId, itemId);
 //
 //        //then
-//        assertThat(apiResponse.getMessage()).isEqualTo("Product successfully assigned to edition");
+//        assertThat(apiResponse.getMessage()).isEqualTo("Item successfully assigned to edition");
 //    }
 
     @Test
-    public void shouldFailOnAssignProductToEditionProductInEdition() {
+    public void shouldFailOnAssignItemToEditionItemInEdition() {
         //given
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product.setEdition(new Edition())));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item.setEdition(new Edition())));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
-                () -> productService.assignProductToEdition(userId, editionId, productId));
-        assertThat(badRequestException.getMessage()).isEqualTo("Product already in edition");
+                () -> itemService.assignItemToEdition(userId, editionId, itemId));
+        assertThat(badRequestException.getMessage()).isEqualTo("Item already in edition");
     }
 
     @Test
-    public void shouldFailOnAssignProductToEditionNoAccess() {
+    public void shouldFailOnAssignItemToEditionNoAccess() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product.setUser(new User().setId(10L))));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item.setUser(new User().setId(10L))));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
-                () -> productService.assignProductToEdition(userId, editionId, productId));
-        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this product");
+                () -> itemService.assignItemToEdition(userId, editionId, itemId));
+        assertThat(badRequestException.getMessage()).isEqualTo("You have no access to this item");
     }
 
     @Test
-    public void shouldFailOnAssignProductToEditionNotOpened() {
+    public void shouldFailOnAssignItemToEditionNotOpened() {
         //given
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition.setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED))));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         BadRequestException badRequestException = assertThrows(BadRequestException.class,
-                () -> productService.assignProductToEdition(userId, editionId, productId));
+                () -> itemService.assignItemToEdition(userId, editionId, itemId));
         assertThat(badRequestException.getMessage()).isEqualTo("Edition is not opened");
     }
 
     @Test
-    public void shouldFailOnAssignProductToEditionEditionDoesntExist() {
+    public void shouldFailOnAssignItemToEditionEditionDoesntExist() {
         //given
         ResourceNotFoundException expected = new ResourceNotFoundException("Edition", "id", editionId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(editionRepository.findById(editionId)).thenReturn(Optional.empty());
 
         //when then
         ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class,
-                () -> productService.assignProductToEdition(userId, editionId, productId));
+                () -> itemService.assignItemToEdition(userId, editionId, itemId));
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void shouldFailOnAssignProductToEditionProductDoesntExist() {
+    public void shouldFailOnAssignItemToEditionItemDoesntExist() {
         //given
-        ResourceNotFoundException expected = new ResourceNotFoundException("Product", "id", editionId);
-        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+        ResourceNotFoundException expected = new ResourceNotFoundException("Item", "id", editionId);
+        when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when then
         ResourceNotFoundException actual = assertThrows(ResourceNotFoundException.class,
-                () -> productService.assignProductToEdition(userId, editionId, productId));
+                () -> itemService.assignItemToEdition(userId, editionId, itemId));
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void shouldGetNotAssignedProducts() {
+    public void shouldGetNotAssignedItems() {
         //given
-        when(productRepository.findByUser_IdAndEditionIsNull(userId)).thenReturn(Collections.singleton(product));
+        when(itemRepository.findByUser_IdAndEditionIsNull(userId)).thenReturn(Collections.singleton(item));
 
         //when
-        Set<ProductTO> productTOs = productService.getNotAssignedProducts(userId);
+        Set<ItemTO> itemTOS = itemService.getNotAssignedItems(userId);
 
         //then
-        assertThat(productTOs.size()).isEqualTo(1);
-        assertThat(productTOs.contains(productTO)).isTrue();
+        assertThat(itemTOS.size()).isEqualTo(1);
+        assertThat(itemTOS.contains(itemTO)).isTrue();
     }
 
     @Test
-    public void shouldGetProductsFromEdition() {
+    public void shouldGetItemsFromEdition() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(editionRepository.existsById(editionId)).thenReturn(true);
-        when(productRepository.findByEdition_IdAndUser_IdNot(editionId, userId)).thenReturn(Collections.singleton(product));
+        when(itemRepository.findByEdition_IdAndUser_IdNot(editionId, userId)).thenReturn(Collections.singleton(item));
 
         //when
-        Set<ProductTO> productTOs = productService.getProductsFromEdition(userId, editionId);
+        Set<ItemTO> itemTOS = itemService.getItemsFromEdition(userId, editionId);
 
         //then
-        assertThat(productTOs.size()).isEqualTo(1);
-        assertThat(productTOs.contains(productTO)).isTrue();
+        assertThat(itemTOS.size()).isEqualTo(1);
+        assertThat(itemTOS.contains(itemTO)).isTrue();
     }
 
     @Test
-    public void shouldFailOnGetProductsFromEditionWhenEditionDoesntExist() {
+    public void shouldFailOnGetItemsFromEditionWhenEditionDoesntExist() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.existsById(editionId)).thenReturn(false);
 
         //when then
         ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
-                () -> productService.getProductsFromEdition(userId, editionId));
+                () -> itemService.getItemsFromEdition(userId, editionId));
         assertThat(resourceNotFoundException.getResourceName()).isEqualTo("Edition");
         assertThat(resourceNotFoundException.getFieldName()).isEqualTo("id");
         assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(editionId);
     }
 
     @Test
-    public void shouldGetMyProductsFromEdition() {
+    public void shouldGetMyItemsFromEdition() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.findById(editionId)).thenReturn(Optional.of(edition));
         when(editionRepository.existsById(editionId)).thenReturn(true);
-        when(productRepository.findByEdition_IdAndUser_Id(editionId, userId)).thenReturn(Collections.singleton(product));
+        when(itemRepository.findByEdition_IdAndUser_Id(editionId, userId)).thenReturn(Collections.singleton(item));
 
         //when
-        Set<ProductTO> productTOs = productService.getMyProductsFromEdition(userId, editionId);
+        Set<ItemTO> itemTOS = itemService.getMyItemsFromEdition(userId, editionId);
 
         //then
-        assertThat(productTOs.size()).isEqualTo(1);
-        assertThat(productTOs.contains(productTO)).isTrue();
+        assertThat(itemTOS.size()).isEqualTo(1);
+        assertThat(itemTOS.contains(itemTO)).isTrue();
     }
 
     @Test
-    public void shouldThrowExceptionOnGetMyProductsFromEditionWhenEditionDoesntExist() {
+    public void shouldThrowExceptionOnGetMyItemsFromEditionWhenEditionDoesntExist() {
         //given
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(editionRepository.existsById(editionId)).thenReturn(false);
 
         //when then
         ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
-                () -> productService.getMyProductsFromEdition(userId, editionId));
+                () -> itemService.getMyItemsFromEdition(userId, editionId));
         assertThat(resourceNotFoundException.getResourceName()).isEqualTo("Edition");
         assertThat(resourceNotFoundException.getFieldName()).isEqualTo("id");
         assertThat(resourceNotFoundException.getFieldValue()).isEqualTo(editionId);

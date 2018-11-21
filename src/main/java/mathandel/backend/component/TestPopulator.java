@@ -2,7 +2,7 @@ package mathandel.backend.component;
 
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
-import mathandel.backend.model.client.ProductTO;
+import mathandel.backend.model.client.ItemTO;
 import mathandel.backend.model.client.request.SignUpRequest;
 import mathandel.backend.service.*;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ if you want to use it add @Transactional annotations in methods
     - UserService.joinEdition()
     - PreferenceService.updatePreference()
     - EditionService.createEdition()
-    - ProductService.createProduct()
+    - ItemService.createItem()
     - CalcService.closeEdition()
 
 otherwise lazy fetch error will occur
@@ -30,15 +30,15 @@ public class TestPopulator {
 
     private final AuthService authService;
     private final EditionService editionService;
-    private final ProductService productService;
+    private final ItemService itemService;
     private final PreferenceService preferenceService;
     private final CalcService calcService;
     private final UserService userService;
 
-    public TestPopulator(AuthService authService, EditionService editionService, ProductService productService, PreferenceService preferenceService, CalcService calcService, UserService userService) {
+    public TestPopulator(AuthService authService, EditionService editionService, ItemService itemService, PreferenceService preferenceService, CalcService calcService, UserService userService) {
         this.authService = authService;
         this.editionService = editionService;
-        this.productService = productService;
+        this.itemService = itemService;
         this.preferenceService = preferenceService;
         this.calcService = calcService;
         this.userService = userService;
@@ -47,7 +47,7 @@ public class TestPopulator {
     public void populate() {
         createEdition();
         createUsers();
-        createProducts();
+        createItems();
         createPreferences();
         closeEdition();
     }
@@ -91,36 +91,36 @@ public class TestPopulator {
         userService.joinEdition(3L, 1L);
     }
 
-    private void createProducts() {
-        ProductTO product1 = new ProductTO()
-                .setName("product1")
-                .setDescription("product1 description")
+    private void createItems() {
+        ItemTO item1 = new ItemTO()
+                .setName("item1")
+                .setDescription("item1 description")
                 .setImages(Collections.emptySet());
 
-        ProductTO product2 = new ProductTO()
-                .setName("product2")
-                .setDescription("product2 description")
+        ItemTO item2 = new ItemTO()
+                .setName("item2")
+                .setDescription("item2 description")
                 .setImages(Collections.emptySet());
 
-        ProductTO product3 = new ProductTO()
-                .setName("product3")
-                .setDescription("product3 description")
+        ItemTO item3 = new ItemTO()
+                .setName("item3")
+                .setDescription("item3 description")
                 .setImages(Collections.emptySet());
 
-        productService.createProduct(1L, 1L, product1);
-        productService.createProduct(2L, 1L, product2);
-        productService.createProduct(3L, 1L, product3);
+        itemService.createItem(1L, 1L, item1);
+        itemService.createItem(2L, 1L, item2);
+        itemService.createItem(3L, 1L, item3);
     }
 
     private void createPreferences() {
         PreferenceTO preference1 = new PreferenceTO()
-                .setWantedProductsIds(Collections.singleton(2L))
+                .setWantedItemsIds(Collections.singleton(2L))
                 .setWantedDefinedGroupsIds(Collections.emptySet());
         PreferenceTO preference2 = new PreferenceTO()
-                .setWantedProductsIds(Collections.singleton(3L))
+                .setWantedItemsIds(Collections.singleton(3L))
                 .setWantedDefinedGroupsIds(Collections.emptySet());
         PreferenceTO preference3 = new PreferenceTO()
-                .setWantedProductsIds(Collections.singleton(1L))
+                .setWantedItemsIds(Collections.singleton(1L))
                 .setWantedDefinedGroupsIds(Collections.emptySet());
 
         preferenceService.updatePreference(1L, preference1, 1L, 1L);

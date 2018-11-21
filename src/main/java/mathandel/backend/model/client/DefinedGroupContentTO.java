@@ -4,15 +4,15 @@ import java.util.Set;
 
 public class DefinedGroupContentTO {
 
-    private Set<Long> productsIds;
+    private Set<Long> itemsIds;
     private Set<Long> groupIds;
 
-    public Set<Long> getProductsIds() {
-        return productsIds;
+    public Set<Long> getItemsIds() {
+        return itemsIds;
     }
 
-    public DefinedGroupContentTO setProductsIds(Set<Long> productsIds) {
-        this.productsIds = productsIds;
+    public DefinedGroupContentTO setItemsIds(Set<Long> itemsIds) {
+        this.itemsIds = itemsIds;
         return this;
     }
 

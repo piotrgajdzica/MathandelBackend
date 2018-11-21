@@ -32,7 +32,7 @@ public class ResultService {
         this.editionRepository = editionRepository;
     }
 
-    public Set<ResultTO> getEditionProductsToSendForUser(Long userId, Long editionId) {
+    public Set<ResultTO> getEditionItemsToSendForUser(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
 
@@ -46,7 +46,7 @@ public class ResultService {
         return mapResultsToSend(resultRepository.findAllBySender_IdAndEdition_Id(userId, editionId)) ;
     }
 
-    public Set<ResultTO> getEditionProductsToReceiveForUser(Long userId, Long editionId) {
+    public Set<ResultTO> getEditionItemsToReceiveForUser(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
 

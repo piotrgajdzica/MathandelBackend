@@ -7,12 +7,12 @@ import mathandel.backend.model.client.DefinedGroupContentTO;
 import mathandel.backend.model.client.DefinedGroupTO;
 import mathandel.backend.model.server.DefinedGroup;
 import mathandel.backend.model.server.Edition;
-import mathandel.backend.model.server.Product;
+import mathandel.backend.model.server.Item;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.DefinedGroupRepository;
 import mathandel.backend.repository.EditionRepository;
-import mathandel.backend.repository.ProductRepository;
+import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,13 @@ public class DefinedGroupService {
     private final UserRepository userRepository;
     private final EditionRepository editionRepository;
     private final DefinedGroupRepository definedGroupRepository;
-    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
 
-    public DefinedGroupService(UserRepository userRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ProductRepository productRepository) {
+    public DefinedGroupService(UserRepository userRepository, EditionRepository editionRepository, DefinedGroupRepository definedGroupRepository, ItemRepository itemRepository) {
         this.userRepository = userRepository;
         this.editionRepository = editionRepository;
         this.definedGroupRepository = definedGroupRepository;
-        this.productRepository = productRepository;
+        this.itemRepository = itemRepository;
     }
 
     public DefinedGroupTO createDefinedGroup(Long userId, Long editionId, DefinedGroupTO definedGroupTO) {
@@ -63,13 +63,7 @@ public class DefinedGroupService {
 
     public DefinedGroupTO editDefinedGroup(Long userId, Long editionId, Long groupId, DefinedGroupTO definedGroupTO) {
         DefinedGroup definedGroup = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
-
-        if(!definedGroup.getEdition().getId().equals(editionId)) {
-            throw new BadRequestException("Group " + groupId + " is not in edition " + editionId);
-        }
-        if(!definedGroup.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
-        }
+        validateGroup(definedGroup, editionId, userId, groupId);
 
         definedGroup.setName(definedGroupTO.getName());
         return mapDefinedGroup(definedGroupRepository.save(definedGroup));
@@ -90,30 +84,25 @@ public class DefinedGroupService {
     public DefinedGroupTO updateDefinedGroup(Long userId, Long editionId, Long groupId, DefinedGroupContentTO definedGroupContentTO) {
         DefinedGroup group = definedGroupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException("DefinedGroup", "id", groupId));
 
-        if(!group.getEdition().getId().equals(editionId)) {
-            throw new BadRequestException("Group " + groupId + " is not in edition " + editionId);
-        }
-        if(!group.getUser().getId().equals(userId)) {
-            throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
-        }
+        validateGroup(group, editionId, userId, groupId);
 
-        Set<Product> products = new HashSet<>();
+        Set<Item> items = new HashSet<>();
         Set<DefinedGroup> groups = new HashSet<>();
 
-        for(Long productId: definedGroupContentTO.getProductsIds()) {
-            Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
+        for(Long itemId: definedGroupContentTO.getItemsIds()) {
+            Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
 
-            if(product.getUser().getId().equals(userId)){
-                throw new BadRequestException("Product belongs to user " + userId);
+            if(item.getUser().getId().equals(userId)){
+                throw new BadRequestException("Item belongs to user " + userId);
             }
-            if(!product.getEdition().getId().equals(editionId)) {
-                throw new BadRequestException("Product does not belong to edition " + editionId);
+            if(!item.getEdition().getId().equals(editionId)) {
+                throw new BadRequestException("Item does not belong to edition " + editionId);
             }
-            products.add(product);
+            items.add(item);
         }
 
         for(Long definedGroupId: definedGroupContentTO.getGroupIds()) {
-            DefinedGroup definedGroup = definedGroupRepository.findById(definedGroupId).orElseThrow(() -> new ResourceNotFoundException("Product", "id", definedGroupId));
+            DefinedGroup definedGroup = definedGroupRepository.findById(definedGroupId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", definedGroupId));
 
             if(!definedGroup.getUser().getId().equals(userId)){
                 throw new BadRequestException("Group does not belong to user " + userId);
@@ -124,10 +113,19 @@ public class DefinedGroupService {
             groups.add(definedGroup);
         }
 
-        group.setProducts(products);
+        group.setItems(items);
         group.setGroups(groups);
 
         return mapDefinedGroup(definedGroupRepository.save(group));
+    }
+
+    private void validateGroup(DefinedGroup group, Long editionId, Long userId, Long groupId) {
+        if(!group.getEdition().getId().equals(editionId)) {
+            throw new BadRequestException("Group " + groupId + " is not in edition " + editionId);
+        }
+        if(!group.getUser().getId().equals(userId)) {
+            throw new BadRequestException("User " + userId + " is not creator of group " + groupId);
+        }
     }
 
     public DefinedGroupTO getDefinedGroup(Long userId, Long editionID, Long groupId) {

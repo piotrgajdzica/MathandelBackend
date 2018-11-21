@@ -1,4 +1,5 @@
-GET http://localhost:8080/api/editions/1/products/my
+//todo change to preference
+GET http://localhost:8080/api/items/2/preferences
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQxODAwMDMwLCJleHAiOjE1NDI0MDQ4MzB9.Rcbahux0riZEAcuoRqB7bf7cNDMfKL8LMp2CNRZBDloMDUvtO6h4WEKZWXZbk_9TEvm6UG6GB66YZo0L3qT_6Q
 

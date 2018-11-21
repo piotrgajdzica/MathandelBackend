@@ -24,8 +24,8 @@ public class ServerToClientDataConverter {
         return new PreferenceTO()
                 .setId(preference.getId())
                 .setUserId(preference.getUser().getId())
-                .setHaveProductId(preference.getHaveProduct().getId())
-                .setWantedProductsIds(preference.getWantedProducts().stream().map(Product::getId).collect(Collectors.toSet()))
+                .setHaveItemId(preference.getHaveItem().getId())
+                .setWantedItemsIds(preference.getWantedItems().stream().map(Item::getId).collect(Collectors.toSet()))
                 .setWantedDefinedGroupsIds(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
     }
 
@@ -41,25 +41,25 @@ public class ServerToClientDataConverter {
         return roles.stream().map(ServerToClientDataConverter::mapRole).collect(Collectors.toSet());
     }
 
-    public static ProductTO mapProduct(Product product) {
-        return new ProductTO()
-                .setId(product.getId())
-                .setName(product.getName())
-                .setDescription(product.getDescription())
-                .setUserId(product.getUser().getId())
-                .setEditionId(product.getEdition() != null ? product.getEdition().getId() : null)
-                .setImages(mapImages(product.getImages()));
+    public static ItemTO mapItem(Item item) {
+        return new ItemTO()
+                .setId(item.getId())
+                .setName(item.getName())
+                .setDescription(item.getDescription())
+                .setUserId(item.getUser().getId())
+                .setEditionId(item.getEdition() != null ? item.getEdition().getId() : null)
+                .setImages(mapImages(item.getImages()));
     }
 
-    public static Set<ProductTO> mapProducts(Set<Product> products) {
-        return products.stream().map(ServerToClientDataConverter::mapProduct).collect(Collectors.toSet());
+    public static Set<ItemTO> mapItems(Set<Item> items) {
+        return items.stream().map(ServerToClientDataConverter::mapItem).collect(Collectors.toSet());
     }
 
     public static DefinedGroupTO mapDefinedGroup(DefinedGroup definedGroup) {
         return new DefinedGroupTO()
                 .setId(definedGroup.getId())
                 .setName(definedGroup.getName())
-                .setProductsIds(definedGroup.getProducts().stream().map(Product::getId).collect(Collectors.toSet()))
+                .setItemsIds(definedGroup.getItems().stream().map(Item::getId).collect(Collectors.toSet()))
                 .setGroupIds(definedGroup.getGroups().stream().map(DefinedGroup::getId).collect(Collectors.toSet()));
     }
 
@@ -126,7 +126,7 @@ public class ServerToClientDataConverter {
                 .setId(result.getId())
                 .setReceiver(mapUser(result.getReceiver()))
                 .setSender(mapUser(result.getSender()))
-                .setProduct(mapProduct(result.getProductToSend()))
+                .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
 
@@ -138,7 +138,7 @@ public class ServerToClientDataConverter {
         return new ResultTO()
                 .setId(result.getId())
                 .setReceiver(mapUser(result.getReceiver()))
-                .setProduct(mapProduct(result.getProductToSend()))
+                .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
 
@@ -158,7 +158,7 @@ public class ServerToClientDataConverter {
         return new ResultTO()
                 .setId(result.getId())
                 .setSender(mapSender(result.getSender()))
-                .setProduct(mapProduct(result.getProductToSend()))
+                .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
 

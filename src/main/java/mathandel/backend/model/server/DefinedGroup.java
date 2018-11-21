@@ -25,7 +25,7 @@ public class DefinedGroup {
     private User user;
 
     @OneToMany
-    private Set<Product> products = new HashSet<>();
+    private Set<Item> items = new HashSet<>();
 
     @OneToMany
     private Set<DefinedGroup> groups = new HashSet<>();
@@ -69,12 +69,12 @@ public class DefinedGroup {
         return this;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<Item> getItems() {
+        return items;
     }
 
-    public DefinedGroup setProducts(Set<Product> products) {
-        this.products = products;
+    public DefinedGroup setItems(Set<Item> items) {
+        this.items = items;
         return this;
     }
 

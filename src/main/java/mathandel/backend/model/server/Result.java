@@ -17,7 +17,7 @@ public class Result {
     private User receiver;
 
     @OneToOne
-    private Product productToSend;
+    private Item itemToSend;
 
     @ManyToOne
     private Edition edition;
@@ -61,12 +61,12 @@ public class Result {
         return this;
     }
 
-    public Product getProductToSend() {
-        return productToSend;
+    public Item getItemToSend() {
+        return itemToSend;
     }
 
-    public Result setProductToSend(Product productToSend) {
-        this.productToSend = productToSend;
+    public Result setItemToSend(Item itemToSend) {
+        this.itemToSend = itemToSend;
         return this;
     }
 

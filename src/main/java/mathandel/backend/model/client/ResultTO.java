@@ -5,7 +5,7 @@ public class ResultTO {
     private Long id;
     private UserTO sender;
     private UserTO receiver;
-    private ProductTO product;
+    private ItemTO item;
     private RateTO rate;
 
     public Long getId() {
@@ -35,12 +35,12 @@ public class ResultTO {
         return this;
     }
 
-    public ProductTO getProduct() {
-        return product;
+    public ItemTO getItem() {
+        return item;
     }
 
-    public ResultTO setProduct(ProductTO product) {
-        this.product = product;
+    public ResultTO setItem(ItemTO item) {
+        this.item = item;
         return this;
     }
 

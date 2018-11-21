@@ -1,7 +1,0 @@
-PUT http://localhost:8080/api/products/3
-Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNTQxNTE4MDI0LCJleHAiOjE1NDIxMjI4MjR9.Yw8lVBRYCfMvBykY3cV4QiE9T1DURiQA6nwv84UkiLgMLxY5wdCFu2n9ti6nVb7T583zYVo_a25zqPOjcKDopg
-
-< editProduct.json
-
-###
