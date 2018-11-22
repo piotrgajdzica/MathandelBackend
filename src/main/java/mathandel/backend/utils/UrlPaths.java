@@ -28,8 +28,6 @@ public class UrlPaths {
     public static final String editionItemPreferencePath = editionItemPath + "/preferences";
     // /api/editions/{editionId}/preferences
     public static final String editionPreferencesPath = editionPath + "/preferences";
-    // /api/editions/{editionId}/results
-    public static final String editionResultsPath = editionPath + "/results";
     // /api/editions/{editionId}/close
     public static final String closeEditionPath = editionPath + "/close";
 
@@ -83,4 +81,9 @@ public class UrlPaths {
     public static final String resultsItemsToSendByUserPath = editionPath + "/results-send";
     // /api/editions/{editionId}/results-receive
     public static final String resultsItemsToReceiveByUserPath = editionPath + "/results-receive";
+
+    // /api/editions/{editionId}/results-user
+    public static final String editionUserResultsPath = editionPath + "/results-user";
+    // /api/editions/{editionId}/results-moderator
+    public static final String editionModeratorResultsPath = editionPath + "/results-moderator";
 }

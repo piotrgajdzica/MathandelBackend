@@ -1,10 +1,10 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.UserTO;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Role;
@@ -130,7 +130,7 @@ public class UserServiceTest {
 
         //when then
         ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class,
-                () -> userService.getUserData(userId));
+                () -> userService.getUser(userId));
         assertThat(resourceNotFoundException).isEqualTo(expected);
     }
 

@@ -2,6 +2,7 @@ package mathandel.backend.model.client;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -101,5 +102,17 @@ public class ItemTO {
                 .append(editionId)
                 .append(images)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("description", description)
+                .append("userId", userId)
+                .append("editionId", editionId)
+                .append("images", images)
+                .toString();
     }
 }

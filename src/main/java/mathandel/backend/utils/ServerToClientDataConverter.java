@@ -108,24 +108,31 @@ public class ServerToClientDataConverter {
                 .setCountry(user.getCountry());
     }
 
+    public static UserDataTO mapUserData(User user, Set<RateTO> rates) {
+        return new UserDataTO()
+                .setName(user.getName())
+                .setSurname(user.getSurname())
+                .setEmail(user.getEmail())
+                .setUsername(user.getUsername())
+                .setRates(rates);
+    }
+
     public static Set<RateTO> mapRates(Set<Rate> rates) {
         return rates.stream().map(ServerToClientDataConverter::mapRate).collect(Collectors.toSet());
     }
 
     public static RateTO mapRate(Rate rate) {
         return rate == null ? null : new RateTO()
-                .setId(rate.getId())
                 .setComment(rate.getComment())
                 .setRateTypeName(rate.getRateType().getName())
-                .setResultId(rate.getResult().getId())
-                .setRaterId(rate.getRater().getId());
+                .setResultId(rate.getResult().getId());
     }
 
     private static ResultTO mapResult(Result result){
         return new ResultTO()
                 .setId(result.getId())
-                .setReceiver(mapUser(result.getReceiver()))
-                .setSender(mapUser(result.getSender()))
+                .setReceiverId(result.getReceiver().getId())
+                .setSenderId(result.getReceiver().getId())
                 .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
@@ -137,7 +144,7 @@ public class ServerToClientDataConverter {
     public static ResultTO mapResultToSend (Result result) {
         return new ResultTO()
                 .setId(result.getId())
-                .setReceiver(mapUser(result.getReceiver()))
+                .setReceiverId(result.getReceiver().getId())
                 .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
@@ -146,18 +153,10 @@ public class ServerToClientDataConverter {
         return results.stream().map(ServerToClientDataConverter::mapResultToSend).collect(Collectors.toSet());
     }
 
-    public static UserTO mapSender(User user) {
-        return new UserTO()
-                .setName(user.getName())
-                .setSurname(user.getSurname())
-                .setEmail(user.getEmail())
-                .setUsername(user.getUsername());
-    }
-
     public static ResultTO mapResultToReceive (Result result) {
         return new ResultTO()
                 .setId(result.getId())
-                .setSender(mapSender(result.getSender()))
+                .setSenderId(result.getSender().getId())
                 .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
@@ -174,5 +173,35 @@ public class ServerToClientDataConverter {
 
     public static Set<RateTypeTO> mapRateTypes(Set<RateType> rateTypes) {
         return rateTypes.stream().map(ServerToClientDataConverter::mapRateType).collect(Collectors.toSet());
+    }
+
+    public static Set<SenderTO> mapProductsSenders(Set<Result> resultsToReceive) {
+        return resultsToReceive.stream().map(result -> mapSender(result.getSender())).collect(Collectors.toSet());
+    }
+
+    private static SenderTO mapSender(User sender) {
+        return new SenderTO()
+                .setId(sender.getId())
+                .setUsername(sender.getUsername())
+                .setEmail(sender.getEmail())
+                .setName(sender.getName())
+                .setSurname(sender.getSurname());
+    }
+
+    public static Set<ReceiverTO> mapProductsReceivers(Set<Result> resultsToSend) {
+        return resultsToSend.stream().map(result -> mapReceiver(result.getReceiver())).collect(Collectors.toSet());
+    }
+
+    private static ReceiverTO mapReceiver(User receiver) {
+        return new ReceiverTO()
+                .setId(receiver.getId())
+                .setUsername(receiver.getUsername())
+                .setEmail(receiver.getEmail())
+                .setName(receiver.getName())
+                .setSurname(receiver.getSurname())
+                .setAddress(receiver.getAddress())
+                .setCity(receiver.getCity())
+                .setCountry(receiver.getCountry())
+                .setPostalCode(receiver.getPostalCode());
     }
 }

@@ -22,7 +22,7 @@ public class Item {
     @ManyToOne
     private Edition edition;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private Set<Image> images = new HashSet<>();
 
     public Item() {

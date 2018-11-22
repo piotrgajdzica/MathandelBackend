@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-import static mathandel.backend.utils.UrlPaths.*;
+import static mathandel.backend.utils.UrlPaths.ratePath;
+import static mathandel.backend.utils.UrlPaths.rateTypesPath;
 
 @Controller
 public class RateController {
@@ -30,14 +31,6 @@ public class RateController {
                       @PathVariable Long resultId,
                       @RequestBody RateTO rateTO) {
         return rateService.rateResult(currentUser.getId(), resultId, rateTO);
-    }
-
-    // documented
-    @GetMapping(userRatesPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    Set<RateTO> getUserRates(@PathVariable Long userId) {
-        return rateService.getUserRates(userId);
     }
 
     // documented

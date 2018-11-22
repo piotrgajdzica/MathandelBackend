@@ -1,5 +1,6 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.model.client.UserDataTO;
 import mathandel.backend.model.client.UserTO;
 import mathandel.backend.model.client.request.PasswordRequest;
 import mathandel.backend.model.client.response.ApiResponse;
@@ -27,7 +28,7 @@ public class UserController {
     @GetMapping(userPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    UserTO getUserData(@PathVariable Long userId) {
+    UserDataTO getUserData(@PathVariable Long userId) {
         return userService.getUserData(userId);
     }
 
@@ -36,7 +37,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     UserTO getMyData(@CurrentUser UserPrincipal currentUser) {
-        return userService.getUserData(currentUser.getId());
+        return userService.getUser(currentUser.getId());
     }
 
     // documented

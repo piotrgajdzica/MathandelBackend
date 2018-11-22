@@ -43,7 +43,7 @@ public class PreferenceService {
         if(!haveItem.getEdition().getId().equals(editionId)){
             throw new BadRequestException("Item not in this edition");
         }
-        ItemService.validateEditionAndUser(user, edition);
+        ItemService.validateEdition(user, edition);
         if (!haveItem.getUser().getId().equals(userId)) {
             throw new BadRequestException("User is not an owner of this item");
         }
@@ -81,7 +81,7 @@ public class PreferenceService {
         Edition edition = editionRepository.findById(editionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        ItemService.validateEditionAndUser(user, edition);
+        ItemService.validateEdition(user, edition);
 
         return mapPreferences(preferenceRepository.findAllByUser_IdAndEdition_Id(userId, editionId));
     }

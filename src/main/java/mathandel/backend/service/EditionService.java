@@ -1,10 +1,10 @@
 package mathandel.backend.service;
 
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.EditionTO;
+import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.EditionStatusType;
 import mathandel.backend.model.server.Role;
@@ -15,7 +15,6 @@ import mathandel.backend.repository.EditionStatusTypeRepository;
 import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -45,12 +44,7 @@ public class EditionService {
 
     public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
-        if (editionRepository.existsByName(editionTO.getName())) {
-            throw new BadRequestException("Edition name already exists");
-        }
-        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Edition end date cannot be in the past");
-        }
+        validateEdition(editionTO);
         if (editionTO.getMaxParticipants() < 1) {
             throw new BadRequestException("Incorrect max participants value - has to be more than 0");
         }
@@ -82,6 +76,15 @@ public class EditionService {
         return mapEdition(editionRepository.save(edition), userId);
     }
 
+    private void validateEdition(EditionTO editionTO) {
+        if (editionRepository.existsByName(editionTO.getName())) {
+            throw new BadRequestException("Edition name already exists");
+        }
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Edition end date cannot be in the past");
+        }
+    }
+
     public EditionTO editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
@@ -90,12 +93,7 @@ public class EditionService {
         if (!edition.getModerators().contains(user)) {
             throw new BadRequestException("You are not moderator of this edition");
         }
-        if (editionRepository.existsByName(editionTO.getName())) {
-            throw new BadRequestException("Edition name already exists");
-        }
-        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Edition end date cannot be in the past");
-        }
+        validateEdition(editionTO);
         if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
             throw new BadRequestException("Cannot lower max number of participants");
         }

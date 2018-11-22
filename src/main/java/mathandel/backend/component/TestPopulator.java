@@ -2,7 +2,7 @@ package mathandel.backend.component;
 
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
-import mathandel.backend.model.client.ItemTO;
+import mathandel.backend.model.client.request.CreateUpdateItemRequest;
 import mathandel.backend.model.client.request.SignUpRequest;
 import mathandel.backend.service.*;
 import org.springframework.stereotype.Component;
@@ -92,24 +92,24 @@ public class TestPopulator {
     }
 
     private void createItems() {
-        ItemTO item1 = new ItemTO()
+        CreateUpdateItemRequest createUpdateItemRequest1 = new CreateUpdateItemRequest()
                 .setName("item1")
                 .setDescription("item1 description")
-                .setImages(Collections.emptySet());
+                .setImagesToRemove(Collections.emptySet());
 
-        ItemTO item2 = new ItemTO()
+        CreateUpdateItemRequest createUpdateItemRequest2 = new CreateUpdateItemRequest()
                 .setName("item2")
                 .setDescription("item2 description")
-                .setImages(Collections.emptySet());
+                .setImagesToRemove(Collections.emptySet());
 
-        ItemTO item3 = new ItemTO()
+        CreateUpdateItemRequest createUpdateItemRequest3 = new CreateUpdateItemRequest()
                 .setName("item3")
                 .setDescription("item3 description")
-                .setImages(Collections.emptySet());
+                .setImagesToRemove(Collections.emptySet());
 
-        itemService.createItem(1L, 1L, item1);
-        itemService.createItem(2L, 1L, item2);
-        itemService.createItem(3L, 1L, item3);
+        itemService.createItem(1L, 1L, createUpdateItemRequest1, null, null, null);
+        itemService.createItem(2L, 1L, createUpdateItemRequest2, null, null, null);
+        itemService.createItem(3L, 1L, createUpdateItemRequest3, null, null, null);
     }
 
     private void createPreferences() {

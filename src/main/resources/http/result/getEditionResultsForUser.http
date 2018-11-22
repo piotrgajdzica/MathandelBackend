@@ -1,0 +1,5 @@
+GET http://localhost:8080/api/editions/1/results-user
+Content-Type: Application/Json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyOTIzNzE3LCJleHAiOjE1NDM1Mjg1MTd9.aoetLKiADo0q68d4lhxo-9jfUcPIX3QPpMKGEjFkNFf7iy5BetTCP3qa-PrKnYD262EgaTqTsRMMving0LM8-Q
+
+###

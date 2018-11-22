@@ -3,8 +3,8 @@ package mathandel.backend.model.client;
 public class ResultTO {
 
     private Long id;
-    private UserTO sender;
-    private UserTO receiver;
+    private Long senderId;
+    private Long receiverId;
     private ItemTO item;
     private RateTO rate;
 
@@ -17,21 +17,21 @@ public class ResultTO {
         return this;
     }
 
-    public UserTO getSender() {
-        return sender;
+    public Long getSenderId() {
+        return senderId;
     }
 
-    public ResultTO setSender(UserTO sender) {
-        this.sender = sender;
+    public ResultTO setSenderId(Long senderId) {
+        this.senderId = senderId;
         return this;
     }
 
-    public UserTO getReceiver() {
-        return receiver;
+    public Long getReceiverId() {
+        return receiverId;
     }
 
-    public ResultTO setReceiver(UserTO receiver) {
-        this.receiver = receiver;
+    public ResultTO setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
         return this;
     }
 

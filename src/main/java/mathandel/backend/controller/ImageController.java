@@ -1,18 +1,13 @@
 package mathandel.backend.controller;
 
-import mathandel.backend.model.client.ImageTO;
-import mathandel.backend.model.client.response.ApiResponse;
-import mathandel.backend.security.CurrentUser;
-import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ImageService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import static mathandel.backend.utils.UrlPaths.*;
+import static mathandel.backend.utils.UrlPaths.imagePath;
 
 @Controller
 public class ImageController {
@@ -24,16 +19,6 @@ public class ImageController {
     }
 
     // documented
-    @PostMapping(itemImagesPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    ImageTO addImage(@CurrentUser UserPrincipal current,
-                     @PathVariable Long itemId,
-                     @RequestParam("image") MultipartFile multipartFile) {
-        return imageService.addImage(current.getId(), itemId, multipartFile);
-    }
-
-    // documented
     @GetMapping(imagePath)
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
 
@@ -41,15 +26,5 @@ public class ImageController {
                 .ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(imageService.getImage(imageName));
-    }
-
-    // documented
-    @DeleteMapping(itemImagePath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    ApiResponse deleteImage(@CurrentUser UserPrincipal current,
-                            @PathVariable String imageName,
-                            @PathVariable Long itemId) {
-        return imageService.deleteImage(current.getId(), itemId, imageName);
     }
 }

@@ -1,9 +1,6 @@
 package mathandel.backend.model.client;
 
 import com.google.gson.Gson;
-import mathandel.backend.model.client.RoleTO;
-import mathandel.backend.model.client.UserTO;
-import mathandel.backend.model.server.enums.RoleName;
 import org.junit.Test;
 
 import java.util.Collections;

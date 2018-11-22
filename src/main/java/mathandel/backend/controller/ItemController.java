@@ -1,27 +1,27 @@
 package mathandel.backend.controller;
 
+import com.google.gson.Gson;
 import mathandel.backend.model.client.ItemTO;
+import mathandel.backend.model.client.request.CreateUpdateItemRequest;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
-import mathandel.backend.service.PreferenceService;
 import mathandel.backend.service.ItemService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
 import static mathandel.backend.utils.UrlPaths.*;
 
 @Controller
-public class Item {
+public class ItemController {
 
     private ItemService itemService;
-    private PreferenceService preferenceService;
 
-    public Item(ItemService itemService, PreferenceService preferenceService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
-        this.preferenceService = preferenceService;
     }
 
     // documented
@@ -30,8 +30,11 @@ public class Item {
     public @ResponseBody
     ItemTO createItem(@CurrentUser UserPrincipal user,
                       @PathVariable Long editionId,
-                      @RequestBody ItemTO itemTO) {
-        return itemService.createItem(user.getId(), editionId, itemTO);
+                      @RequestParam(value = "1", required = false) MultipartFile image1,
+                      @RequestParam(value = "2", required = false) MultipartFile image2,
+                      @RequestParam(value = "3", required = false) MultipartFile image3,
+                      @RequestParam("item") String itemString) {
+        return itemService.createItem(user.getId(), editionId, new Gson().fromJson(itemString, CreateUpdateItemRequest.class), image1, image2, image3);
     }
 
     // documented
@@ -39,10 +42,12 @@ public class Item {
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ItemTO editItem(@CurrentUser UserPrincipal user,
-                    @RequestBody ItemTO itemTO,
-                    @PathVariable Long itemId) {
-        return itemService.editItem(user.getId(), itemTO, itemId);
-
+                    @PathVariable Long itemId,
+                    @RequestParam(value = "1", required = false) MultipartFile image1,
+                    @RequestParam(value = "2", required = false) MultipartFile image2,
+                    @RequestParam(value = "3", required = false) MultipartFile image3,
+                    @RequestParam("item") String itemString) {
+        return itemService.editItem(user.getId(), itemId, new Gson().fromJson(itemString, CreateUpdateItemRequest.class), image1, image2, image3);
     }
 
     // documented

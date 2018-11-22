@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/editions/1/results
+GET http://localhost:8080/api/editions/1/results-moderator
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyNjE5MzEzLCJleHAiOjE1NDMyMjQxMTN9.AUoCpFCPo3wfofi97VdfHBuQYhKTldOd_PBFgFAtoorGX5jSom9AIR7iMfVqjzrfAeWmFL-r-I229sQhUQdXYA
 

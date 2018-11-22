@@ -20,7 +20,6 @@ import java.util.Set;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.mapRate;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapRateTypes;
-import static mathandel.backend.utils.ServerToClientDataConverter.mapRates;
 
 @Service
 public class RateService {
@@ -55,13 +54,6 @@ public class RateService {
         result.setRate(rate);
 
         return mapRate(rateRepository.save(rate));
-    }
-
-    public Set<RateTO> getUserRates(Long senderId) {
-        if(!userRepository.existsById(senderId)) {
-            throw new ResourceNotFoundException("User", "id", senderId);
-        }
-        return mapRates(rateRepository.findAllByResult_Sender_Id(senderId));
     }
 
     public Set<RateTypeTO> getRateTypes() {

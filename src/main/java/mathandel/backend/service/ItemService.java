@@ -4,18 +4,28 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.ItemTO;
-import mathandel.backend.model.server.Edition;
-import mathandel.backend.model.server.EditionStatusType;
-import mathandel.backend.model.server.Item;
-import mathandel.backend.model.server.User;
+import mathandel.backend.model.client.request.CreateUpdateItemRequest;
+import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
+import mathandel.backend.repository.ImageRepository;
 import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
+import static mathandel.backend.utils.ImageTypeMap.getExtension;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapItem;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapItems;
 
@@ -23,36 +33,87 @@ import static mathandel.backend.utils.ServerToClientDataConverter.mapItems;
 @Service
 public class ItemService {
 
+    private final ImageRepository imageRepository;
+
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final EditionRepository editionRepository;
+    @Value("${maximum-file-size}")
+    private long maxSize;
 
-    public ItemService(ItemRepository itemRepository, UserRepository userRepository, EditionRepository editionRepository) {
+    public ItemService(ItemRepository itemRepository, UserRepository userRepository, EditionRepository editionRepository, ImageRepository imageRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.editionRepository = editionRepository;
+        this.imageRepository = imageRepository;
     }
 
-    public ItemTO createItem(Long userId, Long editionId, ItemTO itemTO) {
+    static void validateEdition(User user, Edition edition) {
+        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
+            throw new BadRequestException("Edition is not opened");
+        }
+        if (!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User is not in this edition");
+        }
+    }
+
+    public ItemTO createItem(Long userId, Long editionId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        String basePath = new File("").getAbsolutePath();
 
-        validateEditionAndUser(user, edition);
+        validateEdition(user, edition);
 
         Item item = new Item()
-                .setName(itemTO.getName())
-                .setDescription(itemTO.getDescription())
+                .setName(createUpdateItemRequest.getName())
+                .setDescription(createUpdateItemRequest.getDescription())
                 .setUser(user)
                 .setEdition(edition);
 
-        return mapItem(itemRepository.save(item));
+        item = itemRepository.save(item);
+
+        return saveItemWithImages(userId, image1, image2, image3, item, basePath);
     }
 
-    //todo if preferences exists should not be able to do this
+    private void processFile(Long userId, MultipartFile multipartFile, String basePath, Item item) {
+        String extension;
+        String name;
+        if (multipartFile != null) {
+            extension = getExtension(multipartFile.getContentType());
+            name = generateName(userId, item.getId()) + "." + extension;
 
-    public ItemTO editItem(Long userId, ItemTO itemTO, Long itemId) {
+            if (multipartFile.getSize() > maxSize) {
+                throw new BadRequestException("File cannot exceed 5mb");
+            }
+            if (!Objects.requireNonNull(multipartFile.getContentType()).startsWith("image/")) {
+                throw new BadRequestException("You can only upload an image");
+            }
+            if (extension == null) {
+                throw new BadRequestException("File type not supported");
+            }
+
+            if (multipartFile.getSize() > 0) {
+                try {
+                    byte[] bytes = multipartFile.getBytes();
+                    Path path = Paths.get(basePath + "\\src\\main\\resources\\images\\" + name);
+                    Files.write(path, bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new AppException("Error occurred when trying to save file");
+                }
+
+                Image image = new Image()
+                        .setName(name);
+
+                item.getImages().add(image);
+            }
+        }
+    }
+
+    public ItemTO editItem(Long userId, Long itemId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
+        String basePath = new File("").getAbsolutePath();
 
         if (!user.getId().equals(item.getUser().getId())) {
             throw new BadRequestException("You have no access to this resource");
@@ -66,32 +127,48 @@ public class ItemService {
             }
         }
 
-        item.setDescription(itemTO.getDescription())
-                .setName(itemTO.getName());
+        item.setDescription(createUpdateItemRequest.getDescription())
+                .setName(createUpdateItemRequest.getName());
 
-        return mapItem(itemRepository.save(item));
+        int imagesInItem = item.getImages().size();
+        int imagesToRemove = createUpdateItemRequest.getImagesToRemove().size();
+        int newImagesCounter = 0;
+        if (image1 != null) newImagesCounter++;
+        if (image2 != null) newImagesCounter++;
+        if (image3 != null) newImagesCounter++;
+
+        if (imagesInItem - imagesToRemove + newImagesCounter > 3) {
+            throw new BadRequestException("Trying to have more than 3 photos in an item");
+        }
+
+        createUpdateItemRequest.getImagesToRemove().forEach(imageToRemoveId -> {
+            Image image = imageRepository.findById(imageToRemoveId).orElseThrow(() -> new ResourceNotFoundException("Image", "id", imageToRemoveId));
+
+            if (item.getImages().stream().noneMatch(itemImage -> itemImage.getId().equals(imageToRemoveId))) {
+                throw new BadRequestException("Image with id " + imageToRemoveId + " is not assigned to item " + itemId);
+            }
+
+            File file = new File(basePath + "\\src\\main\\resources\\images\\" + image.getName());
+            if (!file.delete()) {
+                throw new AppException("Could not delete file - server internal error");
+            }
+            imageRepository.delete(image);
+            item.getImages().remove(image);
+        });
+
+        return saveItemWithImages(userId, image1, image2, image3, item, basePath);
     }
+
     public ItemTO getItem(Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
         return mapItem(item);
     }
 
-    public ItemTO assignItemToEdition(Long userId, Long editionId, Long itemId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
-        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-
-        validateEditionAndUser(user, edition);
-        if (!userId.equals(item.getUser().getId())) {
-            throw new BadRequestException("You have no access to this item");
-        }
-        if (item.getEdition() != null) {
-            throw new BadRequestException("Item already in edition");
-        }
-
-        item.setEdition(edition);
+    private ItemTO saveItemWithImages(Long userId, MultipartFile image1, MultipartFile image2, MultipartFile image3, Item item, String basePath) {
+        processFile(userId, image1, basePath, item);
+        processFile(userId, image2, basePath, item);
+        processFile(userId, image3, basePath, item);
         return mapItem(itemRepository.save(item));
-
     }
 
     public Set<ItemTO> getNotAssignedItems(Long userId) {
@@ -110,13 +187,21 @@ public class ItemService {
         return mapItems(itemRepository.findByEdition_IdAndUser_Id(editionId, userId));
     }
 
-    static void validateEditionAndUser(User user, Edition edition) {
-        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
-            throw new BadRequestException("Edition is not opened");
+    public ItemTO assignItemToEdition(Long userId, Long editionId, Long itemId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        validateEdition(user, edition);
+        if (!userId.equals(item.getUser().getId())) {
+            throw new BadRequestException("You have no access to this item");
         }
-        if (!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("User is not in this edition");
+        if (item.getEdition() != null) {
+            throw new BadRequestException("Item already in edition");
         }
+
+        item.setEdition(edition);
+        return mapItem(itemRepository.save(item));
     }
 
     private void validateGetItems(Long userId, Long editionId) {
@@ -126,5 +211,11 @@ public class ItemService {
         if (!edition.getParticipants().contains(user)) {
             throw new BadRequestException("User not in this edition");
         }
+    }
+
+    private String generateName(Long userId, Long itemId) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
+        String dateString = format.format(new Date());
+        return userId.toString() + "_" + itemId + "_" + dateString;
     }
 }
