@@ -1,5 +1,6 @@
 package mathandel.backend.component;
 
+import mathandel.backend.exception.AppException;
 import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.client.ItemTO;
@@ -129,6 +130,10 @@ public class TestPopulator {
     }
 
     private void closeEdition() {
-        calcService.closeEdition(1L, 1L);
+        try {
+            calcService.closeEdition(1L, 1L);
+        } catch(AppException exc) {
+            exc.printStackTrace();
+        }
     }
 }

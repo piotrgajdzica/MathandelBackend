@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
@@ -44,6 +45,7 @@ public class CalcService {
     }
 
     // todo test this
+    @Transactional
     public ApiResponse closeEdition(Long userId, Long editionId) {
 
         Edition initialEdition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));

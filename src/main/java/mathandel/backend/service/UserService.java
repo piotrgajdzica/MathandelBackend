@@ -30,6 +30,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public ApiResponse joinEdition(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));

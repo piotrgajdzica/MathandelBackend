@@ -8,6 +8,7 @@ import mathandel.backend.model.server.*;
 import mathandel.backend.repository.*;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class PreferenceService {
         this.definedGroupRepository = definedGroupRepository;
     }
 
+    @Transactional
     public PreferenceTO updatePreference(Long userId, PreferenceTO preferenceTO, Long editionId, Long itemId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException("User doesn't exist."));

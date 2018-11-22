@@ -43,14 +43,10 @@ public class EditionService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
-        if (editionRepository.existsByName(editionTO.getName())) {
-            throw new BadRequestException("Edition name already exists");
-        }
-        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Edition end date cannot be in the past");
-        }
+        validateEditionData(editionTO);
         if (editionTO.getMaxParticipants() < 1) {
             throw new BadRequestException("Incorrect max participants value - has to be more than 0");
         }
@@ -82,6 +78,15 @@ public class EditionService {
         return mapEdition(editionRepository.save(edition), userId);
     }
 
+    private void validateEditionData(EditionTO editionTO) {
+        if (editionRepository.existsByName(editionTO.getName())) {
+            throw new BadRequestException("Edition name already exists");
+        }
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Edition end date cannot be in the past");
+        }
+    }
+
     public EditionTO editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
@@ -90,12 +95,7 @@ public class EditionService {
         if (!edition.getModerators().contains(user)) {
             throw new BadRequestException("You are not moderator of this edition");
         }
-        if (editionRepository.existsByName(editionTO.getName())) {
-            throw new BadRequestException("Edition name already exists");
-        }
-        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Edition end date cannot be in the past");
-        }
+        validateEditionData(editionTO);
         if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
             throw new BadRequestException("Cannot lower max number of participants");
         }

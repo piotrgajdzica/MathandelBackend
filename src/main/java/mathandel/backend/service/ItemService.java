@@ -13,6 +13,7 @@ import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class ItemService {
         this.editionRepository = editionRepository;
     }
 
+    @Transactional
     public ItemTO createItem(Long userId, Long editionId, ItemTO itemTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
