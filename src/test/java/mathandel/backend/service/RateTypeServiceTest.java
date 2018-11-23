@@ -3,7 +3,6 @@ package mathandel.backend.service;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.model.client.RateTO;
-import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.RateTypeName;
@@ -129,7 +128,7 @@ public class RateTypeServiceTest {
     private void initializeTransactionRateTO() {
         rateTO
                 .setResultId(resultId)
-                .setRateTypeName(rateTypeName)
+                .setRate(5)
                 .setComment("comment");
     }
 }

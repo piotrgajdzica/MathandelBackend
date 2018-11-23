@@ -2,6 +2,7 @@ package mathandel.backend.model.client;
 
 import mathandel.backend.model.server.enums.RateTypeName;
 
+@Deprecated
 public class RateTypeTO {
 
     private Long id;

@@ -1,17 +1,17 @@
 package mathandel.backend.model.client;
 
-import mathandel.backend.model.server.enums.RateTypeName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class RateTO {
 
     private Long resultId;
-    @NotNull
-    private RateTypeName rateTypeName;
+    @NotBlank
+    @Range(min = 0, max = 5)
+    private int rate;
     @NotBlank
     private String comment;
 
@@ -33,12 +33,12 @@ public class RateTO {
         return this;
     }
 
-    public RateTypeName getRateTypeName() {
-        return rateTypeName;
+    public @NotBlank int getRate() {
+        return rate;
     }
 
-    public RateTO setRateTypeName(RateTypeName rateTypeName) {
-        this.rateTypeName = rateTypeName;
+    public RateTO setRate(int rate) {
+        this.rate = rate;
         return this;
     }
 
@@ -52,7 +52,7 @@ public class RateTO {
 
         return new EqualsBuilder()
                 .append(resultId, rateTO.resultId)
-                .append(rateTypeName, rateTO.rateTypeName)
+                .append(rate, rateTO.rate)
                 .append(comment, rateTO.comment)
                 .isEquals();
     }
@@ -61,7 +61,7 @@ public class RateTO {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(resultId)
-                .append(rateTypeName)
+                .append(rate)
                 .append(comment)
                 .toHashCode();
     }

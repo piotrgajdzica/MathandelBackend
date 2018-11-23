@@ -6,7 +6,6 @@ import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.RateTO;
 import mathandel.backend.model.client.RateTypeTO;
 import mathandel.backend.model.server.Rate;
-import mathandel.backend.model.server.RateType;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
 import mathandel.backend.repository.RateRepository;
@@ -39,7 +38,6 @@ public class RateService {
     public RateTO rateResult(Long userId, Long resultId, RateTO rateTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Result result = resultRepository.findById(resultId).orElseThrow(() -> new ResourceNotFoundException("Result", "id", resultId));
-        RateType rateType = rateTypeRepository.findByName(rateTO.getRateTypeName()).orElseThrow(() -> new AppException("Rate type not in data base"));
 
         if (!user.getId().equals(result.getReceiver().getId())) {
             throw new BadRequestException("User is not receiver of this result");
@@ -47,7 +45,7 @@ public class RateService {
 
         Rate rate = rateRepository.findByResult(result).orElseGet(Rate::new)
                 .setRater(user)
-                .setRateType(rateType)
+                .setRate(rateTO.getRate())
                 .setComment(rateTO.getComment())
                 .setResult(result);
 

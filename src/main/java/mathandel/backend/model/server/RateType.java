@@ -4,6 +4,7 @@ import mathandel.backend.model.server.enums.RateTypeName;
 
 import javax.persistence.*;
 
+@Deprecated
 @Entity
 @Table(name = "rate_types")
 public class RateType {

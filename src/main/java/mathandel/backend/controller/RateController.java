@@ -1,18 +1,17 @@
 package mathandel.backend.controller;
 
 import mathandel.backend.model.client.RateTO;
-import mathandel.backend.model.client.RateTypeTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.RateService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static mathandel.backend.utils.UrlPaths.ratePath;
-import static mathandel.backend.utils.UrlPaths.rateTypesPath;
 
 @Controller
 public class RateController {
@@ -33,11 +32,4 @@ public class RateController {
         return rateService.rateResult(currentUser.getId(), resultId, rateTO);
     }
 
-    // documented
-    @GetMapping(rateTypesPath)
-    @PreAuthorize("hasRole('USER')")
-    public @ResponseBody
-    Set<RateTypeTO> getRateTypes() {
-        return rateService.getRateTypes();
-    }
 }

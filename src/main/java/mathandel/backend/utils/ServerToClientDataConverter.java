@@ -124,7 +124,7 @@ public class ServerToClientDataConverter {
     public static RateTO mapRate(Rate rate) {
         return rate == null ? null : new RateTO()
                 .setComment(rate.getComment())
-                .setRateTypeName(rate.getRateType().getName())
+                .setRate(rate.getRate())
                 .setResultId(rate.getResult().getId());
     }
 

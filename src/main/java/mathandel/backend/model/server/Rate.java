@@ -1,5 +1,7 @@
 package mathandel.backend.model.server;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,8 +15,8 @@ public class Rate {
     @ManyToOne
     private User rater;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private RateType rateType;
+    @Range(min = 0, max = 5)
+    private int rate;
 
     @OneToOne
     private Result result;
@@ -39,12 +41,12 @@ public class Rate {
         return this;
     }
 
-    public RateType getRateType() {
-        return rateType;
+    public int getRate() {
+        return rate;
     }
 
-    public Rate setRateType(RateType rateType) {
-        this.rateType = rateType;
+    public Rate setRate(int rate) {
+        this.rate = rate;
         return this;
     }
 
