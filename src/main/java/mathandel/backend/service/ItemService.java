@@ -133,6 +133,7 @@ public class ItemService {
         int imagesInItem = item.getImages().size();
         int imagesToRemove = createUpdateItemRequest.getImagesToRemove().size();
         int newImagesCounter = 0;
+        //todo getSize
         if (image1 != null) newImagesCounter++;
         if (image2 != null) newImagesCounter++;
         if (image3 != null) newImagesCounter++;

@@ -50,7 +50,6 @@ public class SystemInitializer implements ApplicationRunner {
         insertRolesToDB();
         insertEditionStatusesToDB();
         insertAdminToDB();
-        insertRatesToDB();
         insertModeratorRequestStatusesToDB();
 //        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();
@@ -69,14 +68,6 @@ public class SystemInitializer implements ApplicationRunner {
             EditionStatusType editionStatusType = new EditionStatusType();
             editionStatusType.setEditionStatusName(editionStatusName);
             editionStatusTypeRepository.save(editionStatusType);
-        }
-    }
-
-    private void insertRatesToDB() {
-        for (RateTypeName rateTypeName : RateTypeName.values()) {
-            RateType rateType = new RateType();
-            rateType.setName(rateTypeName);
-            rateTypeRepository.save(rateType);
         }
     }
 
