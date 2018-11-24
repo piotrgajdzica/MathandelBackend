@@ -16,6 +16,7 @@ import mathandel.backend.repository.RoleRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +43,7 @@ public class EditionService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional
     public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
         validateEdition(editionTO);
@@ -93,6 +95,9 @@ public class EditionService {
         if (!edition.getModerators().contains(user)) {
             throw new BadRequestException("You are not moderator of this edition");
         }
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition " + edition.getName() + " is not opened");
+        }
         validateEdition(editionTO);
         if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
             throw new BadRequestException("Cannot lower max number of participants");
@@ -138,16 +143,8 @@ public class EditionService {
         return user.getRoles().stream().anyMatch(role -> role.getName().equals(ROLE_MODERATOR));
     }
 
-    void changeEditionStatus(Long userId, Long editionId, EditionStatusName editionStatusName) {
-        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
-        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-
-        if(!edition.getModerators().contains(moderator)) {
-            throw new BadRequestException("You have no access to this resource");
-        }
-
+    Edition changeEditionStatus(Edition edition, EditionStatusName editionStatusName) {
         edition.setEditionStatusType(editionStatusTypeRepository.findByEditionStatusName(editionStatusName));
-
-        editionRepository.save(edition);
+        return editionRepository.save(edition);
     }
 }

@@ -73,6 +73,9 @@ public class DefinedGroupService {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition " + edition.getName() + " is not opened");
+        }
         if(!edition.getParticipants().contains(user)) {
             throw new BadRequestException("User is not in this edition");
         }
@@ -120,6 +123,11 @@ public class DefinedGroupService {
     }
 
     private void validateGroup(DefinedGroup group, Long editionId, Long userId, Long groupId) {
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition " + edition.getName() + " is not opened");
+        }
         if(!group.getEdition().getId().equals(editionId)) {
             throw new BadRequestException("Group " + groupId + " is not in edition " + editionId);
         }

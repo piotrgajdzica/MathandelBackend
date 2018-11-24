@@ -1,7 +1,9 @@
 package mathandel.backend.service;
 
 import mathandel.backend.exception.AppException;
+import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.response.ApiResponse;
 import mathandel.backend.model.server.*;
 import mathandel.backend.model.server.enums.EditionStatusName;
@@ -14,11 +16,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static mathandel.backend.model.server.enums.EditionStatusName.*;
+import static mathandel.backend.utils.ServerToClientDataConverter.mapEdition;
+
 //todo review and refactor
+@SuppressWarnings("Duplicates")
 @Service
 public class CalcService {
 
@@ -29,11 +37,12 @@ public class CalcService {
     private EditionRepository editionRepository;
     private final EditionService editionService;
     private final RestTemplate restTemplate;
+    private final UserRepository userRepository;
 
     @Value("${calc.service.url}")
     private String CALC_SERVICE_URL;
 
-    public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ItemRepository itemRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate) {
+    public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ItemRepository itemRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate, UserRepository userRepository) {
         this.preferenceRepository = preferenceRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.resultRepository = resultRepository;
@@ -41,35 +50,49 @@ public class CalcService {
         this.editionRepository = editionRepository;
         this.editionService = editionService;
         this.restTemplate = restTemplate;
+        this.userRepository = userRepository;
     }
 
-    // todo test this
-    public ApiResponse closeEdition(Long userId, Long editionId) {
+    @Transactional
+    public ApiResponse resolveEdition(Long userId, Long editionId) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
 
-        Edition initialEdition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-        EditionStatusName initialEditionStatus = initialEdition.getEditionStatusType().getEditionStatusName();
-        editionService.changeEditionStatus(userId, editionId, EditionStatusName.CLOSED);
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+        if(!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
+            throw new BadRequestException("You cannot resolve edition with edition status " + editionStatusName);
+        }
+        calculateResults(edition);
+        return new ApiResponse("Edition closed, you can now reOpen, publish or cancel this edition");
+    }
+
+    public void calculateResults(Edition edition) {
+        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
+
+        if(editionStatusName.equals(CLOSED)) {
+            resultRepository.deleteAllByEdition_Id(edition.getId());
+        }
+
+        editionService.changeEditionStatus(edition, PENDING);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        String body = getMappedDataForEdition(editionId);
+        String body = getMappedDataForEdition(edition.getId());
         HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 
         try {
             String result = restTemplate.postForObject(CALC_SERVICE_URL + "/solve/", httpEntity, String.class);
-
-            saveResultsFromJsonData(editionId, result);
-
-            editionService.changeEditionStatus(userId, editionId, EditionStatusName.FINISHED);
-            nullEditionIdsOfAllItemsThatWerentChosen(editionId);
-
-            return new ApiResponse("Edition closed, you can now check for results");
+            saveResultsFromJsonData(edition.getId(), result);
+            editionService.changeEditionStatus(edition, CLOSED);
         } catch (Exception e) {
-            editionService.changeEditionStatus(userId,editionId, initialEditionStatus);
+            editionService.changeEditionStatus(edition, FAILED);
             throw new AppException("Server had a problem with calculating result for your edition. Try again later.");
         }
-
     }
+
 
     private void saveResultsFromJsonData(Long editionId, String jsonString) {
         JSONArray jsonData = new JSONArray(jsonString);
@@ -128,19 +151,89 @@ public class CalcService {
                 .put("groups", new JSONArray(preference.getWantedDefinedGroups().stream().map(DefinedGroup::getId).collect(Collectors.toList())));
     }
 
-    private void nullEditionIdsOfAllItemsThatWerentChosen(Long editionId) {
+    private void nullEditionIdsOfAllItemsThatWereNotChosen(Long editionId) {
         Set<Long> resultItemsIds = resultRepository.findAllByEdition_Id(editionId).stream().map(r -> r.getItemToSend().getId()).collect(Collectors.toSet());
         Set<Item> editionItems = itemRepository.findAllByEdition_Id(editionId);
         Set<Item> notAssignedItems = new HashSet<>();
 
         for (Item p : editionItems) {
-
             if (!resultItemsIds.contains(p.getId())) {
                 p.setEdition(null);
                 notAssignedItems.add(p);
             }
         }
+        itemRepository.saveAll(notAssignedItems);
+    }
+
+    public EditionTO publishEdition(Long userId, Long editionId) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(CLOSED)) {
+            throw new BadRequestException("You have to resolve edition first");
+        }
+
+        nullEditionIdsOfAllItemsThatWereNotChosen(editionId);
+        return mapEdition(editionService.changeEditionStatus(edition, PUBLISHED), userId);
+    }
+
+    @Transactional
+    public EditionTO reOpenEdition(Long userId, Long editionId, LocalDate endDate) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+        if(!(editionStatusName.equals(CLOSED) || editionStatusName.equals(FAILED))) {
+            throw new BadRequestException("You can only reopen closed or failed edition edition is " + editionStatusName);
+        }
+        if (endDate.isBefore(LocalDate.now())) {
+            throw new BadRequestException("Edition end date cannot be in the past");
+        }
+        System.out.println(LocalDate.now());
+        System.out.println(endDate);
+
+        resultRepository.deleteAllByEdition_Id(edition.getId());
+        return mapEdition(editionService.changeEditionStatus(edition, OPENED).setEndDate(endDate), userId);
+
+    }
+
+    private void nullEditionIdsOfAllItems(Long editionId) {
+        Set<Item> notAssignedItems = new HashSet<>();
+
+        itemRepository.findAllByEdition_Id(editionId).forEach(item -> {
+            item.setEdition(null);
+            notAssignedItems.add(item);
+        });
 
         itemRepository.saveAll(notAssignedItems);
+    }
+
+    @Transactional
+    public EditionTO cancelEdition(Long userId, Long editionId) {
+        User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
+
+        if(!edition.getModerators().contains(moderator)) {
+            throw new BadRequestException("You have no access to this resource");
+        }
+        if(!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
+            throw new BadRequestException("You cannot cancel " + editionStatusName + " edition");
+        }
+
+        resultRepository.deleteAllByEdition_Id(edition.getId());
+        definedGroupRepository.deleteAllByEdition_Id(edition.getId());
+        preferenceRepository.deleteAllByEdition_Id(edition.getId());
+        edition.getParticipants().clear();
+        editionRepository.save(edition);
+
+        nullEditionIdsOfAllItems(edition.getId());
+        return mapEdition(editionService.changeEditionStatus(edition, CANCELLED), userId);
     }
 }

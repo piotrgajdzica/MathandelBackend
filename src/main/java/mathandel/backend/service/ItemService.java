@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,6 +58,7 @@ public class ItemService {
         }
     }
 
+    @Transactional
     public ItemTO createItem(Long userId, Long editionId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
@@ -120,6 +122,7 @@ public class ItemService {
         }
 
         Edition edition = item.getEdition();
+        validateEdition(user, edition);
         if (edition != null) {
             EditionStatusType editionStatusType = edition.getEditionStatusType();
             if (editionStatusType.getEditionStatusName() != EditionStatusName.OPENED) {

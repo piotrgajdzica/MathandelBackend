@@ -5,9 +5,11 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.PreferenceTO;
 import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.*;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -32,6 +34,7 @@ public class PreferenceService {
         this.definedGroupRepository = definedGroupRepository;
     }
 
+    @Transactional
     public PreferenceTO updatePreference(Long userId, PreferenceTO preferenceTO, Long editionId, Long itemId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException("User doesn't exist."));
@@ -90,6 +93,9 @@ public class PreferenceService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
 
+        if(!item.getEdition().getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
+            throw new BadRequestException("Edition " + item.getEdition().getName() + " is not opened");
+        }
         if (!item.getUser().getId().equals(userId)) {
             throw new BadRequestException("User is not allowed to know other's user items preferences");
         }

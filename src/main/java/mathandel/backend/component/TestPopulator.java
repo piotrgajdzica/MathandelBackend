@@ -20,7 +20,7 @@ if you want to use it add @Transactional annotations in methods
     - PreferenceService.updatePreference()
     - EditionService.createEdition()
     - ItemService.createItem()
-    - CalcService.closeEdition()
+    - CalcService.resolveEdition()
 
 otherwise lazy fetch error will occur
 
@@ -49,7 +49,7 @@ public class TestPopulator {
         createUsers();
         createItems();
         createPreferences();
-        closeEdition();
+//        resolveEdition();
     }
 
     private void createEdition() {
@@ -129,6 +129,6 @@ public class TestPopulator {
     }
 
     private void closeEdition() {
-        calcService.closeEdition(1L, 1L);
+        calcService.resolveEdition(1L, 1L);
     }
 }

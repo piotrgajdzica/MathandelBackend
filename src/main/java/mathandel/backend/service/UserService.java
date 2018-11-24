@@ -17,6 +17,7 @@ import mathandel.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Set;
 
 import static mathandel.backend.utils.ServerToClientDataConverter.*;
@@ -37,6 +38,7 @@ public class UserService {
         this.rateRepository = rateRepository;
     }
 
+    @Transactional
     public EditionTO joinEdition(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));

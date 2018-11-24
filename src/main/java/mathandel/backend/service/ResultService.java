@@ -8,6 +8,7 @@ import mathandel.backend.model.client.ResultsTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.RateRepository;
 import mathandel.backend.repository.ResultRepository;
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static mathandel.backend.model.server.enums.EditionStatusName.FINISHED;
+import static mathandel.backend.model.server.enums.EditionStatusName.CLOSED;
+import static mathandel.backend.model.server.enums.EditionStatusName.PUBLISHED;
 import static mathandel.backend.utils.ServerToClientDataConverter.*;
 
 @Service
@@ -40,8 +42,9 @@ public class ResultService {
             throw new BadRequestException("User is not moderator of this edition");
         }
 
-        if (!edition.getEditionStatusType().getEditionStatusName().equals(FINISHED)) {
-            throw new BadRequestException("Edition is not finished. Please finish edition first");
+        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
+        if (!(editionStatusName.equals(PUBLISHED) || editionStatusName.equals(CLOSED))) {
+            throw new BadRequestException("Edition is not published nor closed. Please close edition first");
         }
 
         return mapResults(resultRepository.findAllByEdition_Id(editionId));
@@ -54,8 +57,8 @@ public class ResultService {
         if (!edition.getParticipants().contains(user)) {
             throw new BadRequestException("User is not in this edition");
         }
-        if (!edition.getEditionStatusType().getEditionStatusName().equals(FINISHED)) {
-            throw new BadRequestException("Edition is not finished yet");
+        if (!edition.getEditionStatusType().getEditionStatusName().equals(PUBLISHED)) {
+            throw new BadRequestException("Edition is not published yet");
         }
 
         Set<Result> resultsToReceive = resultRepository.findAllByReceiver_IdAndEdition_Id(userId, editionId);

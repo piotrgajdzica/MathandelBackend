@@ -1,7 +1,3 @@
 GET http://localhost:8080//api/moderator-requests/my
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQzMDY1NTEwLCJleHAiOjE1NDM2NzAzMTB9.I8Sg2Vx-c4Px6kHbQpsH7RjLbnEALqqbsVtS2Lyfe-lrZiWWGefpNPWrj2yCjp6BB7852PYrtKRHTBWTZHlp9w
-
-###
-   #
-   ####

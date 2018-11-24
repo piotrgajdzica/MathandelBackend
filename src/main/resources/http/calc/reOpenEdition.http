@@ -1,5 +1,6 @@
-GET http://localhost:8080/api/editions
+POST http://localhost:8080/api/editions/1/re-open
 Content-Type: Application/Json
 Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzMDY5NzM0LCJleHAiOjE1NDM2NzQ1MzR9.sFM7imAqCfFJJEGVP3aBKIYEye4H_m0aIEXpwugcuQ3X_5HhNhyE2NRyJw0ZbEgR0CkeBcV2Xr87RzVcd3EkTg
 
+< reOpenEdition.json
 ###

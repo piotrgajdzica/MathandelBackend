@@ -2,6 +2,7 @@ package mathandel.backend.utils;
 
 import mathandel.backend.model.client.*;
 import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.enums.EditionStatusName;
 
 import java.util.List;
 import java.util.Set;
@@ -81,7 +82,14 @@ public class ServerToClientDataConverter {
                 .setMaxParticipants(edition.getMaxParticipants())
                 .setModerator(edition.getModerators().stream().anyMatch(participant -> participant.getId().equals(userId)))
                 .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)))
-                .setEditionStatusName(edition.getEditionStatusType().getEditionStatusName());
+                .setEditionStatusName(mapEditionStatusName(edition.getEditionStatusType().getEditionStatusName()));
+    }
+
+    private static EditionStatusName mapEditionStatusName(EditionStatusName editionStatusName) {
+        if(editionStatusName.equals(EditionStatusName.PENDING) || editionStatusName.equals(EditionStatusName.FAILED)) {
+            return EditionStatusName.CLOSED;
+        }
+        return editionStatusName;
     }
 
     private static Set<ImageTO> mapImages(Set<Image> images) {

@@ -28,8 +28,14 @@ public class UrlPaths {
     public static final String editionItemPreferencePath = editionItemPath + "/preferences";
     // /api/editions/{editionId}/preferences
     public static final String editionPreferencesPath = editionPath + "/preferences";
-    // /api/editions/{editionId}/close
-    public static final String closeEditionPath = editionPath + "/close";
+    // /api/editions/{editionId}/resolve
+    public static final String resolveEditionPath = editionPath + "/resolve";
+    // /api/editions/{editionId}/publish
+    public static final String publishEditionPath = editionPath + "/publish";
+    // /api/editions/{editionId}/re-open
+    public static final String reOpenEditionPath = editionPath + "/re-open";
+    // /api/editions/{editionId}/cancel
+    public static final String cancelEditionPath = editionPath + "/cancel";
 
     // /api/editions/{editionId}/defined-groups
     public static final String definedGroups = editionPath + "/defined-groups";

@@ -5,9 +5,11 @@ import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.RateTO;
 import mathandel.backend.model.client.RateTypeTO;
+import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.Rate;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.RateRepository;
 import mathandel.backend.repository.RateTypeRepository;
 import mathandel.backend.repository.ResultRepository;
@@ -38,7 +40,11 @@ public class RateService {
     public RateTO rateResult(Long userId, Long resultId, RateTO rateTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Result result = resultRepository.findById(resultId).orElseThrow(() -> new ResourceNotFoundException("Result", "id", resultId));
+        Edition edition = result.getEdition();
 
+        if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.PUBLISHED)) {
+            throw new BadRequestException("Edition " + edition.getName() + " is not opened");
+        }
         if (!user.getId().equals(result.getReceiver().getId())) {
             throw new BadRequestException("User is not receiver of this result");
         }

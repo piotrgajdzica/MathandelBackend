@@ -12,4 +12,5 @@ public interface PreferenceRepository extends JpaRepository<Preference, Long> {
     Set<Preference> findAllByUser_IdAndEdition_Id(Long user_id, Long edition_id);
     Set<Preference> findAllByEdition_Id(Long edition_id);
     Set<Preference> findAllByWantedItemsContains(Set<Item> wantedItems);
+    void deleteAllByEdition_Id(Long edition_id);
 }

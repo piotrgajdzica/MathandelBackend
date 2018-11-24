@@ -52,7 +52,7 @@ public class SystemInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertRatesToDB();
         insertModeratorRequestStatusesToDB();
-//        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
+        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();
     }
 
