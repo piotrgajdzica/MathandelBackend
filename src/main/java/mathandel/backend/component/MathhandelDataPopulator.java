@@ -1,24 +1,23 @@
 package mathandel.backend.component;
 
 import mathandel.backend.model.server.Preference;
-import mathandel.backend.service.*;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MathhandelDataPopulator {
     public static void main(String[] args) throws IOException {
-        new MathhandelDataPopulator().parseFile("/home/monikeu/Dokumenty/mathandel-back/MathandelBackend/src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
+        new MathhandelDataPopulator().parseFile("/home/monikeu/Dokumenty/mathandel-back/MathandelBackend/src/main/resources/mathandel_example_preference_data/mathandel_29,5.txt");
     }
 
     private Set<ItemData> items = new HashSet<>();
     private Set<DefinedGroupData> definedGroups = new HashSet<>();
-    private Set<PreferenceLocal> preferences;
+    private Set<PreferenceLocal> preferences = new HashSet<>();
 //    private Map<ItemData, Set<Long>> userItemPreferences = new HashMap<>();
 //    private Map<ItemData, Set<String>> userDefinedGroupPreferences = new HashMap<>();
 
@@ -26,13 +25,22 @@ public class MathhandelDataPopulator {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
         String line = bufferedReader.readLine();
 
-        while (line != null) {
-            String[] splitLine = line.split(":");
-            String[] leftSideOfCollon = splitLine[0].trim().split(" ");
-            Set<String> res = new HashSet<>();
-            Set<String> rightSideOfCollon = Arrays.stream(splitLine[1].trim().split(";")).flatMap(e -> Arrays.stream(e.split(" "))).collect(Collectors.toSet());
+        while (line != null && !line.equals("\u001A")) {
 
-            switch (leftSideOfCollon[1].charAt(0)) {
+            if (line.startsWith("#") || line.isEmpty() || line.startsWith("\n")) {
+                line = bufferedReader.readLine();
+                continue;
+            }
+
+            String[] splitLine = line.split(":");
+            String[] leftSideOfCollon = splitLine[0].trim().split("\\)");
+
+            Set<String> rightSideOfCollon = new HashSet<>();
+            if (splitLine.length > 1) {
+                rightSideOfCollon = Arrays.stream(splitLine[1].trim().split(";")).flatMap(e -> Arrays.stream(e.split(" "))).filter(a -> !a.isEmpty()).collect(Collectors.toSet());
+            }
+
+            switch (leftSideOfCollon[1].trim().charAt(0)) {
                 case '%':
                     parseDefinedGroupDefinition(leftSideOfCollon, rightSideOfCollon);
                     break;
@@ -41,6 +49,8 @@ public class MathhandelDataPopulator {
                     parsePreference(leftSideOfCollon, rightSideOfCollon);
                     break;
             }
+            line = bufferedReader.readLine();
+            System.out.println("Parsed " + line);
         }
 
         //todo zapisac itemsy
@@ -59,15 +69,15 @@ public class MathhandelDataPopulator {
     private void parsePreference(String[] leftSideOfCollon, Set<String> rightSideOfCollon) {
         String userName = leftSideOfCollon[0].replace("(", "").replace(")", "");
 
-        Long haveItemId = Long.valueOf(leftSideOfCollon[1]);
+        Long haveItemId = Long.valueOf(leftSideOfCollon[1].trim());
         items.add(new ItemData(userName, haveItemId));
         Set<String> wantedDefinedGroups = new HashSet<>();
         Set<Long> wantedItems = new HashSet<>();
 
         for (String wantedObject : rightSideOfCollon) {
-            switch (wantedObject.charAt(0)) {
+            switch (wantedObject.trim().charAt(0)) {
                 case '%':
-                    wantedDefinedGroups.add(wantedObject.replace("%", ""));
+                    wantedDefinedGroups.add(getDefinedGroupName(wantedObject));
                     break;
                 default:
                     long id = Long.parseLong(wantedObject);
@@ -77,21 +87,29 @@ public class MathhandelDataPopulator {
             }
         }
 
-        preferences.add(new PreferenceLocal(new Preference(),wantedDefinedGroups, userName,haveItemId,  wantedItems));
+        preferences.add(new PreferenceLocal(new Preference(), wantedDefinedGroups, userName, haveItemId, wantedItems));
 
     }
 
     private void parseDefinedGroupDefinition(String[] leftSideOfCollon, Set<String> rightSideOfCollon) {
         String userName = leftSideOfCollon[0].replace("(", "").replace(")", "");
 
-        String definedGroupName = leftSideOfCollon[1].replace("%", "");
+        String definedGroupName = getDefinedGroupName(leftSideOfCollon[1]);
 
-        Set<Long> definedGroupsItems = rightSideOfCollon.stream().map(Long::valueOf).collect(Collectors.toSet());
+        Set<String> defindedGroupsDefinedGroups = rightSideOfCollon.stream().filter(e -> e.startsWith("%")).map(this::getDefinedGroupName).collect(Collectors.toSet());
+
+        definedGroups.addAll(defindedGroupsDefinedGroups.stream().map(e -> new DefinedGroupData(null, e, null,null)).collect(Collectors.toSet()));
+
+        Set<Long> definedGroupsItems = rightSideOfCollon.stream().filter(e -> !e.startsWith("%")).map(e -> Long.valueOf(e.trim())).collect(Collectors.toSet());
 
         items.addAll(definedGroupsItems.stream().map(id -> new ItemData(null, id)).collect(Collectors.toSet()));
 
-        definedGroups.add(new DefinedGroupData(userName,definedGroupName,definedGroupsItems));
+        definedGroups.add(new DefinedGroupData(userName, definedGroupName, definedGroupsItems, defindedGroupsDefinedGroups));
 
+    }
+
+    private String getDefinedGroupName(String s) {
+        return s.replace("%", "");
     }
 
     private class ItemData {
@@ -109,12 +127,14 @@ public class MathhandelDataPopulator {
         String userName;
         String definedGruopName;
         Set<Long> items;
+        Set<String> definedGroups;
 
 
-        DefinedGroupData(String userName, String definedGruopName, Set<Long> items) {
+        DefinedGroupData(String userName, String definedGruopName, Set<Long> items, Set<String> definedGroups) {
             this.userName = userName;
             this.definedGruopName = definedGruopName;
             this.items = items;
+            this.definedGroups = definedGroups;
         }
 
     }
