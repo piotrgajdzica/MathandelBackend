@@ -3,6 +3,7 @@ package mathandel.backend.service;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.EditionTO;
 import mathandel.backend.model.client.RateTO;
 import mathandel.backend.model.client.UserDataTO;
 import mathandel.backend.model.client.UserTO;
@@ -36,7 +37,7 @@ public class UserService {
         this.rateRepository = rateRepository;
     }
 
-    public ApiResponse joinEdition(Long userId, Long editionId) {
+    public EditionTO joinEdition(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
 
@@ -51,9 +52,7 @@ public class UserService {
         }
 
         edition.getParticipants().add(user);
-        editionRepository.save(edition);
-
-        return new ApiResponse("User added to edition successfully");
+        return mapEdition(editionRepository.save(edition), userId);
     }
 
     public UserTO getUser(Long userId) {
