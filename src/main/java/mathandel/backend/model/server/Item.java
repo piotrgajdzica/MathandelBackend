@@ -1,5 +1,7 @@
 package mathandel.backend.model.server;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,8 +10,12 @@ import java.util.Set;
 @Table(name = "items")
 public class Item {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "UseExistingIdOtherwiseGenerateUsingIdentity", strategy = "mathandel.backend.model.generator.UseExistingIdOtherwiseGenerateUsingIdentity")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "UseExistingIdOtherwiseGenerateUsingIdentity")
     private Long id;
 
     private String name;
