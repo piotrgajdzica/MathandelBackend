@@ -90,7 +90,10 @@ public class ModeratorRequestService {
     }
 
     public ModeratorRequestTO getUserRequests(Long userId) {
-        return mapModeratorRequest(moderatorRequestsRepository.findAllByUser_Id(userId)
-                .orElseThrow(() -> new BadRequestException("User have no moderator request")));
+        return mapModeratorRequest(moderatorRequestsRepository.findAllByUser_Id(userId).orElse(new ModeratorRequest()
+                .setId(null)
+                .setReason("")
+                .setUser(new User().setId(null))
+                .setModeratorRequestStatus(new ModeratorRequestStatus().setName(null))));
     }
 }

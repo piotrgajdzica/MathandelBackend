@@ -61,7 +61,7 @@ public class EditionController {
     @PostMapping(editionParticipantsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ApiResponse joinEdition(@CurrentUser UserPrincipal currentUser,
+    EditionTO joinEdition(@CurrentUser UserPrincipal currentUser,
                             @PathVariable Long editionId) {
         return userService.joinEdition(currentUser.getId(), editionId);
     }
