@@ -104,9 +104,7 @@ public class UserControllerITTest {
                 .setName("admin")
                 .setSurname("admin")
                 .setUsername("admin")
-                .setEmail("admin@admin.admin")
-                .setId(1L)
-                .setRoles(mapRoles(roles));
+                .setEmail("admin@admin.admin");
         String token = acquireTokenNormalUser();
 
         //when

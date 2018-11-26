@@ -34,7 +34,6 @@ public class PreferenceService {
         this.definedGroupRepository = definedGroupRepository;
     }
 
-    @Transactional
     public PreferenceTO updatePreference(Long userId, PreferenceTO preferenceTO, Long editionId, Long itemId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException("User doesn't exist."));

@@ -11,6 +11,7 @@ import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.EditionRepository;
 import mathandel.backend.repository.ItemRepository;
 import mathandel.backend.repository.UserRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-
+@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")

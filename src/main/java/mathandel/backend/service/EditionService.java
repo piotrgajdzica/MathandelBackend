@@ -43,7 +43,6 @@ public class EditionService {
         this.roleRepository = roleRepository;
     }
 
-    @Transactional
     public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
         validateEdition(editionTO);

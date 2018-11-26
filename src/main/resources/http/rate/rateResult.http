@@ -1,6 +1,6 @@
-POST http://localhost:8080/api/results/1/rate
+POST http://localhost:8080/api/results/3/rate
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyNTU1ODg3LCJleHAiOjE1NDMxNjA2ODd9.4vYaDSa9oVYQsa_lQpLT3BCOXtoUNMqSF5knN_cMjcYQiDvHj9KAZoHWd5elAvJPBnM4-YOHIVuplUb6F210tA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQzMDc4NzM3LCJleHAiOjE1NDM2ODM1Mzd9.lRtwa9mLjU3ATKzI80OP85ies6fFVGTqrcQQ8jRPIAc5jVxERowzqWOtIh8ZUsemH0KjVlYGw-PTUb07Jc8XKw
 
 < rateResult.json
 

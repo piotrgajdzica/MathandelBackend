@@ -38,7 +38,6 @@ public class UserService {
         this.rateRepository = rateRepository;
     }
 
-    @Transactional
     public EditionTO joinEdition(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));

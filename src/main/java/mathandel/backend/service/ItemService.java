@@ -58,7 +58,6 @@ public class ItemService {
         }
     }
 
-    @Transactional
     public ItemTO createItem(Long userId, Long editionId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
