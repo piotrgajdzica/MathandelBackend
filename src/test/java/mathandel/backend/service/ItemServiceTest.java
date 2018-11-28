@@ -129,7 +129,7 @@ public class ItemServiceTest {
 //        //given
 //        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 //        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
-//        item.setEdition(new Edition().setEditionStatusType(new EditionStatusType().setEditionStatusName(EditionStatusName.CLOSED)));
+//        item.setEdition(new Edition().setEditionStatusType(new EditionStatusType().setStatus(EditionStatusName.CLOSED)));
 //
 //        //when then
 //        BadRequestException badRequestException = assertThrows(BadRequestException.class,

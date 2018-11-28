@@ -1,7 +1,8 @@
 package mathandel.backend.controller;
 
+import mathandel.backend.model.client.ModeratorResultsTO;
 import mathandel.backend.model.client.ResultTO;
-import mathandel.backend.model.client.ResultsTO;
+import mathandel.backend.model.client.UserResultsTO;
 import mathandel.backend.security.CurrentUser;
 import mathandel.backend.security.UserPrincipal;
 import mathandel.backend.service.ResultService;
@@ -28,7 +29,7 @@ public class ResultController {
     @GetMapping(editionUserResultsPath)
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    ResultsTO getEditionResultsForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
+    UserResultsTO getEditionResultsForUser(@CurrentUser UserPrincipal currentUser, @PathVariable Long editionId) {
         return resultService.getEditionResultsForUser(currentUser.getId(), editionId);
     }
 
@@ -36,8 +37,8 @@ public class ResultController {
     @GetMapping(editionModeratorResultsPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    Set<ResultTO> getEditionResultsForModerator(@CurrentUser UserPrincipal currentUser,
-                                                @PathVariable Long editionId) {
+    ModeratorResultsTO getEditionResultsForModerator(@CurrentUser UserPrincipal currentUser,
+                                                     @PathVariable Long editionId) {
         return resultService.getEditionResultsForModerator(currentUser.getId(), editionId);
     }
 }

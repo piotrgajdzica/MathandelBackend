@@ -4,23 +4,17 @@ import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
 import mathandel.backend.model.client.RateTO;
-import mathandel.backend.model.client.RateTypeTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.Rate;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.repository.RateRepository;
-import mathandel.backend.repository.RateTypeRepository;
 import mathandel.backend.repository.ResultRepository;
 import mathandel.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static mathandel.backend.utils.ServerToClientDataConverter.mapRate;
-import static mathandel.backend.utils.ServerToClientDataConverter.mapRateTypes;
 
 @Service
 public class RateService {
@@ -28,13 +22,11 @@ public class RateService {
     private final ResultRepository resultRepository;
     private final UserRepository userRepository;
     private final RateRepository rateRepository;
-    private final RateTypeRepository rateTypeRepository;
 
-    public RateService(ResultRepository resultRepository, UserRepository userRepository, RateRepository rateRepository, RateTypeRepository rateTypeRepository) {
+    public RateService(ResultRepository resultRepository, UserRepository userRepository, RateRepository rateRepository) {
         this.resultRepository = resultRepository;
         this.userRepository = userRepository;
         this.rateRepository = rateRepository;
-        this.rateTypeRepository = rateTypeRepository;
     }
 
     public RateTO rateResult(Long userId, Long resultId, RateTO rateTO) {
@@ -58,9 +50,5 @@ public class RateService {
         result.setRate(rate);
 
         return mapRate(rateRepository.save(rate));
-    }
-
-    public Set<RateTypeTO> getRateTypes() {
-        return mapRateTypes(new HashSet<>(rateTypeRepository.findAll()));
     }
 }

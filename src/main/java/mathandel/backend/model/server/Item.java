@@ -1,5 +1,6 @@
 package mathandel.backend.model.server;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,12 +11,9 @@ import java.util.Set;
 @Table(name = "items")
 public class Item {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Id
     @GenericGenerator(name = "UseExistingIdOtherwiseGenerateUsingIdentity", strategy = "mathandel.backend.model.generator.UseExistingIdOtherwiseGenerateUsingIdentity")
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "UseExistingIdOtherwiseGenerateUsingIdentity")
+    @GeneratedValue(generator = "UseExistingIdOtherwiseGenerateUsingIdentity")
     private Long id;
 
     private String name;
@@ -86,5 +84,17 @@ public class Item {
     public Item setImages(Set<Image> images) {
         this.images = images;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("description", description)
+                .append("user", user.getUsername())
+                .append("edition", edition.getName())
+                .append("images", images)
+                .toString();
     }
 }

@@ -16,4 +16,5 @@ public interface DefinedGroupRepository extends JpaRepository<DefinedGroup, Long
     Set<DefinedGroup> findAllByEdition_Id(Long edition_id);
     void deleteAllByEdition_Id(Long edition_id);
     Set<DefinedGroup> findAllByNameIn(Collection<@NotBlank @Size(max = 100) String> name);
+    DefinedGroup findByNameAndUser_Username(String name, String user_username);
 }

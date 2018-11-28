@@ -3,8 +3,9 @@ package mathandel.backend.service;
 import mathandel.backend.exception.AppException;
 import mathandel.backend.exception.BadRequestException;
 import mathandel.backend.exception.ResourceNotFoundException;
+import mathandel.backend.model.client.ModeratorResultsTO;
 import mathandel.backend.model.client.ResultTO;
-import mathandel.backend.model.client.ResultsTO;
+import mathandel.backend.model.client.UserResultsTO;
 import mathandel.backend.model.server.Edition;
 import mathandel.backend.model.server.Result;
 import mathandel.backend.model.server.User;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static mathandel.backend.model.server.enums.EditionStatusName.CLOSED;
-import static mathandel.backend.model.server.enums.EditionStatusName.PUBLISHED;
+import static mathandel.backend.model.server.enums.EditionStatusName.*;
 import static mathandel.backend.utils.ServerToClientDataConverter.*;
 
 @Service
@@ -34,7 +34,7 @@ public class ResultService {
         this.editionRepository = editionRepository;
     }
 
-    public Set<ResultTO> getEditionResultsForModerator(Long userId, Long editionId) {
+    public ModeratorResultsTO getEditionResultsForModerator(Long userId, Long editionId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User not in db"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
@@ -42,15 +42,10 @@ public class ResultService {
             throw new BadRequestException("User is not moderator of this edition");
         }
 
-        EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
-        if (!(editionStatusName.equals(PUBLISHED) || editionStatusName.equals(CLOSED))) {
-            throw new BadRequestException("Edition is not published nor closed. Please close edition first");
-        }
-
-        return mapResults(resultRepository.findAllByEdition_Id(editionId));
+        return mapModeratorResults(resultRepository.findAllByEdition_Id(editionId), edition.getEditionStatusType().getEditionStatusName());
     }
 
-    public ResultsTO getEditionResultsForUser(Long userId, Long editionId) {
+    public UserResultsTO getEditionResultsForUser(Long userId, Long editionId) {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
 
@@ -64,7 +59,7 @@ public class ResultService {
         Set<Result> resultsToReceive = resultRepository.findAllByReceiver_IdAndEdition_Id(userId, editionId);
         Set<Result> resultsToSend = resultRepository.findAllBySender_IdAndEdition_Id(userId, editionId);
 
-        return new ResultsTO()
+        return new UserResultsTO()
                 .setResultsToReceive(mapResultsToReceive(resultsToReceive))
                 .setResultsToSend(mapResultsToSend(resultsToSend))
                 .setReceivers(mapProductsReceivers(resultsToSend))

@@ -173,16 +173,6 @@ public class ServerToClientDataConverter {
         return results.stream().map(ServerToClientDataConverter::mapResultToReceive).collect(Collectors.toSet());
     }
 
-    public static RateTypeTO mapRateType(RateType rateType) {
-        return new RateTypeTO()
-                .setId(rateType.getId())
-                .setRateTypeName(rateType.getName());
-    }
-
-    public static Set<RateTypeTO> mapRateTypes(Set<RateType> rateTypes) {
-        return rateTypes.stream().map(ServerToClientDataConverter::mapRateType).collect(Collectors.toSet());
-    }
-
     public static Set<SenderTO> mapProductsSenders(Set<Result> resultsToReceive) {
         return resultsToReceive.stream().map(result -> mapSender(result.getSender())).collect(Collectors.toSet());
     }
@@ -211,5 +201,11 @@ public class ServerToClientDataConverter {
                 .setCity(receiver.getCity())
                 .setCountry(receiver.getCountry())
                 .setPostalCode(receiver.getPostalCode());
+    }
+
+    public static ModeratorResultsTO mapModeratorResults(Set<Result> results, EditionStatusName editionStatusName){
+        return new ModeratorResultsTO()
+                .setResults(mapResults(results))
+                .setStatus(editionStatusName);
     }
 }

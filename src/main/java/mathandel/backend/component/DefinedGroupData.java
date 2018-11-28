@@ -8,7 +8,6 @@ class DefinedGroupData {
     private Set<Long> items;
     private Set<String> definedGroups;
 
-
     public String getUserName() {
         return userName;
     }

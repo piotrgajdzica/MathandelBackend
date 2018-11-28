@@ -2,7 +2,7 @@ package mathandel.backend.model.client;
 
 import java.util.Set;
 
-public class ResultsTO {
+public class UserResultsTO {
 
     private Set<ResultTO> resultsToSend;
     private Set<ResultTO> resultsToReceive;
@@ -13,7 +13,7 @@ public class ResultsTO {
         return resultsToSend;
     }
 
-    public ResultsTO setResultsToSend(Set<ResultTO> resultsToSend) {
+    public UserResultsTO setResultsToSend(Set<ResultTO> resultsToSend) {
         this.resultsToSend = resultsToSend;
         return this;
     }
@@ -22,7 +22,7 @@ public class ResultsTO {
         return resultsToReceive;
     }
 
-    public ResultsTO setResultsToReceive(Set<ResultTO> resultsToReceive) {
+    public UserResultsTO setResultsToReceive(Set<ResultTO> resultsToReceive) {
         this.resultsToReceive = resultsToReceive;
         return this;
     }
@@ -31,7 +31,7 @@ public class ResultsTO {
         return senders;
     }
 
-    public ResultsTO setSenders(Set<SenderTO> senders) {
+    public UserResultsTO setSenders(Set<SenderTO> senders) {
         this.senders = senders;
         return this;
     }
@@ -40,7 +40,7 @@ public class ResultsTO {
         return receivers;
     }
 
-    public ResultsTO setReceivers(Set<ReceiverTO> receivers) {
+    public UserResultsTO setReceivers(Set<ReceiverTO> receivers) {
         this.receivers = receivers;
         return this;
     }

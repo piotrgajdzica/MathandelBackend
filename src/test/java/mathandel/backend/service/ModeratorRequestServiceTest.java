@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.when;
 
-//todo why is it ignored??
 @Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest

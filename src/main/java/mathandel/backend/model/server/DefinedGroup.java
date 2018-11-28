@@ -1,10 +1,14 @@
 package mathandel.backend.model.server;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "defined_groups")
@@ -24,10 +28,10 @@ public class DefinedGroup {
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @ManyToMany
     private Set<Item> items = new HashSet<>();
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<DefinedGroup> groups = new HashSet<>();
 
     public DefinedGroup() {
@@ -85,5 +89,17 @@ public class DefinedGroup {
     public DefinedGroup setGroups(Set<DefinedGroup> groups) {
         this.groups = groups;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("edition", edition)
+                .append("user", user.getUsername())
+                .append("items", items.stream().map(Item::getId).collect(Collectors.toSet()))
+                .append("groups", groups.stream().map(DefinedGroup::getName).collect(Collectors.toSet()))
+                .toString();
     }
 }

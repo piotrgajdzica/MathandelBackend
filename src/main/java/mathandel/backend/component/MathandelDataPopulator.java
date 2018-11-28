@@ -1,49 +1,64 @@
 package mathandel.backend.component;
 
 import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.*;
-import org.hibernate.exception.DataException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class MathandelDataPopulator {
 
+    private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private ItemRepository itemRepository;
     private DefinedGroupRepository definedGroupRepository;
     private PreferenceRepository preferenceRepository;
     private RoleRepository roleRepository;
     private EditionRepository editionRepository;
+    private EditionStatusTypeRepository editionStatusTypeRepository;
 
     private Set<String> userNames = new HashSet<>();
     private Set<ItemData> items = new HashSet<>();
     private Set<DefinedGroupData> definedGroups = new HashSet<>();
     private Set<PreferenceLocal> preferences = new HashSet<>();
 
+    private long maxId = 0;
     private Edition edition;
 
-    public MathandelDataPopulator(UserRepository userRepository, ItemRepository itemRepository, DefinedGroupRepository definedGroupRepository, PreferenceRepository preferenceRepository, RoleRepository roleRepository, EditionRepository editionRepository) {
+    private long lStartTime;
+    private long lEndTime;
+    private long output;
+
+    public MathandelDataPopulator(PasswordEncoder passwordEncoder, UserRepository userRepository, ItemRepository itemRepository, DefinedGroupRepository definedGroupRepository, PreferenceRepository preferenceRepository, RoleRepository roleRepository, EditionRepository editionRepository, EditionStatusTypeRepository editionStatusTypeRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.definedGroupRepository = definedGroupRepository;
         this.preferenceRepository = preferenceRepository;
         this.roleRepository = roleRepository;
         this.editionRepository = editionRepository;
+        this.editionStatusTypeRepository = editionStatusTypeRepository;
     }
 
     public void saveFromFile(String fileName) throws IOException {
-        initEdition();
 
+        lStartTime = System.nanoTime();
+        initEdition();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Created edition -- " + output / 1000000000);
+
+        lStartTime = System.nanoTime();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
         String line = bufferedReader.readLine();
 
@@ -72,8 +87,9 @@ public class MathandelDataPopulator {
                     break;
             }
             line = bufferedReader.readLine();
-            System.out.println("Parsed " + line);
         }
+        lEndTime = System.nanoTime();
+        System.out.println("Parser  -- " + output / 1000000000);
 
         saveDataToDb();
 
@@ -81,83 +97,44 @@ public class MathandelDataPopulator {
 
     private void initEdition() {
         // todo init edition
+        EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
         Set<User> mods = new HashSet<>();
         mods.add(userRepository.findById(1L).get());
         edition = new Edition()
-                .setName("Mathandel test ")
+                .setName("Mathandel test")
                 .setDescription("desc")
                 .setMaxParticipants(Integer.MAX_VALUE)
-                .setModerators(mods);
+                .setModerators(mods)
+                .setEditionStatusType(editionStatusType)
+                .setEndDate(LocalDate.now().plusMonths(10));
 
         editionRepository.save(edition);
     }
 
     private void saveDataToDb() {
+        lStartTime = System.nanoTime();
         saveUsers();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved users -- " + output / 1000000000);
+        lStartTime = System.nanoTime();
         saveItems();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved items -- " + output / 1000000000);
+        lStartTime = System.nanoTime();
+        saveItemsNotPresent();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved not present items -- " + output / 1000000000);
+
         saveDefinedGroups();
+
+        lStartTime = System.nanoTime();
         savePreferences();
-    }
-
-    private void savePreferences() {
-        //zapisac prefki
-
-        Set<Preference> localPreferences = new HashSet<>();
-
-        for (PreferenceLocal preferenceLocal : preferences) {
-            Preference preference = new Preference()
-                    .setEdition(edition)
-                    .setHaveItem(itemRepository.findById(preferenceLocal.haveItemId).get())
-                    .setUser(userRepository.findByUsername(preferenceLocal.userName).get())
-                    .setWantedDefinedGroups(definedGroupRepository.findAllByNameIn(preferenceLocal.definedGroups))
-                    .setWantedItems(itemRepository.findAllByIdIn(preferenceLocal.wantedItems));
-            localPreferences.add(preference);
-        }
-
-        preferenceRepository.saveAll(localPreferences);
-    }
-
-    private void saveDefinedGroups(){
-        //zapisac grupsy
-        Set<DefinedGroup> localDefinedGroups = new HashSet<>();
-
-        for (DefinedGroupData definedGroupData : definedGroups) {
-            DefinedGroup definedGroup = new DefinedGroup()
-                    .setName(definedGroupData.getDefinedGruopName())
-                    .setUser(userRepository.findByUsername(definedGroupData.getUserName()).get())
-                    .setEdition(edition)
-                    .setItems(definedGroupData.getItems().stream().map(e -> itemRepository.findById(e).get()).collect(Collectors.toSet()));
-            localDefinedGroups.add(definedGroup);
-        }
-
-        definedGroupRepository.saveAll(localDefinedGroups);
-
-
-        // hacks for updating list of defined groups for defined groups
-        List<DefinedGroup> repositoryDefinedGroups = definedGroupRepository.findAll();
-        for (DefinedGroup definedGroup : repositoryDefinedGroups) {
-            DefinedGroupData definedGroupData = definedGroups.stream().filter(df -> df.getDefinedGruopName().equals(definedGroup.getName())).findFirst().get();
-            definedGroup.setGroups(repositoryDefinedGroups.stream().filter(df -> definedGroupData.getDefinedGroups().contains(df.getName())).collect(Collectors.toSet()));
-        }
-
-        definedGroupRepository.saveAll(repositoryDefinedGroups);
-    }
-
-    private void saveItems() {
-        // zapisac item
-        Set<Item> itemsy = new HashSet<>();
-
-        for (ItemData itemdata : items) {
-            Item item = new Item()
-                    .setEdition(edition)
-                    .setUser(userRepository.findByUsername(itemdata.userName).get())
-                    .setDescription("desc")
-                    .setId(itemdata.haveItemId);
-
-            itemsy.add(item);
-        }
-
-        itemRepository.saveAll(itemsy);
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved preferences -- " + output / 1000000000);
     }
 
     private void saveUsers() {
@@ -175,14 +152,28 @@ public class MathandelDataPopulator {
                     .setCountry("country" + i)
                     .setCity("city" + i)
                     .setRoles(roles)
-                    .setEmail("email" + i+"@domain.com")
-                    .setPassword("pass" + i)
+                    .setEmail("email" + i + "@domain.com")
+                    .setPassword(passwordEncoder.encode("pass" + i))
                     .setAddress("addr" + i);
 
             i++;
 
             users.add(user);
         }
+
+        User user = new User()
+                .setName("John")
+                .setSurname("Smith")
+                .setUsername("johnsmith123")
+                .setEmail("johnsmith@gmail.com")
+                .setAddress("address")
+                .setCity("city")
+                .setCountry("country")
+                .setPostalCode("postal code")
+                .setPassword(passwordEncoder.encode("johnsmith"))
+                .setRoles(roles);
+
+        users.add(user);
 
         edition = editionRepository.findById(edition.getId()).get();
         edition.setParticipants(users);
@@ -191,10 +182,132 @@ public class MathandelDataPopulator {
         editionRepository.save(edition);
     }
 
+    private void saveItems() {
+        // zapisac item
+        for (ItemData itemdata : this.items) {
+            User user = userRepository.findByUsername(itemdata.userName).get();
+            Item item = new Item()
+                    .setEdition(edition)
+                    .setUser(user)
+                    .setDescription("desc")
+                    .setId(itemdata.haveItemId);
+
+            itemRepository.save(item);
+        }
+    }
+
+    private void saveItemsNotPresent() {
+
+        Set<Item> items = new HashSet<>();
+        User user = userRepository.findByUsername("johnsmith123").get();
+
+        for (long i = 1; i <= maxId; i++) {
+            if(!itemRepository.existsById(i)) {
+                Item item = new Item()
+                        .setId(i)
+                        .setEdition(edition)
+                        .setUser(user)
+                        .setName("NPP")
+                        .setDescription("no preference product")
+                        .setImages(Collections.emptySet());
+                items.add(item);
+            }
+        }
+        itemRepository.saveAll(items);
+    }
+
+    @Transactional
+    void saveDefinedGroups() {
+        //zapisac grupsy
+        Set<DefinedGroup> localDefinedGroups = new HashSet<>();
+
+        for (DefinedGroupData definedGroupData : definedGroups) {
+            DefinedGroup definedGroup = new DefinedGroup()
+                    .setName(definedGroupData.getDefinedGruopName())
+                    .setUser(userRepository.findByUsername(definedGroupData.getUserName()).get())
+                    .setEdition(edition)
+                    .setItems(definedGroupData.getItems().stream().map(e -> itemRepository.findById(e).get()).collect(Collectors.toSet()));
+            localDefinedGroups.add(definedGroup);
+        }
+
+        for(DefinedGroup definedGroup: localDefinedGroups) {
+            Set<Item> items = definedGroup.getItems();
+            definedGroup.setItems(null);
+            DefinedGroup savedGroup = definedGroupRepository.save(definedGroup);
+            savedGroup.setItems(items);
+            definedGroupRepository.save(savedGroup);
+        }
+
+        System.out.println("First step of saving defined groups terminated successfully");
+
+        //trzeba teraz zapisac grupy w grupach
+        //posiadamy usernamea i nazwy grup
+        //musimy wyciagnac grupy o tych nazwach ktore naleza tez do tego usera
+
+        for(DefinedGroupData definedGroupData: definedGroups) {
+
+            String definedGruopName = definedGroupData.getDefinedGruopName();
+            String userName = definedGroupData.getUserName();
+            System.out.println("Group name: " + definedGruopName + "  User name: " + userName);
+
+            if(definedGroupData.getDefinedGroups().size()!= 0) {
+                int i = 1;
+            }
+
+            DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGruopName, userName);
+
+            for(String groupName: definedGroupData.getDefinedGroups()) {
+                DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser_Username(groupName, userName);
+                definedGroup.getGroups().add(groupToAdd);
+            }
+            definedGroupRepository.save(definedGroup);
+        }
+
+
+//        // hacks for updating list of defined groups for defined groups
+//        List<DefinedGroup> repositoryDefinedGroups = definedGroupRepository.findAll();
+//        for (DefinedGroup definedGroup : repositoryDefinedGroups) {
+//
+//
+//
+//            DefinedGroupData definedGroupData = definedGroups.stream().filter(df -> df.getDefinedGruopName().equals(definedGroup.getName())).findFirst().get();
+//            definedGroup.setGroups(repositoryDefinedGroups.stream().filter(df -> definedGroupData.getDefinedGroups().contains(df.getName())).collect(Collectors.toSet()));
+//        }
+//
+//        definedGroupRepository.saveAll(repositoryDefinedGroups);
+    }
+
+    private void savePreferences() {
+        //zapisac prefki
+
+        Set<Preference> localPreferences = new HashSet<>();
+
+        for (PreferenceLocal preferenceLocal : preferences) {
+            HashSet<DefinedGroup> groups = new HashSet<>();
+            preferenceLocal.definedGroups.forEach(definedGroupName -> {
+                DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGroupName, preferenceLocal.userName);
+                groups.add(definedGroup);
+            });
+
+            Preference preference = new Preference()
+                    .setEdition(edition)
+                    .setHaveItem(itemRepository.findById(preferenceLocal.haveItemId).get())
+                    .setUser(userRepository.findByUsername(preferenceLocal.userName).get())
+                    .setWantedDefinedGroups(groups)
+                    .setWantedItems(itemRepository.findAllByIdIn(preferenceLocal.wantedItems));
+            localPreferences.add(preference);
+        }
+
+        preferenceRepository.saveAll(localPreferences);
+    }
+
     private void parsePreference(String[] leftSideOfCollon, Set<String> rightSideOfCollon) {
         String userName = leftSideOfCollon[0].replace("(", "").replace(")", "");
         userNames.add(userName);
 
+        if(userName.equals("razul")){
+            int i = 1;
+        }
         Long haveItemId = Long.valueOf(leftSideOfCollon[1].trim());
         items.add(new ItemData(userName, haveItemId));
         Set<String> wantedDefinedGroups = new HashSet<>();
@@ -207,6 +320,9 @@ public class MathandelDataPopulator {
                     break;
                 default:
                     long id = Long.parseLong(wantedObject);
+                    if (id > maxId) {
+                        maxId = id;
+                    }
                     wantedItems.add(id);
 //                    items.add(new ItemData(null, id));
                     break;
