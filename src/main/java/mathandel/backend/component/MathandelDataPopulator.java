@@ -131,10 +131,12 @@ public class MathandelDataPopulator {
         saveDefinedGroups();
         lEndTime = System.nanoTime();
         output = lEndTime - lStartTime;
-        System.out.println("Saved preferences -- " + output / 1000000000);
-
+        System.out.println("Saved groups -- " + output / 1000000000);
+        lStartTime = System.nanoTime();
         saveDefinedGroupsInGroups();
-
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved groups in groups -- " + output / 1000000000);
         lStartTime = System.nanoTime();
         savePreferences();
         lEndTime = System.nanoTime();
@@ -247,17 +249,12 @@ public class MathandelDataPopulator {
         for(DefinedGroupData definedGroupData: definedGroups) {
 
             String definedGruopName = definedGroupData.getDefinedGruopName();
+            //todo this is not necessary
             User user = userRepository.findByUsername(definedGroupData.getUserName()).get();
-            System.out.println("Group name: " + definedGruopName + "  User name: " + user.getUsername());
-
-            if(definedGroupData.getDefinedGroups().size()!= 0) {
-                int i = 1;
-            }
-
-            DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser(definedGruopName, user);
+            DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGruopName, user.getUsername());
 
             for(String groupName: definedGroupData.getDefinedGroups()) {
-                DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser(groupName, user);
+                DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser_Username(groupName, user.getUsername());
                 definedGroup.getGroups().add(groupToAdd);
             }
             definedGroupRepository.save(definedGroup);
@@ -294,9 +291,6 @@ public class MathandelDataPopulator {
         String userName = leftSideOfCollon[0].replace("(", "").replace(")", "");
         userNames.add(userName);
 
-        if(userName.equals("razul")){
-            int i = 1;
-        }
         Long haveItemId = Long.valueOf(leftSideOfCollon[1].trim());
         items.add(new ItemData(userName, haveItemId));
         Set<String> wantedDefinedGroups = new HashSet<>();
@@ -313,7 +307,6 @@ public class MathandelDataPopulator {
                         maxId = id;
                     }
                     wantedItems.add(id);
-//                    items.add(new ItemData(null, id));
                     break;
             }
         }
@@ -335,7 +328,7 @@ public class MathandelDataPopulator {
 
 //        items.addAll(definedGroupsItems.stream().map(id -> new ItemData(null, id)).collect(Collectors.toSet()));
 
-        definedGroups.add(new DefinedGroupData(userName, definedGroupName, definedGroupsItems, defindedGroupsDefinedGroups));
+        definedGroups.add(new DefinedGroupData(userName, definedGroupName.trim(), definedGroupsItems, defindedGroupsDefinedGroups));
 
     }
 
