@@ -1,6 +1,6 @@
 PUT http://localhost:8080/api/users/me
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyMTIzNTQzLCJleHAiOjE1NDI3MjgzNDN9.xksQ-BRAfa0Xp_YIcTy30VB_SKEhZ8FwChfyfRI3GA6_eXUzC9Hg_jxZvSaYlJeQ9gfJSj_GQ3EpwNbcZdFSgw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzNTE5NDA0LCJleHAiOjE1NDQxMjQyMDR9.QOaJIia9wSIGn2REINEqQGJHD462KHy4sv5sFuOboIHEcKHgth3ZwoOnufOxq4a1yDdQpihu1vMIxvndY2v7Bg
 
 < editMe.json
 

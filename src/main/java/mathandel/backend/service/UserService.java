@@ -69,18 +69,17 @@ public class UserService {
     public UserTO editMyData(Long userId, UserTO userTO) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
 
-        if (!user.getUsername().equals(userTO.getUsername()) && userRepository.existsByUsername(userTO.getUsername())) {
-            throw new BadRequestException("Username is already taken");
-        }
         if (!user.getEmail().equals(userTO.getEmail()) && userRepository.existsByEmail(userTO.getEmail())) {
             throw new BadRequestException("Email Address already in use");
         }
 
         user.setName(userTO.getName())
                 .setSurname(userTO.getSurname())
-                .setUsername(userTO.getUsername())
                 .setEmail(userTO.getEmail())
-                .setAddress(userTO.getAddress());
+                .setAddress(userTO.getAddress())
+                .setCity(userTO.getCity())
+                .setCountry(userTO.getCountry())
+                .setPostalCode(userTO.getPostalCode());
 
         return mapUser(userRepository.save(user));
     }
