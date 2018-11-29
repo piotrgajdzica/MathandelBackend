@@ -31,7 +31,7 @@ public class DefinedGroup {
     @ManyToMany
     private Set<Item> items = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<DefinedGroup> groups = new HashSet<>();
 
     public DefinedGroup() {

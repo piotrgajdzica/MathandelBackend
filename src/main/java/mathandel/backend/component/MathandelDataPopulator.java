@@ -127,8 +127,13 @@ public class MathandelDataPopulator {
         lEndTime = System.nanoTime();
         output = lEndTime - lStartTime;
         System.out.println("Saved not present items -- " + output / 1000000000);
-
+        lStartTime = System.nanoTime();
         saveDefinedGroups();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Saved preferences -- " + output / 1000000000);
+
+        saveDefinedGroupsInGroups();
 
         lStartTime = System.nanoTime();
         savePreferences();
@@ -216,7 +221,6 @@ public class MathandelDataPopulator {
         itemRepository.saveAll(items);
     }
 
-    @Transactional
     void saveDefinedGroups() {
         //zapisac grupsy
         Set<DefinedGroup> localDefinedGroups = new HashSet<>();
@@ -237,45 +241,29 @@ public class MathandelDataPopulator {
             savedGroup.setItems(items);
             definedGroupRepository.save(savedGroup);
         }
+    }
 
-        System.out.println("First step of saving defined groups terminated successfully");
-
-        //trzeba teraz zapisac grupy w grupach
-        //posiadamy usernamea i nazwy grup
-        //musimy wyciagnac grupy o tych nazwach ktore naleza tez do tego usera
-
+    private void saveDefinedGroupsInGroups() {
         for(DefinedGroupData definedGroupData: definedGroups) {
 
             String definedGruopName = definedGroupData.getDefinedGruopName();
-            String userName = definedGroupData.getUserName();
-            System.out.println("Group name: " + definedGruopName + "  User name: " + userName);
+            User user = userRepository.findByUsername(definedGroupData.getUserName()).get();
+            System.out.println("Group name: " + definedGruopName + "  User name: " + user.getUsername());
 
             if(definedGroupData.getDefinedGroups().size()!= 0) {
                 int i = 1;
             }
 
-            DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGruopName, userName);
+            DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser(definedGruopName, user);
 
             for(String groupName: definedGroupData.getDefinedGroups()) {
-                DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser_Username(groupName, userName);
+                DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser(groupName, user);
                 definedGroup.getGroups().add(groupToAdd);
             }
             definedGroupRepository.save(definedGroup);
         }
-
-
-//        // hacks for updating list of defined groups for defined groups
-//        List<DefinedGroup> repositoryDefinedGroups = definedGroupRepository.findAll();
-//        for (DefinedGroup definedGroup : repositoryDefinedGroups) {
-//
-//
-//
-//            DefinedGroupData definedGroupData = definedGroups.stream().filter(df -> df.getDefinedGruopName().equals(definedGroup.getName())).findFirst().get();
-//            definedGroup.setGroups(repositoryDefinedGroups.stream().filter(df -> definedGroupData.getDefinedGroups().contains(df.getName())).collect(Collectors.toSet()));
-//        }
-//
-//        definedGroupRepository.saveAll(repositoryDefinedGroups);
     }
+
 
     private void savePreferences() {
         //zapisac prefki
@@ -283,9 +271,10 @@ public class MathandelDataPopulator {
         Set<Preference> localPreferences = new HashSet<>();
 
         for (PreferenceLocal preferenceLocal : preferences) {
+            User user = userRepository.findByUsername(preferenceLocal.userName).get();
             HashSet<DefinedGroup> groups = new HashSet<>();
             preferenceLocal.definedGroups.forEach(definedGroupName -> {
-                DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGroupName, preferenceLocal.userName);
+                DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser(definedGroupName, user);
                 groups.add(definedGroup);
             });
 
