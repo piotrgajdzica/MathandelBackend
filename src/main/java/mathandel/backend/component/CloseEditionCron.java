@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 import static mathandel.backend.model.server.enums.EditionStatusName.OPENED;
 
 @Component
-public class CloseEditionScheduler {
+public class CloseEditionCron {
 
     private final EditionRepository editionRepository;
     private final CalcService calcService;
-    private static final Logger log = LoggerFactory.getLogger(CloseEditionScheduler.class);
+    private static final Logger log = LoggerFactory.getLogger(CloseEditionCron.class);
 
-    public CloseEditionScheduler(EditionRepository editionRepository, CalcService calcService) {
+    public CloseEditionCron(EditionRepository editionRepository, CalcService calcService) {
         this.editionRepository = editionRepository;
         this.calcService = calcService;
 

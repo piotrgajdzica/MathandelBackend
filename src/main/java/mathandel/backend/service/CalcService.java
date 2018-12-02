@@ -42,6 +42,9 @@ public class CalcService {
     @Value("${calc.service.url}")
     private String CALC_SERVICE_URL;
 
+    @Value("${calc.service.token}")
+    private String CALC_SERVICE_TOKEN;
+
     public CalcService(PreferenceRepository preferenceRepository, DefinedGroupRepository definedGroupRepository, ResultRepository resultRepository, ItemRepository itemRepository, EditionRepository editionRepository, EditionService editionService, RestTemplate restTemplate, UserRepository userRepository) {
         this.preferenceRepository = preferenceRepository;
         this.definedGroupRepository = definedGroupRepository;
@@ -59,10 +62,10 @@ public class CalcService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
 
-        if(!edition.getModerators().contains(moderator)) {
+        if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
+        if (!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
             throw new BadRequestException("You cannot resolve edition with edition status " + editionStatusName);
         }
         calculateResults(edition);
@@ -72,7 +75,7 @@ public class CalcService {
     public void calculateResults(Edition edition) {
         EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
 
-        if(editionStatusName.equals(CLOSED)) {
+        if (editionStatusName.equals(CLOSED)) {
             resultRepository.deleteAllByEdition_Id(edition.getId());
         }
 
@@ -80,6 +83,7 @@ public class CalcService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
+        headers.add("Authorization", CALC_SERVICE_TOKEN);
         String body = getMappedDataForEdition(edition.getId());
         HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 
@@ -169,10 +173,10 @@ public class CalcService {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if(!edition.getModerators().contains(moderator)) {
+        if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!edition.getEditionStatusType().getEditionStatusName().equals(CLOSED)) {
+        if (!edition.getEditionStatusType().getEditionStatusName().equals(CLOSED)) {
             throw new BadRequestException("You have to resolve edition first");
         }
 
@@ -185,10 +189,10 @@ public class CalcService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
 
-        if(!edition.getModerators().contains(moderator)) {
+        if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!(editionStatusName.equals(CLOSED) || editionStatusName.equals(FAILED))) {
+        if (!(editionStatusName.equals(CLOSED) || editionStatusName.equals(FAILED))) {
             throw new BadRequestException("You can only reopen closed or failed edition edition is " + editionStatusName);
         }
         if (endDate.isBefore(LocalDate.now())) {
@@ -219,10 +223,10 @@ public class CalcService {
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
 
-        if(!edition.getModerators().contains(moderator)) {
+        if (!edition.getModerators().contains(moderator)) {
             throw new BadRequestException("You have no access to this resource");
         }
-        if(!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
+        if (!(editionStatusName.equals(OPENED) || editionStatusName.equals(FAILED) || editionStatusName.equals(CLOSED))) {
             throw new BadRequestException("You cannot cancel " + editionStatusName + " edition");
         }
 
