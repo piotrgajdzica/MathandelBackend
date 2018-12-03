@@ -13,6 +13,8 @@ public class UserTO {
 
     private Long id;
 
+    private Boolean userExists = true;
+
     @NotBlank
     @Size(min = 2, max = 40)
     private String name;
@@ -176,5 +178,9 @@ public class UserTO {
                 .append("email", email)
                 .append("roles", roles)
                 .toString();
+    }
+
+    public Boolean getUserExists() {
+        return userExists;
     }
 }

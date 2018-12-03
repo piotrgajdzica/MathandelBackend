@@ -1,5 +1,5 @@
 POST http://localhost:8080/api/editions/1/participants
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzNDQ0NTkwLCJleHAiOjE1NDQwNDkzOTB9.O9ZbqQ8EPMvjrQ2gxbF-DvNiwmCAjG8f_iOWPU3lv5ig2AZ0T_SpHp89YoIz4hJHSjMYkD1vsG-_YI3aCNYPeA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQzODM3MjA3LCJleHAiOjE1NDQ0NDIwMDd9.dfr3Hhg3Pb-DMKwRac0TPfFyLnqR976ZCSW5JSEKXjuKhX-WDNVip-qYXRbX4K2dn2Xj-o4x5dqC74o1lEswQg
 
 ###

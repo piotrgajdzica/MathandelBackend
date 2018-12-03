@@ -28,7 +28,7 @@ public class EditionTO {
     private int numberOfParticipants;
     private boolean isModerator;
     private boolean isParticipant;
-    private EditionStatusName editionStatusName;
+    private EditionStatusName status;
 
     public Long getId() {
         return Id;
@@ -102,12 +102,12 @@ public class EditionTO {
         return this;
     }
 
-    public EditionStatusName getEditionStatusName() {
-        return editionStatusName;
+    public EditionStatusName getStatus() {
+        return status;
     }
 
-    public EditionTO setEditionStatusName(EditionStatusName editionStatusName) {
-        this.editionStatusName = editionStatusName;
+    public EditionTO setStatus(EditionStatusName status) {
+        this.status = status;
         return this;
     }
 

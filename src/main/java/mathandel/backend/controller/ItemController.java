@@ -25,7 +25,7 @@ public class ItemController {
     }
 
     // documented
-    @PostMapping(editionItemsPath)
+    @RequestMapping(path = editionItemsPath, method = RequestMethod.POST, consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
     ItemTO createItem(@CurrentUser UserPrincipal user,

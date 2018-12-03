@@ -82,7 +82,7 @@ public class ServerToClientDataConverter {
                 .setMaxParticipants(edition.getMaxParticipants())
                 .setModerator(edition.getModerators().stream().anyMatch(participant -> participant.getId().equals(userId)))
                 .setParticipant(edition.getParticipants().stream().anyMatch(participant -> participant.getId().equals(userId)))
-                .setEditionStatusName(mapEditionStatusName(edition.getEditionStatusType().getEditionStatusName()));
+                .setStatus(mapEditionStatusName(edition.getEditionStatusType().getEditionStatusName()));
     }
 
     private static EditionStatusName mapEditionStatusName(EditionStatusName editionStatusName) {

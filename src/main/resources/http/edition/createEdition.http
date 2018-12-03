@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/editions
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQyOTA3Nzc3LCJleHAiOjE1NDM1MTI1Nzd9.PA7CF35w5Sgk8CaU3QEEoEKTxLSEyUL7HneRDWrPPjUTK3sXobLWM2CBMsQyRmJdWZ5iiqlLI6sd4M_SgkZ3pA
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzODMyMTk0LCJleHAiOjE1NDQ0MzY5OTR9.TWjAyIqek_dtktqPOIKgTfETn2NyAoWRyXD5zMZup7EiSlLYbyWR_75MDyyq_Q5d9txhuZh0t-PrbNp6q1IREw
 
 < createEdition.json
 
