@@ -45,7 +45,13 @@ public class EditionService {
 
     public EditionTO createEdition(EditionTO editionTO, Long userId) {
 
-        validateEdition(editionTO);
+        if (editionRepository.existsByName(editionTO.getName())) {
+            throw new BadRequestException("Edition name already exists");
+        }
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Edition end date cannot be in the past");
+        }
+
         if (editionTO.getMaxParticipants() < 1) {
             throw new BadRequestException("Incorrect max participants value - has to be more than 0");
         }
@@ -77,15 +83,6 @@ public class EditionService {
         return mapEdition(editionRepository.save(edition), userId);
     }
 
-    private void validateEdition(EditionTO editionTO) {
-        if (editionRepository.existsByName(editionTO.getName())) {
-            throw new BadRequestException("Edition name already exists");
-        }
-        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Edition end date cannot be in the past");
-        }
-    }
-
     public EditionTO editEdition(EditionTO editionTO, Long editionId, Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
@@ -97,7 +94,12 @@ public class EditionService {
         if(!edition.getEditionStatusType().getEditionStatusName().equals(EditionStatusName.OPENED)) {
             throw new BadRequestException("Edition " + edition.getName() + " is not opened");
         }
-        validateEdition(editionTO);
+        if (!edition.getName().equals(editionTO.getName()) && editionRepository.existsByName(editionTO.getName())) {
+            throw new BadRequestException("Edition name already exists");
+        }
+        if (editionTO.getEndDate().isBefore(LocalDate.now())) {
+            throw new BadRequestException("Edition end date cannot be in the past");
+        }
         if (editionTO.getMaxParticipants() < edition.getParticipants().size()) {
             throw new BadRequestException("Cannot lower max number of participants");
         }

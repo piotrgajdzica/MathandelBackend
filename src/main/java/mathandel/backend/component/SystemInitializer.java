@@ -23,12 +23,8 @@ public class SystemInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EditionStatusTypeRepository editionStatusTypeRepository;
-    private final FullDBPopulator fullDBPopulator;
     private final ModeratorRequestStatusRepository moderatorRequestStatusRepository;
-    private final TestPopulator testPopulator;
     private final MathandelDataPopulator mathandelDataPopulator;
-    private final EditionRepository editionRepository;
-    private final ItemRepository itemRepository;
 
 
     public SystemInitializer(RoleRepository roleRepository,
@@ -36,18 +32,13 @@ public class SystemInitializer implements ApplicationRunner {
                              PasswordEncoder passwordEncoder,
                              EditionStatusTypeRepository editionStatusTypeRepository,
                              ModeratorRequestStatusRepository moderatorRequestStatusRepository,
-                             FullDBPopulator fullDBPopulator, TestPopulator testPopulator,
-                             MathandelDataPopulator mathandelDataPopulator, EditionRepository editionRepository, ItemRepository itemRepository) {
+                             MathandelDataPopulator mathandelDataPopulator) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
         this.moderatorRequestStatusRepository = moderatorRequestStatusRepository;
-        this.fullDBPopulator = fullDBPopulator;
-        this.testPopulator = testPopulator;
         this.mathandelDataPopulator = mathandelDataPopulator;
-        this.editionRepository = editionRepository;
-        this.itemRepository = itemRepository;
     }
 
     @Override
@@ -57,15 +48,15 @@ public class SystemInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertModeratorRequestStatusesToDB();
 
-        try {
-            long lStartTime = System.nanoTime();
-            mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
-            long lEndTime = System.nanoTime();
-            long output = lEndTime - lStartTime;
-            System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            long lStartTime = System.nanoTime();
+//            mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
+//            long lEndTime = System.nanoTime();
+//            long output = lEndTime - lStartTime;
+//            System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 //        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();
