@@ -6,18 +6,21 @@ import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
 public class SystemInitializer implements ApplicationRunner {
+
+    @Value("${populate.mathandel.data}")
+    private Boolean populateMathandelData;
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -48,15 +51,17 @@ public class SystemInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertModeratorRequestStatusesToDB();
 
-//        try {
-//            long lStartTime = System.nanoTime();
-//            mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
-//            long lEndTime = System.nanoTime();
-//            long output = lEndTime - lStartTime;
-//            System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        if(populateMathandelData) {
+            try {
+                long lStartTime = System.nanoTime();
+                mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
+                long lEndTime = System.nanoTime();
+                long output = lEndTime - lStartTime;
+                System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 //        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();
@@ -64,51 +69,59 @@ public class SystemInitializer implements ApplicationRunner {
 
     private void insertRolesToDB() {
         for (RoleName roleName : RoleName.values()) {
-            Role role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
+            if(!roleRepository.existsByName(roleName)){
+                Role role = new Role();
+                role.setName(roleName);
+                roleRepository.save(role);
+            }
         }
     }
 
     private void insertEditionStatusesToDB() {
         for (EditionStatusName editionStatusName : EditionStatusName.values()) {
-            EditionStatusType editionStatusType = new EditionStatusType();
-            editionStatusType.setEditionStatusName(editionStatusName);
-            editionStatusTypeRepository.save(editionStatusType);
+            if(!editionStatusTypeRepository.existsByEditionStatusName(editionStatusName)) {
+                EditionStatusType editionStatusType = new EditionStatusType();
+                editionStatusType.setEditionStatusName(editionStatusName);
+                editionStatusTypeRepository.save(editionStatusType);
+            }
         }
     }
 
     private void insertAdminToDB() {
-        User user = new User()
-                .setName("admin")
-                .setSurname("admin")
-                .setUsername("admin")
-                .setEmail("admin@admin.admin")
-                .setPassword(passwordEncoder.encode("admin"))
-                .setAddress("admin")
-                .setCity("admin")
-                .setPostalCode("admin")
-                .setCountry("admin");
+        if(!(userRepository.existsById(1L) || userRepository.existsByUsername("admin") || userRepository.existsByEmail("admin@admin.admin"))) {
+            User user = new User()
+                    .setName("admin")
+                    .setSurname("admin")
+                    .setUsername("admin")
+                    .setEmail("admin@admin.admin")
+                    .setPassword(passwordEncoder.encode("admin"))
+                    .setAddress("admin")
+                    .setCity("admin")
+                    .setPostalCode("admin")
+                    .setCountry("admin");
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
-        Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-                .orElseThrow(() -> new AppException("Admin Role not set."));
-        Role moderatorRole = roleRepository.findByName(RoleName.ROLE_MODERATOR)
-                .orElseThrow(() -> new AppException("Moderator Role not set."));
+            Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                    .orElseThrow(() -> new AppException("User Role not set."));
+            Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
+                    .orElseThrow(() -> new AppException("Admin Role not set."));
+            Role moderatorRole = roleRepository.findByName(RoleName.ROLE_MODERATOR)
+                    .orElseThrow(() -> new AppException("Moderator Role not set."));
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(userRole);
-        roles.add(adminRole);
-        roles.add(moderatorRole);
-        user.setRoles(roles);
+            Set<Role> roles = new HashSet<>();
+            roles.add(userRole);
+            roles.add(adminRole);
+            roles.add(moderatorRole);
+            user.setRoles(roles);
 
-        userRepository.save(user);
+            userRepository.save(user);
+        }
     }
 
     private void insertModeratorRequestStatusesToDB() {
         for (ModeratorRequestStatusName moderatorRequestStatusName : ModeratorRequestStatusName.values()) {
-            moderatorRequestStatusRepository.save(new ModeratorRequestStatus().setName(moderatorRequestStatusName));
+            if(!moderatorRequestStatusRepository.existsByName(moderatorRequestStatusName)) {
+                moderatorRequestStatusRepository.save(new ModeratorRequestStatus().setName(moderatorRequestStatusName));
+            }
         }
     }
 }

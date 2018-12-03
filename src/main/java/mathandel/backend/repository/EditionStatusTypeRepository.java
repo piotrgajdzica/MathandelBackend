@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EditionStatusTypeRepository extends JpaRepository<EditionStatusType, Long> {
     EditionStatusType findByEditionStatusName(EditionStatusName editionStatusName);
+    Boolean existsByEditionStatusName(EditionStatusName editionStatusName);
 }

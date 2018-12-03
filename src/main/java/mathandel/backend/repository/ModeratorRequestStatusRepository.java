@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ModeratorRequestStatusRepository extends JpaRepository<ModeratorRequestStatus, Long> {
     Optional<ModeratorRequestStatus> findByName(ModeratorRequestStatusName name);
+    Boolean existsByName(ModeratorRequestStatusName name);
 }
