@@ -1,5 +1,16 @@
-FROM java:8
-VOLUME /tmp
+FROM openjdk:8 AS TEMP_BUILD_IMAGE
+ENV APP_HOME=.
+WORKDIR $APP_HOME
+COPY build.gradle settings.gradle gradlew $APP_HOME/
+COPY gradle $APP_HOME/gradle
+RUN ./gradlew build -x test || return 0 
+COPY . .
+RUN ./gradlew build -x test
+
+FROM openjdk:8
+ENV ARTIFACT_NAME=backend-0.0.1-SNAPSHOT.jar
+ENV APP_HOME=.
+WORKDIR $APP_HOME
+COPY --from=TEMP_BUILD_IMAGE $APP_HOME/build/libs/$ARTIFACT_NAME server.jar
 EXPOSE 8080
-ADD /build/libs/backend-0.0.1-SNAPSHOT.jar backend-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java","-jar","backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","server.jar"]
