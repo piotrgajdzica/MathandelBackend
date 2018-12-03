@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,7 +60,6 @@ public class ItemService {
     public ItemTO createItem(Long userId, Long editionId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
-        String basePath = new File("").getAbsolutePath();
 
         validateEdition(user, edition);
 
@@ -73,30 +71,22 @@ public class ItemService {
 
         item = itemRepository.save(item);
 
-        return saveItemWithImages(userId, image1, image2, image3, item, basePath);
+        return saveItemWithImages(userId, image1, image2, image3, item);
     }
 
-    private void processFile(Long userId, MultipartFile multipartFile, String basePath, Item item) {
+    private void processFile(Long userId, MultipartFile file, Item item) {
         String extension;
         String name;
-        if (multipartFile != null) {
-            extension = getExtension(multipartFile.getContentType());
+        if (file != null) {
+            extension = getExtension(file.getContentType());
             name = generateName(userId, item.getId()) + "." + extension;
 
-            if (multipartFile.getSize() > maxSize) {
-                throw new BadRequestException("File cannot exceed 5mb");
-            }
-            if (!Objects.requireNonNull(multipartFile.getContentType()).startsWith("image/")) {
-                throw new BadRequestException("You can only upload an image");
-            }
-            if (extension == null) {
-                throw new BadRequestException("File type not supported");
-            }
+            validateFile(file, extension, maxSize);
 
-            if (multipartFile.getSize() > 0) {
+            if (file.getSize() > 0) {
                 try {
-                    byte[] bytes = multipartFile.getBytes();
-                    Path path = Paths.get(basePath + "\\src\\main\\resources\\images\\" + name);
+                    byte[] bytes = file.getBytes();
+                    Path path = Paths.get("src/main/resources/images/" + name);
                     Files.write(path, bytes);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -111,10 +101,21 @@ public class ItemService {
         }
     }
 
+    static void validateFile(MultipartFile multipartFile, String extension, long maxSize) {
+        if (multipartFile.getSize() > maxSize) {
+            throw new BadRequestException("File cannot exceed 5mb");
+        }
+        if (!Objects.requireNonNull(multipartFile.getContentType()).startsWith("image/")) {
+            throw new BadRequestException("You can only upload an image");
+        }
+        if (extension == null) {
+            throw new BadRequestException("File type not supported");
+        }
+    }
+
     public ItemTO editItem(Long userId, Long itemId, CreateUpdateItemRequest createUpdateItemRequest, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
-        String basePath = new File("").getAbsolutePath();
 
         if (!user.getId().equals(item.getUser().getId())) {
             throw new BadRequestException("You have no access to this resource");
@@ -151,7 +152,7 @@ public class ItemService {
                 throw new BadRequestException("Image with id " + imageToRemoveId + " is not assigned to item " + itemId);
             }
 
-            File file = new File(basePath + "\\src\\main\\resources\\images\\" + image.getName());
+            File file = new File("src/main/resources/images/" + image.getName());
             if (!file.delete()) {
                 throw new AppException("Could not delete file - server internal error");
             }
@@ -159,7 +160,7 @@ public class ItemService {
             item.getImages().remove(image);
         });
 
-        return saveItemWithImages(userId, image1, image2, image3, item, basePath);
+        return saveItemWithImages(userId, image1, image2, image3, item);
     }
 
     public ItemTO getItem(Long itemId) {
@@ -167,10 +168,10 @@ public class ItemService {
         return mapItem(item);
     }
 
-    private ItemTO saveItemWithImages(Long userId, MultipartFile image1, MultipartFile image2, MultipartFile image3, Item item, String basePath) {
-        processFile(userId, image1, basePath, item);
-        processFile(userId, image2, basePath, item);
-        processFile(userId, image3, basePath, item);
+    private ItemTO saveItemWithImages(Long userId, MultipartFile image1, MultipartFile image2, MultipartFile image3, Item item) {
+        processFile(userId, image1, item);
+        processFile(userId, image2, item);
+        processFile(userId, image3, item);
         return mapItem(itemRepository.save(item));
     }
 

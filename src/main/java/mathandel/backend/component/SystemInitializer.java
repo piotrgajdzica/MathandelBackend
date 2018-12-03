@@ -57,15 +57,15 @@ public class SystemInitializer implements ApplicationRunner {
         insertAdminToDB();
         insertModeratorRequestStatusesToDB();
 
-//        try {
-//            long lStartTime = System.nanoTime();
-//            mathandelDataPopulator.saveFromFile("C:\\Users\\James\\IdeaProjects\\MathandelBackend\\src\\main\\resources\\mathandel_example_preference_data\\mathandel_30.txt");
-//            long lEndTime = System.nanoTime();
-//            long output = lEndTime - lStartTime;
-//            System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            long lStartTime = System.nanoTime();
+            mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
+            long lEndTime = System.nanoTime();
+            long output = lEndTime - lStartTime;
+            System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 //        testPopulator.populate(); // -> if you want to use this go to TestPopulator class
 //        fullDBPopulator.populate();

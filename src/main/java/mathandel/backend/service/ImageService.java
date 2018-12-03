@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
 import static mathandel.backend.utils.ImageTypeMap.getExtension;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapImage;
@@ -60,19 +59,11 @@ public class ImageService {
         if (item.getImages().size() == maxImagesPerItem) {
             throw new BadRequestException("Item already has 3 images");
         }
-        if (file.getSize() > maxSize) {
-            throw new BadRequestException("File cannot exceed 5mb");
-        }
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
-            throw new BadRequestException("You can only upload an image");
-        }
-        if (extension == null) {
-            throw new BadRequestException("File type not supported");
-        }
+        ItemService.validateFile(file, extension, maxSize);
 
         try {
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(basePath + "\\src\\main\\resources\\images\\" + name);
+            Path path = Paths.get("src/main/resources/images/" + name);
             Files.write(path, bytes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,8 +87,7 @@ public class ImageService {
 
     public byte[] getImage(String imageName) {
         try {
-            String basePath = new File("").getAbsolutePath();
-            return Files.readAllBytes(Paths.get(basePath + "\\src\\main\\resources\\images\\" + imageName));
+            return Files.readAllBytes(Paths.get("src/main/resources/images/" + imageName));
         } catch (IOException e) {
             throw new BadRequestException("Requested file does not exist");
         }
@@ -106,7 +96,6 @@ public class ImageService {
     public ApiResponse deleteImage(Long userId, Long itemId, String imageName) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Item", "id", itemId));
         Image image = imageRepository.findByName(imageName).orElseThrow(() -> new ResourceNotFoundException("Image", "name", imageName));
-        String basePath = new File("").getAbsolutePath();
 
         if(!item.getUser().getId().equals(userId)) {
             throw new BadRequestException("You are not the owner of this item");
@@ -117,7 +106,7 @@ public class ImageService {
 
         item.getImages().remove(image);
         imageRepository.delete(image);
-        File file = new File(basePath + "\\src\\main\\resources\\images\\" + imageName);
+        File file = new File("src/main/resources/images/" + imageName);
         if(!file.delete()) {
            throw new AppException("Could not delete file - server internal error");
         }
