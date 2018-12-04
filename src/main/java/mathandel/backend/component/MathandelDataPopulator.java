@@ -104,9 +104,9 @@ public class MathandelDataPopulator {
         mods.add(admin);
         participants.add(admin);
         edition = new Edition()
-                .setName("Mathandel test")
-                .setDescription("desc")
-                .setMaxParticipants(Integer.MAX_VALUE)
+                .setName("Mathandel 30")
+                .setDescription("This is mathandel 30")
+                .setMaxParticipants(200)
                 .setModerators(mods)
                 .setParticipants(participants)
                 .setEditionStatusType(editionStatusType)
@@ -185,6 +185,7 @@ public class MathandelDataPopulator {
                 .setRoles(roles);
 
         users.add(user);
+        users.addAll(edition.getParticipants());
 
         edition = editionRepository.findById(edition.getId()).get();
         edition.setParticipants(users);
