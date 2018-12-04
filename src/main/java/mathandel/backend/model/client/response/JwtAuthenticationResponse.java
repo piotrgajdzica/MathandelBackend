@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.Set;
 
 public class JwtAuthenticationResponse {
+
+    private Boolean userExists = true;
     private String accessToken;
     private Set<String> roles;
 
@@ -25,6 +27,10 @@ public class JwtAuthenticationResponse {
     public JwtAuthenticationResponse setRoles(Set<String> roles) {
         this.roles = roles;
         return this;
+    }
+
+    public Boolean getUserExists() {
+        return userExists;
     }
 
     @Override
