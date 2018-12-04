@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import static mathandel.backend.model.server.enums.EditionStatusName.OPENED;
 import static mathandel.backend.utils.ImageTypeMap.getExtension;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapItem;
 import static mathandel.backend.utils.ServerToClientDataConverter.mapItems;
@@ -49,7 +50,7 @@ public class ItemService {
     }
 
     static void validateEdition(User user, Edition edition) {
-        if (edition.getEditionStatusType().getEditionStatusName() != EditionStatusName.OPENED) {
+        if (edition.getEditionStatusType().getEditionStatusName() != OPENED) {
             throw new BadRequestException("Edition is not opened");
         }
         if (!edition.getParticipants().contains(user)) {
@@ -125,7 +126,7 @@ public class ItemService {
         validateEdition(user, edition);
         if (edition != null) {
             EditionStatusType editionStatusType = edition.getEditionStatusType();
-            if (editionStatusType.getEditionStatusName() != EditionStatusName.OPENED) {
+            if (editionStatusType.getEditionStatusName() != OPENED) {
                 throw new BadRequestException("Item's edition is not opened");
             }
         }

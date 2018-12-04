@@ -52,8 +52,8 @@ public class EditionService {
             throw new BadRequestException("Edition end date cannot be in the past");
         }
 
-        if (editionTO.getMaxParticipants() < 1) {
-            throw new BadRequestException("Incorrect max participants value - has to be more than 0");
+        if (editionTO.getMaxParticipants() <= 1) {
+            throw new BadRequestException("Incorrect max participants value - has to be more than 1");
         }
 
         Role adminRole = roleRepository.findByName(ROLE_ADMIN).orElseThrow(() -> new AppException("Admin Role does not exist"));

@@ -99,12 +99,16 @@ public class MathandelDataPopulator {
         // todo init edition
         EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
         Set<User> mods = new HashSet<>();
-        mods.add(userRepository.findById(1L).get());
+        Set<User> participants = new HashSet<>();
+        User admin = userRepository.findById(1L).get();
+        mods.add(admin);
+        participants.add(admin);
         edition = new Edition()
                 .setName("Mathandel test")
                 .setDescription("desc")
                 .setMaxParticipants(Integer.MAX_VALUE)
                 .setModerators(mods)
+                .setParticipants(participants)
                 .setEditionStatusType(editionStatusType)
                 .setEndDate(LocalDate.now().plusMonths(10));
 
