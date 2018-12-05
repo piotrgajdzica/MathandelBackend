@@ -52,9 +52,14 @@ public class MathandelDataPopulator {
     }
 
     public void saveItemsFromFile(String fileName) throws IOException {
-        initEdition();
 
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/monikeu/Dokumenty/mathandel-back/MathandelBackend/src/main/resources/mathandel_example_preference_data/mathandel_30_items.txt"));
+        lStartTime = System.nanoTime();
+        initEdition();
+        lEndTime = System.nanoTime();
+        output = lEndTime - lStartTime;
+        System.out.println("Created edition -- " + output / 1000000000);
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
         String line = bufferedReader.readLine();
         Pattern p = Pattern.compile("(\\d*)\\. (.*) \\(od (.*)\\)");
 
@@ -89,7 +94,7 @@ public class MathandelDataPopulator {
                         .setCity("city" + i)
                         .setRoles(roles)
                         .setEmail("email" + i + "@domain.com")
-                        .setPassword(passwordEncoder.encode("pass" + i))
+                        .setPassword(passwordEncoder.encode(userName + userName))
                         .setAddress("addr" + i);
 
                 users.add(user);
@@ -110,21 +115,16 @@ public class MathandelDataPopulator {
             i--;
         }
 
-        edition.setParticipants(users);
+        Set<User> participants = edition.getParticipants();
+        participants.addAll(users);
+        edition.setParticipants(participants);
         userRepository.saveAll(users);
         editionRepository.save(edition);
         itemRepository.saveAll(items);
-
     }
 
 
     public void saveFromFile(String fileName) throws IOException {
-
-        lStartTime = System.nanoTime();
-        initEdition();
-        lEndTime = System.nanoTime();
-        output = lEndTime - lStartTime;
-        System.out.println("Created edition -- " + output / 1000000000);
 
         lStartTime = System.nanoTime();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
@@ -187,21 +187,6 @@ public class MathandelDataPopulator {
 
     private void saveDataToDb() {
         lStartTime = System.nanoTime();
-        saveUsers();
-        lEndTime = System.nanoTime();
-        output = lEndTime - lStartTime;
-        System.out.println("Saved users -- " + output / 1000000000);
-        lStartTime = System.nanoTime();
-        saveItems();
-        lEndTime = System.nanoTime();
-        output = lEndTime - lStartTime;
-        System.out.println("Saved items -- " + output / 1000000000);
-        lStartTime = System.nanoTime();
-        saveItemsNotPresent();
-        lEndTime = System.nanoTime();
-        output = lEndTime - lStartTime;
-        System.out.println("Saved not present items -- " + output / 1000000000);
-        lStartTime = System.nanoTime();
         saveDefinedGroups();
         lEndTime = System.nanoTime();
         output = lEndTime - lStartTime;
@@ -218,87 +203,8 @@ public class MathandelDataPopulator {
         System.out.println("Saved preferences -- " + output / 1000000000);
     }
 
-    private void saveUsers() {
-        Set<User> users = new HashSet<>();
-        int i = 0;
-        HashSet<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByName(RoleName.ROLE_USER).get());
 
-        for (String userName : userNames) {
-            User user = new User()
-                    .setName("name" + i)
-                    .setUsername(userName)
-                    .setSurname("surname" + i)
-                    .setPostalCode("code" + i)
-                    .setCountry("country" + i)
-                    .setCity("city" + i)
-                    .setRoles(roles)
-                    .setEmail("email" + i + "@domain.com")
-                    .setPassword(passwordEncoder.encode("pass" + i))
-                    .setAddress("addr" + i);
-
-            i++;
-
-            users.add(user);
-        }
-
-        User user = new User()
-                .setName("John")
-                .setSurname("Smith")
-                .setUsername("johnsmith123")
-                .setEmail("johnsmith@gmail.com")
-                .setAddress("address")
-                .setCity("city")
-                .setCountry("country")
-                .setPostalCode("postal code")
-                .setPassword(passwordEncoder.encode("johnsmith"))
-                .setRoles(roles);
-
-        users.add(user);
-        users.addAll(edition.getParticipants());
-
-        edition = editionRepository.findById(edition.getId()).get();
-        edition.setParticipants(users);
-
-        userRepository.saveAll(users);
-        editionRepository.save(edition);
-    }
-
-    private void saveItems() {
-        // zapisac item
-        for (ItemData itemdata : this.items) {
-            User user = userRepository.findByUsername(itemdata.userName).get();
-            Item item = new Item()
-                    .setEdition(edition)
-                    .setUser(user)
-                    .setDescription("desc")
-                    .setId(itemdata.haveItemId);
-
-            itemRepository.save(item);
-        }
-    }
-
-    private void saveItemsNotPresent() {
-
-        Set<Item> items = new HashSet<>();
-        User user = userRepository.findByUsername("johnsmith123").get();
-
-        for (long i = 1; i <= maxId; i++) {
-            if (!itemRepository.existsById(i)) {
-                Item item = new Item()
-                        .setId(i)
-                        .setEdition(edition)
-                        .setUser(user)
-                        .setName("NPP")
-                        .setDescription("no preference product")
-                        .setImages(Collections.emptySet());
-                items.add(item);
-            }
-        }
-        itemRepository.saveAll(items);
-    }
-
-    void saveDefinedGroups() {
+    private void saveDefinedGroups() {
         //zapisac grupsy
         Set<DefinedGroup> localDefinedGroups = new HashSet<>();
 

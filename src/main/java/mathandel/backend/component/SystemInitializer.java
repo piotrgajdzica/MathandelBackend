@@ -28,9 +28,6 @@ public class SystemInitializer implements ApplicationRunner {
     @Value("${populate.mathandel.data}")
     private Boolean populateMathandelData;
 
-    @Value("${populate.mathandel.items}")
-    private Boolean populateMathandelitems;
-
     @Value("${populate.mathandel.data.file.path}")
     private String populateMathandelDataFilePath;
 
@@ -60,18 +57,15 @@ public class SystemInitializer implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws IOException {
+    public void run(ApplicationArguments args) {
         insertRolesToDB();
         insertEditionStatusesToDB();
         insertAdminToDB();
         insertModeratorRequestStatusesToDB();
 
-        if (populateMathandelitems) {
-            mathandelDataPopulator.saveItemsFromFile(populateMathandelDataFilePath);
-        }
-
         if (populateMathandelData) {
             try {
+                mathandelDataPopulator.saveItemsFromFile(populateMathandelItemsDataFilePath);
                 long lStartTime = System.nanoTime();
                 mathandelDataPopulator.saveFromFile(populateMathandelDataFilePath);
                 long lEndTime = System.nanoTime();
