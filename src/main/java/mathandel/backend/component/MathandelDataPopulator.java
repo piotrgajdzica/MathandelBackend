@@ -6,13 +6,14 @@ import mathandel.backend.model.server.enums.RoleName;
 import mathandel.backend.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,7 +34,7 @@ public class MathandelDataPopulator {
     private Set<PreferenceLocal> preferences = new HashSet<>();
 
     private long maxId = 0;
-    private Edition edition;
+    private Edition edition = null;
 
     private long lStartTime;
     private long lEndTime;
@@ -49,6 +50,73 @@ public class MathandelDataPopulator {
         this.editionRepository = editionRepository;
         this.editionStatusTypeRepository = editionStatusTypeRepository;
     }
+
+    public void saveItemsFromFile(String fileName) throws IOException {
+        initEdition();
+
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/monikeu/Dokumenty/mathandel-back/MathandelBackend/src/main/resources/mathandel_example_preference_data/mathandel_30_items.txt"));
+        String line = bufferedReader.readLine();
+        Pattern p = Pattern.compile("(\\d*)\\. (.*) \\(od (.*)\\)");
+
+        Set<Item> items = new HashSet<>();
+        Set<User> users = new HashSet<>();
+        HashSet<Role> roles = new HashSet<>();
+        Map<String, User> usersMap = new HashMap<>();
+
+        int i = 9999;
+
+        roles.add(roleRepository.findByName(RoleName.ROLE_USER).get());
+
+        while (line != null && !line.equals("\u001A")) {
+            line = replacePolishChars(line);
+
+            Matcher matcher = p.matcher(line);
+            matcher.matches();
+            Long id = Long.parseLong(matcher.group(1));
+            String itemName = matcher.group(2);
+
+            itemName = itemName.substring(0, Math.min(250, itemName.length()));
+            String userName = matcher.group(3);
+
+
+            if (usersMap.get(userName) == null) {
+                User user = new User()
+                        .setName("name" + i)
+                        .setUsername(userName)
+                        .setSurname("surname" + i)
+                        .setPostalCode("code" + i)
+                        .setCountry("country" + i)
+                        .setCity("city" + i)
+                        .setRoles(roles)
+                        .setEmail("email" + i + "@domain.com")
+                        .setPassword(passwordEncoder.encode("pass" + i))
+                        .setAddress("addr" + i);
+
+                users.add(user);
+                usersMap.put(userName, user);
+            }
+
+
+            Item e = new Item()
+                    .setEdition(edition)
+                    .setName(itemName)
+                    .setUser(usersMap.get(userName))
+                    .setDescription("desc")
+                    .setId(id);
+
+            items.add(e);
+
+            line = bufferedReader.readLine();
+            i--;
+        }
+
+        edition.setParticipants(users);
+        userRepository.saveAll(users);
+        editionRepository.save(edition);
+        itemRepository.saveAll(items);
+
+    }
+
 
     public void saveFromFile(String fileName) throws IOException {
 
@@ -96,23 +164,25 @@ public class MathandelDataPopulator {
     }
 
     private void initEdition() {
-        // todo init edition
-        EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
-        Set<User> mods = new HashSet<>();
-        Set<User> participants = new HashSet<>();
-        User admin = userRepository.findById(1L).get();
-        mods.add(admin);
-        participants.add(admin);
-        edition = new Edition()
-                .setName("Mathandel 30")
-                .setDescription("This is mathandel 30")
-                .setMaxParticipants(200)
-                .setModerators(mods)
-                .setParticipants(participants)
-                .setEditionStatusType(editionStatusType)
-                .setEndDate(LocalDate.now().plusMonths(10));
 
-        editionRepository.save(edition);
+        if (edition == null) {
+            EditionStatusType editionStatusType = editionStatusTypeRepository.findByEditionStatusName(EditionStatusName.OPENED);
+            Set<User> mods = new HashSet<>();
+            Set<User> participants = new HashSet<>();
+            User admin = userRepository.findById(1L).get();
+            mods.add(admin);
+            participants.add(admin);
+            edition = new Edition()
+                    .setName("Mathandel 30")
+                    .setDescription("This is mathandel 30")
+                    .setMaxParticipants(200)
+                    .setModerators(mods)
+                    .setParticipants(participants)
+                    .setEditionStatusType(editionStatusType)
+                    .setEndDate(LocalDate.now().plusMonths(10));
+
+            editionRepository.save(edition);
+        }
     }
 
     private void saveDataToDb() {
@@ -214,7 +284,7 @@ public class MathandelDataPopulator {
         User user = userRepository.findByUsername("johnsmith123").get();
 
         for (long i = 1; i <= maxId; i++) {
-            if(!itemRepository.existsById(i)) {
+            if (!itemRepository.existsById(i)) {
                 Item item = new Item()
                         .setId(i)
                         .setEdition(edition)
@@ -241,7 +311,7 @@ public class MathandelDataPopulator {
             localDefinedGroups.add(definedGroup);
         }
 
-        for(DefinedGroup definedGroup: localDefinedGroups) {
+        for (DefinedGroup definedGroup : localDefinedGroups) {
             Set<Item> items = definedGroup.getItems();
             definedGroup.setItems(null);
             DefinedGroup savedGroup = definedGroupRepository.save(definedGroup);
@@ -251,14 +321,14 @@ public class MathandelDataPopulator {
     }
 
     private void saveDefinedGroupsInGroups() {
-        for(DefinedGroupData definedGroupData: definedGroups) {
+        for (DefinedGroupData definedGroupData : definedGroups) {
 
             String definedGruopName = definedGroupData.getDefinedGruopName();
             //todo this is not necessary
             User user = userRepository.findByUsername(definedGroupData.getUserName()).get();
             DefinedGroup definedGroup = definedGroupRepository.findByNameAndUser_Username(definedGruopName, user.getUsername());
 
-            for(String groupName: definedGroupData.getDefinedGroups()) {
+            for (String groupName : definedGroupData.getDefinedGroups()) {
                 DefinedGroup groupToAdd = definedGroupRepository.findByNameAndUser_Username(groupName, user.getUsername());
                 definedGroup.getGroups().add(groupToAdd);
             }
@@ -268,7 +338,6 @@ public class MathandelDataPopulator {
 
 
     private void savePreferences() {
-        //zapisac prefki
 
         Set<Preference> localPreferences = new HashSet<>();
 
@@ -342,6 +411,7 @@ public class MathandelDataPopulator {
     }
 
     private class ItemData {
+
         String userName;
         Long haveItemId;
 
@@ -350,9 +420,11 @@ public class MathandelDataPopulator {
             this.userName = userName;
             this.haveItemId = haveItemId;
         }
+
     }
 
     private class PreferenceLocal {
+
         Preference preference;
         Set<String> definedGroups;
         String userName;
@@ -367,5 +439,26 @@ public class MathandelDataPopulator {
             this.wantedItems = wantedItems;
         }
 
+
+    }
+
+    private String replacePolishChars(String line) {
+        return line
+                .replace("ą", "a")
+                .replace("ć", "c")
+                .replace("ę", "e")
+                .replace("ł", "l")
+                .replace("ó", "o")
+                .replace("ś", "s")
+                .replace("ż", "z")
+                .replace("ź", "z")
+                .replace("Ą", "A")
+                .replace("Ć", "C")
+                .replace("Ę", "E")
+                .replace("Ł", "L")
+                .replace("Ó", "O")
+                .replace("Ś", "S")
+                .replace("Ż", "Z")
+                .replace("Ź", "Z");
     }
 }

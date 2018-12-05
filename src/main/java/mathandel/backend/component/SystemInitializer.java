@@ -1,11 +1,17 @@
 package mathandel.backend.component;
 
 import mathandel.backend.exception.AppException;
-import mathandel.backend.model.server.*;
+import mathandel.backend.model.server.EditionStatusType;
+import mathandel.backend.model.server.ModeratorRequestStatus;
+import mathandel.backend.model.server.Role;
+import mathandel.backend.model.server.User;
 import mathandel.backend.model.server.enums.EditionStatusName;
 import mathandel.backend.model.server.enums.ModeratorRequestStatusName;
 import mathandel.backend.model.server.enums.RoleName;
-import mathandel.backend.repository.*;
+import mathandel.backend.repository.EditionStatusTypeRepository;
+import mathandel.backend.repository.ModeratorRequestStatusRepository;
+import mathandel.backend.repository.RoleRepository;
+import mathandel.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -21,6 +27,15 @@ public class SystemInitializer implements ApplicationRunner {
 
     @Value("${populate.mathandel.data}")
     private Boolean populateMathandelData;
+
+    @Value("${populate.mathandel.items}")
+    private Boolean populateMathandelitems;
+
+    @Value("${populate.mathandel.data.file.path}")
+    private String populateMathandelDataFilePath;
+
+    @Value("${populate.mathandel.items.data.file.path}")
+    private String populateMathandelItemsDataFilePath;
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -45,16 +60,20 @@ public class SystemInitializer implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws IOException {
         insertRolesToDB();
         insertEditionStatusesToDB();
         insertAdminToDB();
         insertModeratorRequestStatusesToDB();
 
-        if(populateMathandelData) {
+        if (populateMathandelitems) {
+            mathandelDataPopulator.saveItemsFromFile(populateMathandelDataFilePath);
+        }
+
+        if (populateMathandelData) {
             try {
                 long lStartTime = System.nanoTime();
-                mathandelDataPopulator.saveFromFile("src/main/resources/mathandel_example_preference_data/mathandel_30.txt");
+                mathandelDataPopulator.saveFromFile(populateMathandelDataFilePath);
                 long lEndTime = System.nanoTime();
                 long output = lEndTime - lStartTime;
                 System.out.println("POPULATOR TERMINATED WITH TIME -- " + output / 1000000000);
@@ -69,7 +88,7 @@ public class SystemInitializer implements ApplicationRunner {
 
     private void insertRolesToDB() {
         for (RoleName roleName : RoleName.values()) {
-            if(!roleRepository.existsByName(roleName)){
+            if (!roleRepository.existsByName(roleName)) {
                 Role role = new Role();
                 role.setName(roleName);
                 roleRepository.save(role);
@@ -79,7 +98,7 @@ public class SystemInitializer implements ApplicationRunner {
 
     private void insertEditionStatusesToDB() {
         for (EditionStatusName editionStatusName : EditionStatusName.values()) {
-            if(!editionStatusTypeRepository.existsByEditionStatusName(editionStatusName)) {
+            if (!editionStatusTypeRepository.existsByEditionStatusName(editionStatusName)) {
                 EditionStatusType editionStatusType = new EditionStatusType();
                 editionStatusType.setEditionStatusName(editionStatusName);
                 editionStatusTypeRepository.save(editionStatusType);
@@ -88,7 +107,7 @@ public class SystemInitializer implements ApplicationRunner {
     }
 
     private void insertAdminToDB() {
-        if(!(userRepository.existsById(1L) || userRepository.existsByUsername("admin") || userRepository.existsByEmail("admin@admin.admin"))) {
+        if (!(userRepository.existsById(1L) || userRepository.existsByUsername("admin") || userRepository.existsByEmail("admin@admin.admin"))) {
             User user = new User()
                     .setName("admin")
                     .setSurname("admin")
@@ -119,7 +138,7 @@ public class SystemInitializer implements ApplicationRunner {
 
     private void insertModeratorRequestStatusesToDB() {
         for (ModeratorRequestStatusName moderatorRequestStatusName : ModeratorRequestStatusName.values()) {
-            if(!moderatorRequestStatusRepository.existsByName(moderatorRequestStatusName)) {
+            if (!moderatorRequestStatusRepository.existsByName(moderatorRequestStatusName)) {
                 moderatorRequestStatusRepository.save(new ModeratorRequestStatus().setName(moderatorRequestStatusName));
             }
         }
