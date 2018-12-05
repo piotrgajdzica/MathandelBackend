@@ -107,7 +107,7 @@ public class SystemInitializer implements ApplicationRunner {
                     .setSurname("admin")
                     .setUsername("admin")
                     .setEmail("admin@admin.admin")
-                    .setPassword(passwordEncoder.encode("adminadmin"))
+                    .setPassword(passwordEncoder.encode("admin"))
                     .setAddress("admin")
                     .setCity("admin")
                     .setPostalCode("admin")
