@@ -184,6 +184,7 @@ public class CalcService {
         return mapEdition(editionService.changeEditionStatus(edition, PUBLISHED), userId);
     }
 
+    @Transactional
     public EditionTO reOpenEdition(Long userId, Long editionId, LocalDate endDate) {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
