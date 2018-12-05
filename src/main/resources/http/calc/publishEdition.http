@@ -1,5 +1,5 @@
 POST http://localhost:8080/api/editions/1/publish
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzMDY5NzM0LCJleHAiOjE1NDM2NzQ1MzR9.sFM7imAqCfFJJEGVP3aBKIYEye4H_m0aIEXpwugcuQ3X_5HhNhyE2NRyJw0ZbEgR0CkeBcV2Xr87RzVcd3EkTg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ0MDUyMjk1LCJleHAiOjE1NDQ2NTcwOTV9.WsSN1TY5ZeDPqBUIScyDI_dcrUtLOaWXu4r0deCwZkN4JrzrJBC7I4d3obYRBwfid_LCWVSkTP0wGiVgAEhKxg
 
 ###

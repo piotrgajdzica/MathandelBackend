@@ -57,7 +57,7 @@ public class CalcService {
     }
 
     @Transactional
-    public ApiResponse resolveEdition(Long userId, Long editionId) {
+    public EditionTO resolveEdition(Long userId, Long editionId) {
         User moderator = userRepository.findById(userId).orElseThrow(() -> new AppException("User does not exist"));
         Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
         EditionStatusName editionStatusName = edition.getEditionStatusType().getEditionStatusName();
@@ -69,7 +69,8 @@ public class CalcService {
             throw new BadRequestException("You cannot resolve edition with edition status " + editionStatusName);
         }
         calculateResults(edition);
-        return new ApiResponse("Edition closed, you can now reOpen, publish or cancel this edition");
+        edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+        return mapEdition(edition, userId);
     }
 
     public void calculateResults(Edition edition) {

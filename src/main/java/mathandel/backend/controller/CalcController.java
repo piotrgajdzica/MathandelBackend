@@ -28,7 +28,7 @@ public class CalcController {
     @PostMapping(resolveEditionPath)
     @PreAuthorize("hasRole('MODERATOR')")
     public @ResponseBody
-    ApiResponse resolveEdition(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long editionId) {
+    EditionTO resolveEdition(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long editionId) {
         return calcService.resolveEdition(userPrincipal.getId(), editionId);
     }
 
