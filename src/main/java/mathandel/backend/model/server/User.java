@@ -29,19 +29,19 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     private String name;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     private String surname;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     private String username;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     @Email
     private String email;
 

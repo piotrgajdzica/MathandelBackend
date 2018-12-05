@@ -7,19 +7,19 @@ import javax.validation.constraints.Size;
 public class SignUpFacebookRequest extends SignInFacebookRequest {
 
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 100)
     private String name;
 
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 100)
     private String surname;
 
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 100)
     private String username;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     @Email
     private String email;
 

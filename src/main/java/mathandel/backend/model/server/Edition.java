@@ -16,7 +16,7 @@ public class Edition {
     private Long id;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     private String name;
     private String description;
     private LocalDate endDate;

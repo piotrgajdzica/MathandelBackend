@@ -14,17 +14,17 @@ public class UserTO {
     private Long id;
 
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 100)
     private String name;
 
     @NotBlank
-    @Size(min = 2, max = 40)
+    @Size(min = 2, max = 100)
     private String surname;
 
     private String username;
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 100)
     @Email
     private String email;
 
