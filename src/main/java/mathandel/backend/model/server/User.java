@@ -37,7 +37,7 @@ public class User {
     private String surname;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 40)
     private String username;
 
     @NotBlank
