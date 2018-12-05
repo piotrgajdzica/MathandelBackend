@@ -46,7 +46,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 100)
     private String password;
 
     @Nullable

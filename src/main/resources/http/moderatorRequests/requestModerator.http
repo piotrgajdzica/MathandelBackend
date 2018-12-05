@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/moderator-requests
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyNjQ2NzQzLCJleHAiOjE1NDMyNTE1NDN9.d5lrzXeRCLPQWjluIppJr3sRVhqKmrwkqZP-8auioWCjKDGd7IhKmvgKtX9PpD-GxucudDXoiayM2yN-Xw2qcg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNDgiLCJpYXQiOjE1NDQwNDM3ODUsImV4cCI6MTU0NDY0ODU4NX0.vh4aXLCWXv36VTbHUAJ-0Yok7gIF7hcRAe6dwq21jimvNKeHz-2WwZvw3x8yKLUfL5bfndIHXu5doyjzsneYXg
 
 < requestModerator.json
 
