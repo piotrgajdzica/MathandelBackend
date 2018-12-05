@@ -290,9 +290,7 @@ public class MathandelDataPopulator {
                     break;
             }
         }
-
         preferences.add(new PreferenceLocal(new Preference(), wantedDefinedGroups, userName, haveItemId, wantedItems));
-
     }
 
     private void parseDefinedGroupDefinition(String[] leftSideOfCollon, Set<String> rightSideOfCollon) {
