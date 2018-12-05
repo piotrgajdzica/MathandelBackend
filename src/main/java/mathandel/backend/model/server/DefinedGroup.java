@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Entity
@@ -19,7 +18,7 @@ public class DefinedGroup {
     private Long id;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 40)
     private String name;
 
     @ManyToOne

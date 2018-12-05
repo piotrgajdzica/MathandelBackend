@@ -8,7 +8,7 @@ public class DefinedGroupTO {
 
     private Long id;
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(min = 2, max = 40)
     private String name;
     private Set<Long> itemsIds;
     private Set<Long> groupIds;

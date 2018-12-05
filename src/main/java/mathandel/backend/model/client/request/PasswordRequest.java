@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class PasswordRequest {
 
     @NotBlank
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 30)
     private String newPassword;
 
     public String getNewPassword() {
