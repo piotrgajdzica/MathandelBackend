@@ -182,12 +182,19 @@ public class ItemService {
     }
 
     public Set<ItemTO> getItemsFromEdition(Long userId, Long editionId) {
-        validateGetItems(userId, editionId);
+        userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
         return mapItems(itemRepository.findByEdition_IdAndUser_IdNot(editionId, userId));
     }
 
     public Set<ItemTO> getMyItemsFromEdition(Long userId, Long editionId) {
-        validateGetItems(userId, editionId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
+        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
+
+        if (!edition.getParticipants().contains(user)) {
+            throw new BadRequestException("User not in this edition");
+        }
 
         return mapItems(itemRepository.findByEdition_IdAndUser_Id(editionId, userId));
     }
@@ -210,12 +217,7 @@ public class ItemService {
     }
 
     private void validateGetItems(Long userId, Long editionId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new AppException("User doesn't exist."));
-        Edition edition = editionRepository.findById(editionId).orElseThrow(() -> new ResourceNotFoundException("Edition", "id", editionId));
 
-        if (!edition.getParticipants().contains(user)) {
-            throw new BadRequestException("User not in this edition");
-        }
     }
 
     private String generateName(Long userId, Long itemId) {

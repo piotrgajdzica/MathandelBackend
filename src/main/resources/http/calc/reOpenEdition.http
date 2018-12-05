@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/editions/1/re-open
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzMDY5NzM0LCJleHAiOjE1NDM2NzQ1MzR9.sFM7imAqCfFJJEGVP3aBKIYEye4H_m0aIEXpwugcuQ3X_5HhNhyE2NRyJw0ZbEgR0CkeBcV2Xr87RzVcd3EkTg
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ0MDM4MTExLCJleHAiOjE1NDQ2NDI5MTF9.wBG52A6lSkEGZox3IkCDXzDZJLGfE5f536MiUnh0IvFeGNn-xLjx3m97zL0WKzViZx_Be72gYvg77tDUibAB2A
 
 < reOpenEdition.json
 ###
