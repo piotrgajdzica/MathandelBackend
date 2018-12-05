@@ -1,5 +1,5 @@
 GET http://localhost:8080/api/editions/1/results-moderator
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQzMzU0Mjc1LCJleHAiOjE1NDM5NTkwNzV9.AYuFxHGwZfBniV7FuLX8KK9JqWZ2oESq2OmXyeAV5MVjNQSpG870QeTS_9xwpgakIgNJ3H7Tpv0VnZUPJ2ld6Q
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ0MDUwNDg0LCJleHAiOjE1NDQ2NTUyODR9.OK-V65QCSrZStT0rhs4Uuabue37w47PT3uedFwDvDr5anm_R_kNm345nqfjv-zXPQIEbQ8CP0BTR8gWh6r582Q
 
 ###

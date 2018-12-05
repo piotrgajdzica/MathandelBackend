@@ -1,6 +1,6 @@
 POST http://localhost:8080/api/editions/1/items/1/preferences
 Content-Type: Application/Json
-Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNTQyODI3ODM0LCJleHAiOjE1NDM0MzI2MzR9.gU53nTyKd4HyjmC2mTIRiUjI7GPaW_DHSExGGrfQiPtNARyQATxW0eITSeK7tu442uQ01Drc-f74WToGOHzsZw
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNTQ0MDUwNDg0LCJleHAiOjE1NDQ2NTUyODR9.OK-V65QCSrZStT0rhs4Uuabue37w47PT3uedFwDvDr5anm_R_kNm345nqfjv-zXPQIEbQ8CP0BTR8gWh6r582Q
 
 < updatePreference.json
 ###

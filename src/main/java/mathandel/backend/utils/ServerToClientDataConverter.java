@@ -140,7 +140,7 @@ public class ServerToClientDataConverter {
         return new ResultTO()
                 .setId(result.getId())
                 .setReceiverId(result.getReceiver().getId())
-                .setSenderId(result.getReceiver().getId())
+                .setSenderId(result.getSender().getId())
                 .setItem(mapItem(result.getItemToSend()))
                 .setRate(mapRate(result.getRate()));
     }
